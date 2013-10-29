@@ -54,12 +54,6 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
   {
     private static final String CAMERA_SERVICE = "camera";
       
-    private static final String TAG = DefaultSimpleRemoteApi.class.getSimpleName();
-
-    // If you'd like to suppress detailed log output, change this value into
-    // false.
-    private static final boolean FULL_LOG = true;
-
     // API server device you want to send requests.
     private final ServerDevice mTargetServer;
 
@@ -76,12 +70,12 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
         
         private final String url;
         
-        public Call (final @Nonnull String CAMERA_SERVICE) 
+        public Call (final @Nonnull String service) 
           throws IOException
           {
             try 
               {
-                url = findActionListUrl(CAMERA_SERVICE) + "/" + CAMERA_SERVICE;
+                url = findActionListUrl(service) + "/" + service;
                 request.put("version", "1.0");
                 request.put("id", mRequestId++);
               }

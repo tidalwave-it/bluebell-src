@@ -35,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import android.os.Handler;
 import android.util.Log;
+import it.tidalwave.sony.SimpleRemoteApi;
 
 /***********************************************************************************************************************
  *
