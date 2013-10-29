@@ -27,6 +27,7 @@
  */
 package it.tidalwave.sony;
 
+import it.tidalwave.sony.impl.DefaultServerDevice;
 import android.util.Log;
 
 import java.io.IOException;
@@ -192,8 +193,7 @@ public class SimpleSsdpClient
                             foundDevices.add(ddUsn);
 
                             // Fetch Device Description XML and parse it.
-                            ServerDevice device = ServerDevice
-                                    .fetch(ddLocation);
+                            ServerDevice device = DefaultServerDevice.fetch(ddLocation);
                             
                             if (device != null) 
                               {
