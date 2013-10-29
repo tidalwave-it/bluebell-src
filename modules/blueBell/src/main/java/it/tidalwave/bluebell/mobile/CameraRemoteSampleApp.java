@@ -26,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import it.tidalwave.sony.ServerDevice.ApiService;
+import it.tidalwave.sony.impl.DefaultSimpleSsdpClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,7 @@ public class CameraRemoteSampleApp extends Activity {
         setProgressBarIndeterminateVisibility(false);
 
         mHandler = new Handler();
-        mSsdpClient = new SimpleSsdpClient();
+        mSsdpClient = new DefaultSimpleSsdpClient();
         mListAdapter = new DeviceListAdapter(this);
 
         Log.d(TAG, "onCreate() completed.");
