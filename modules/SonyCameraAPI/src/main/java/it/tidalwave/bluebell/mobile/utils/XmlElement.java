@@ -4,9 +4,10 @@
 
 package it.tidalwave.bluebell.mobile.utils;
 
-import android.util.Log;
-import android.util.Xml;
+//import android.util.Log;
+//import android.util.Xml;
 
+import android.util.Xml;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -238,10 +239,10 @@ public class XmlElement {
                 }
             }
         } catch (final XmlPullParserException e) {
-            Log.e(TAG, "parseXml: XmlPullParserException.");
+//            Log.e(TAG, "parseXml: XmlPullParserException.");
             rootElement = XmlElement.NULL_ELEMENT;
         } catch (final IOException e) {
-            Log.e(TAG, "parseXml: IOException.");
+//            Log.e(TAG, "parseXml: IOException.");
             rootElement = XmlElement.NULL_ELEMENT;
         }
         return rootElement;
@@ -258,11 +259,13 @@ public class XmlElement {
             throw new NullPointerException("parseXml: input is null.");
         }
         try {
+            
+//            XmlPullParser xmlPullParser = XmlPullParserFactory.newInstance().newPullParser();
             XmlPullParser xmlPullParser = Xml.newPullParser();
             xmlPullParser.setInput(new StringReader(xmlStr));
             return parse(xmlPullParser);
         } catch (final XmlPullParserException e) {
-            Log.e(TAG, "parseXml: XmlPullParserException occured.");
+//            Log.e(TAG, "parseXml: XmlPullParserException occured.");
             return XmlElement.NULL_ELEMENT;
         }
     }
