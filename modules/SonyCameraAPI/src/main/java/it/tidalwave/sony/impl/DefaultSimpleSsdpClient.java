@@ -73,7 +73,7 @@ public class DefaultSimpleSsdpClient implements SimpleSsdpClient
      * 
      ******************************************************************************************************************/
     @Override
-    public synchronized boolean search (final @Nonnull SearchResultHandler handler)  
+    public synchronized boolean search (final @Nonnull Callback handler)  
       {
         if (searching) 
           {

@@ -45,7 +45,7 @@ public interface SimpleSsdpClient
      * Handler interface for SSDP search result.
      * 
      ******************************************************************************************************************/
-    public static interface SearchResultHandler 
+    public static interface Callback 
       {
         /***************************************************************************************************************
          * 
@@ -93,9 +93,9 @@ public interface SimpleSsdpClient
      * 
      * Search API server device.
      *
-     * @param handler result handler
+     * @param calback result handler
      * @return true: start successfully, false: already searching now
      * 
      ******************************************************************************************************************/
-    public boolean search (@Nonnull SearchResultHandler handler);  
+    public boolean search (@Nonnull Callback calback);  
   }

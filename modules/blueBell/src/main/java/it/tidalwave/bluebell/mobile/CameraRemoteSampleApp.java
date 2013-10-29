@@ -119,7 +119,7 @@ public class CameraRemoteSampleApp extends Activity {
     private void searchDevices() {
         mListAdapter.clearDevices();
         setProgressBarIndeterminateVisibility(true);
-        mSsdpClient.search(new SimpleSsdpClient.SearchResultHandler() {
+        mSsdpClient.search(new SimpleSsdpClient.Callback() {
 
             @Override
             public void onDeviceFound(final ServerDevice device) {
