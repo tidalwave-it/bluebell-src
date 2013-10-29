@@ -34,11 +34,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.io.IOException;
-import android.util.Log;
 import it.tidalwave.bluebell.net.impl.DefaultHttpClient;
 import it.tidalwave.bluebell.net.impl.XmlElement;
 import it.tidalwave.sony.ServerDevice;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -48,10 +48,9 @@ import lombok.Getter;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class DefaultServerDevice implements ServerDevice 
   {
-    private static final String TAG = DefaultServerDevice.class.getSimpleName();
-    
 //    private final SimpleHttpClient httpClient = new DefaultSimpleHttpClient();
 
     @Getter
@@ -152,11 +151,11 @@ public class DefaultServerDevice implements ServerDevice
         try 
           {
             ddXml = new DefaultHttpClient().get(ddUrl); // FIXME
-            Log.d(TAG, "fetch() httpGet done.");
+            log.debug("fetch() httpGet done.");
           } 
         catch (IOException e) 
           {
-            Log.e(TAG, "fetch: IOException.", e);
+            log.error("fetch(): IOException.", e);
             return null;
           }
         /*
@@ -207,7 +206,7 @@ public class DefaultServerDevice implements ServerDevice
               }
           }
   
-        Log.d(TAG, "fetch () parsing XML done.");
+        log.debug("fetch() parsing XML done.");
         return device;
       }
 

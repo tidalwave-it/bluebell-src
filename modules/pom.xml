@@ -46,6 +46,7 @@
     <properties>
         <android.version>4.0.1.2</android.version>
         <xmlpull.version>1.1.3.1</xmlpull.version>
+        <slf4j.version>1.6.1</slf4j.version>
         <tft.lombok.version>1.12.2</tft.lombok.version>
     </properties>
 
@@ -73,6 +74,16 @@
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>jsr305</artifactId>
                 <version>1.3.7</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-android</artifactId>
+                <version>${slf4j.version}-RC1</version>
             </dependency>
 
             <!-- Androlog is a logging and reporting library for Android -->

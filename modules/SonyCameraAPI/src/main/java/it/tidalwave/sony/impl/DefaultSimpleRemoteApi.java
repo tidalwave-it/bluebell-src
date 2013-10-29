@@ -34,12 +34,12 @@ import java.io.IOException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import android.util.Log;
 import it.tidalwave.bluebell.net.impl.DefaultHttpClient;
 import it.tidalwave.bluebell.net.HttpClient;
 import it.tidalwave.sony.ServerDevice.ApiService;
 import it.tidalwave.sony.ServerDevice;
 import it.tidalwave.sony.SimpleRemoteApi;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -49,6 +49,7 @@ import it.tidalwave.sony.SimpleRemoteApi;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class DefaultSimpleRemoteApi implements SimpleRemoteApi
   {
     private static final String CAMERA_SERVICE = "camera";
@@ -120,9 +121,9 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
             try 
               {
                 request.put("params", params);
-                log("Request:  " + request.toString());
+                log.info("Request: {}", request);
                 final String response = httpClient.post(url, request.toString());
-                log("Response: " + response);
+                log.info("Response: {}", response);
                 
                 return new JSONObject(response);
               } 
@@ -139,9 +140,9 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
             try 
               {
                 request.put("params", params);
-                log("Request:  " + request.toString());
+                log.info("Request: {}", request);
                 final String response = httpClient.post(url, request.toString(), timeout);
-                log("Response: " + response);
+                log.info("Response: {}", response);
 
                 return new JSONObject(response);
               } 
@@ -364,14 +365,5 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
           }
         
         throw new IllegalStateException("actionUrl not found.");
-      }
-
-    // Output a log line.
-    private void log (final @Nonnull String msg)
-      {
-        if (FULL_LOG) 
-          {
-            Log.d(TAG, msg);
-          }
       }
   }

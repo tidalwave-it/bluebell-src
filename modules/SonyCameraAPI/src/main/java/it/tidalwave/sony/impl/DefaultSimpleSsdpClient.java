@@ -38,7 +38,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketException;
 import it.tidalwave.sony.ServerDevice;
 import it.tidalwave.sony.SimpleSsdpClient;
-import android.util.Log;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -49,10 +49,9 @@ import android.util.Log;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class DefaultSimpleSsdpClient implements SimpleSsdpClient
   {
-    private static final String TAG = DefaultSimpleSsdpClient.class.getSimpleName();
-
     private final static int SSDP_RECEIVE_TIMEOUT = 10000; // msec
     
     private final static int PACKET_BUFFER_SIZE = 1024;
@@ -77,7 +76,7 @@ public class DefaultSimpleSsdpClient implements SimpleSsdpClient
       {
         if (searching) 
           {
-            Log.w(TAG, "search() already searching.");
+            log.warn("search() already searching.");
             return false;
           }
         
@@ -86,7 +85,7 @@ public class DefaultSimpleSsdpClient implements SimpleSsdpClient
             throw new NullPointerException("handler is null.");
           }
         
-        Log.i(TAG, "search() Start.");
+        log.info("search() Start.");
 
         final String ssdpRequest = "M-SEARCH * HTTP/1.1\r\n"
                 + String.format("HOST: %s:%d\r\n", SSDP_ADDR, SSDP_PORT)
@@ -113,7 +112,7 @@ public class DefaultSimpleSsdpClient implements SimpleSsdpClient
                     final InetSocketAddress iAddress = new InetSocketAddress(SSDP_ADDR, SSDP_PORT);
                     packet = new DatagramPacket(sendData, sendData.length, iAddress);
                     // send 3 times
-                    Log.i(TAG, "search() Send Datagram packet 3 times.");
+                    log.info("search() Send Datagram packet 3 times.");
                     socket.send(packet);
                     Thread.sleep(100);
                     socket.send(packet);
@@ -126,12 +125,12 @@ public class DefaultSimpleSsdpClient implements SimpleSsdpClient
                   }
                 catch (SocketException e) 
                   {
-                    Log.e(TAG, "search() DatagramSocket error:", e);
+                    log.error("search() DatagramSocket error:", e);
                     handler.onErrorFinished();
                   }
                 catch (IOException e) 
                   {
-                    Log.e(TAG, "search() IOException:", e);
+                    log.error("search() IOException:", e);
                     handler.onErrorFinished();
                   }
 
@@ -172,12 +171,12 @@ public class DefaultSimpleSsdpClient implements SimpleSsdpClient
                       }
                     catch (InterruptedIOException e) 
                       {
-                        Log.d(TAG, "search() Timeout.");
+                        log.debug("search() Timeout.");
                         break;
                       } 
                     catch (IOException e) 
                       {
-                        Log.d(TAG, "search() IOException.");
+                        log.debug("search() IOException.");
                         handler.onErrorFinished();
                         return;
                       }
