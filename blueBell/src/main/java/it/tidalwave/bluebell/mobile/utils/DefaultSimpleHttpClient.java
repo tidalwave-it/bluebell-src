@@ -210,25 +210,19 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
             
             if (inputStream == null) 
               {
-                Log.w(TAG, "httpPost: Response Code Error: " + responseCode
-                        + ": " + url);
                 throw new IOException("Response Error:" + responseCode);
               }
           } 
         catch (final SocketTimeoutException e) 
           {
-            Log.w(TAG, "httpPost: Timeout: " + url);
-            throw new IOException();
+            throw new IOException("httpPost: Timeout: " + url);
           } 
         catch (final MalformedURLException e) 
           {
-            Log.w(TAG, "httpPost: MalformedUrlException: " + url);
-            throw new IOException();
+            throw new IOException("httpPost: MalformedUrlException: " + url);
           }
         catch (final IOException e) 
           {
-            Log.w(TAG, "httpPost: IOException: " + e.getMessage());
-          
             if (httpConn != null) 
               {
                 httpConn.disconnect();
@@ -279,7 +273,6 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
           }
         catch (IOException e) 
           {
-            Log.w(TAG, "httpPost: read error: " + e.getMessage());
             throw e;
           }
         finally 
