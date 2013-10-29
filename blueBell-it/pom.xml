@@ -16,6 +16,8 @@
   <name>blueBell-it - Integration tests</name>
 
   <properties>
+        <buildNumber></buildNumber> <!-- FIXME -->
+        <buildNumberSep></buildNumberSep>
       <!--
         When not running a release, we are deploying the plain artifact (so no classifier)
         This is overridden during the release.

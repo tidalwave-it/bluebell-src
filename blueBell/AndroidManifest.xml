@@ -21,22 +21,21 @@
   </application>-->
 
     <application
-        android:name="SampleApplication"
+        android:name="it.tidalwave.bluebell.mobile.SampleApplication"
         android:allowBackup="true"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Light">
         <activity
-            android:name=".CameraRemoteSampleApp"
+            android:name="it.tidalwave.bluebell.mobile.CameraRemoteSampleApp"
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".SampleCameraActivity"
+            android:name="it.tidalwave.bluebell.mobile.SampleCameraActivity"
             android:label="@string/sample_camera"
             android:screenOrientation="landscape" />
     </application>
