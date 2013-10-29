@@ -70,18 +70,13 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient {
                 inputStream = httpConn.getInputStream();
             }
             if (inputStream == null) {
-                Log.w(TAG, "httpGet: Response Code Error: " + responseCode
-                        + ": " + url);
                 throw new IOException("Response Error:" + responseCode);
             }
         } catch (final SocketTimeoutException e) {
-            Log.w(TAG, "httpGet: Timeout: " + url);
-            throw new IOException();
+            throw new IOException("httpGet: Timeout: " + url);
         } catch (final MalformedURLException e) {
-            Log.w(TAG, "httpGet: MalformedUrlException: " + url);
-            throw new IOException();
+            throw new IOException("httpGet: MalformedUrlException: " + url);
         } catch (final IOException e) {
-            Log.w(TAG, "httpGet: " + e.getMessage());
             if (httpConn != null) {
                 httpConn.disconnect();
             }
