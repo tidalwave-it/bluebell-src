@@ -48,6 +48,28 @@
         <tft.javac.target>1.5</tft.javac.target>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+              <groupId>it.tidalwave.bluebell</groupId>
+              <artifactId>blueBell</artifactId>
+              <version>1.0-ALPHA-1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>it.tidalwave.bluebell</groupId>
+                <artifactId>bluebell-application</artifactId>
+                <version>1.0-ALPHA-1-SNAPSHOT</version>
+                <type>apk</type>
+            </dependency>
+            <dependency>                
+                <groupId>it.tidalwave.bluebell</groupId>
+                <artifactId>bluebell-it</artifactId>
+                <version>1.0-ALPHA-1-SNAPSHOT</version>
+                <type>apk</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    
     <build>
         <pluginManagement>
             <plugins>

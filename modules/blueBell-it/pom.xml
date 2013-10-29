@@ -45,8 +45,6 @@
     <dependency>
       <groupId>it.tidalwave.bluebell</groupId>
       <artifactId>blueBell</artifactId>
-      <type>jar</type>
-      <version>1.0-ALPHA-1-SNAPSHOT</version>
     </dependency>
     <dependency>
        <groupId>junit</groupId>
