@@ -1,7 +1,30 @@
 /*
- * Copyright 2013 Sony Corporation
+ * #%L
+ * *********************************************************************************************************************
+ *
+ * blueBell
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/bluebell-src
+ * %%
+ * Copyright (C) 2013 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations under the License.
+ *
+ * *********************************************************************************************************************
+ *
+ * $Id$
+ *
+ * *********************************************************************************************************************
+ * #L%
  */
-
 package it.tidalwave.sony;
 
 import java.io.ByteArrayOutputStream;
@@ -10,16 +33,22 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
+/***********************************************************************************************************************
+ *
  * A parser class for Liveview data Packet defined by Camera Remote API
- */
-public class SimpleLiveviewSlicer {
-
+ * 
+ * @author  Fabrizio Giudici
+ * @version $Id$
+ *
+ **********************************************************************************************************************/
+public class SimpleLiveviewSlicer 
+  {
     /**
      * Payload data class. See also Camera Remote API specification document to
      * know the data structure.
      */
-    public static class Payload {
+    public static class Payload 
+      {
         /** jpeg data container */
         final public byte[] jpegData;
 
@@ -29,11 +58,12 @@ public class SimpleLiveviewSlicer {
         /**
          * Constructor
          */
-        private Payload(byte[] jpegData, byte[] paddingData) {
+        private Payload(byte[] jpegData, byte[] paddingData)
+          {
             this.jpegData = jpegData;
             this.paddingData = paddingData;
-        }
-    }
+          }
+      }
 
     private static final int CONNECTION_TIMEOUT = 2000; // [msec]
 
@@ -47,10 +77,13 @@ public class SimpleLiveviewSlicer {
      *            of startLiveview API.
      * @throws IOException generic errors or exception.
      */
-    public void open(String liveviewUrl) throws IOException {
-        if (mInputStream != null || mHttpConn != null) {
+    public void open(String liveviewUrl)
+      throws IOException 
+      {
+        if (mInputStream != null || mHttpConn != null) 
+          {
             throw new IllegalStateException("Slicer is already open.");
-        }
+          }
 
         final URL _url = new URL(liveviewUrl);
         mHttpConn = (HttpURLConnection) _url.openConnection();
@@ -58,29 +91,37 @@ public class SimpleLiveviewSlicer {
         mHttpConn.setConnectTimeout(CONNECTION_TIMEOUT);
         mHttpConn.connect();
 
-        if (mHttpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+        if (mHttpConn.getResponseCode() == HttpURLConnection.HTTP_OK) 
+          {
             mInputStream = mHttpConn.getInputStream();
-        }
-        if (mInputStream == null) {
+          }
+        
+        if (mInputStream == null) 
+          {
             throw new IOException("open error: " + liveviewUrl);
-        }
-    }
+          }
+      }
 
     /**
      * Closes the connection.
      * 
      * @throws IOException generic errors or exception.
      */
-    public void close() throws IOException {
-        if (mInputStream != null) {
+    public void close()
+      throws IOException
+      {
+        if (mInputStream != null) 
+          {
             mInputStream.close();
             mInputStream = null;
-        }
-        if (mHttpConn != null) {
+          }
+        
+        if (mHttpConn != null) 
+          {
             mHttpConn.disconnect();
             mHttpConn = null;
-        }
-    }
+          }
+      }
 
     /**
      * Reads liveview stream and slice one Packet. If server is not ready for
@@ -90,33 +131,47 @@ public class SimpleLiveviewSlicer {
      * @return Payload data of sliced Packet
      * @throws IOException generic errors or exception.
      */
-    public Payload nextPayload() throws IOException {
-        if (mInputStream != null) {
+    public Payload nextPayload() 
+       throws IOException
+      {
+        if (mInputStream != null) 
+          {
             // Common Header
             int readLength = 1 + 1 + 2 + 4;
             byte[] commonHeader = readBytes(mInputStream, readLength);
-            if (commonHeader == null || commonHeader.length != readLength) {
+            
+            if (commonHeader == null || commonHeader.length != readLength)
+              {
                 throw new IOException("Cannot read stream for common header.");
-            }
-            if (commonHeader[0] != (byte) 0xFF) {
+              }
+            
+            if (commonHeader[0] != (byte) 0xFF) 
+              {
                 throw new IOException("Unexpected data format. (Start byte)");
-            }
-            if (commonHeader[1] != (byte) 0x01) {
+              }
+            
+            if (commonHeader[1] != (byte) 0x01) 
+              {
                 throw new IOException("Unexpected data format. (Payload byte)");
-            }
+              }
 
             // Payload Header
             readLength = 4 + 3 + 1 + 4 + 1 + 115;
             byte[] payloadHeader = readBytes(mInputStream, readLength);
-            if (payloadHeader == null || payloadHeader.length != readLength) {
+            
+            if (payloadHeader == null || payloadHeader.length != readLength)
+              {
                 throw new IOException("Cannot read stream for payload header.");
-            }
+              }
+            
             if (payloadHeader[0] != (byte) 0x24
-                    || payloadHeader[1] != (byte) 0x35
-                    || payloadHeader[2] != (byte) 0x68
-                    || payloadHeader[3] != (byte) 0x79) {
+             || payloadHeader[1] != (byte) 0x35
+             || payloadHeader[2] != (byte) 0x68
+             || payloadHeader[3] != (byte) 0x79) 
+              {
                 throw new IOException("Unexpected data format. (Start code)");
-            }
+              }
+            
             int jpegSize = bytesToInt(payloadHeader, 4, 3);
             int paddingSize = bytesToInt(payloadHeader, 7, 1);
 
@@ -125,38 +180,51 @@ public class SimpleLiveviewSlicer {
             byte[] paddingData = readBytes(mInputStream, paddingSize);
 
             return new Payload(jpegData, paddingData);
-        }
+          }
+     
         return null;
-    }
+      }
 
     // Converts byte array to int.
-    private static int bytesToInt(byte[] byteData, int startIndex, int count) {
+    private static int bytesToInt (byte[] byteData, int startIndex, int count)
+      {
         int ret = 0;
-        for (int i = startIndex; i < startIndex + count; i++) {
+        
+        for (int i = startIndex; i < startIndex + count; i++) 
+          {
             ret = (ret << 8) | (byteData[i] & 0xff);
-        }
+          }
+        
         return ret;
-    }
+      }
 
     // Reads byte array from the indicated input stream.
     private static byte[] readBytes(InputStream in, int length)
-            throws IOException {
+      throws IOException 
+      {
         ByteArrayOutputStream tmpByteArray = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
-        while (true) {
-            int trialReadlen = Math.min(buffer.length,
-                    length - tmpByteArray.size());
+        
+        while (true) 
+          {
+            int trialReadlen = Math.min(buffer.length, length - tmpByteArray.size());
             int readlen = in.read(buffer, 0, trialReadlen);
-            if (readlen < 0) {
+            
+            if (readlen < 0) 
+              {
                 break;
-            }
+              }
+            
             tmpByteArray.write(buffer, 0, readlen);
-            if (length <= tmpByteArray.size()) {
+            
+            if (length <= tmpByteArray.size()) 
+              {
                 break;
-            }
-        }
+              }
+          }
+        
         byte[] ret = tmpByteArray.toByteArray();
         tmpByteArray.close();
         return ret;
-    }
-}
+      }
+  }
