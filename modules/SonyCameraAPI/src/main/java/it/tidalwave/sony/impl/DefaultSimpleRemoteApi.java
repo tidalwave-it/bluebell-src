@@ -27,6 +27,7 @@
  */
 package it.tidalwave.sony.impl;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.io.IOException;
@@ -50,6 +51,8 @@ import it.tidalwave.sony.SimpleRemoteApi;
  **********************************************************************************************************************/
 public class DefaultSimpleRemoteApi implements SimpleRemoteApi
   {
+    private static final String CAMERA_SERVICE = "camera";
+      
     private static final String TAG = DefaultSimpleRemoteApi.class.getSimpleName();
 
     // If you'd like to suppress detailed log output, change this value into
@@ -57,12 +60,99 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
     private static final boolean FULL_LOG = true;
 
     // API server device you want to send requests.
-    private ServerDevice mTargetServer;
+    private final ServerDevice mTargetServer;
 
     // Request ID of API calling. This will be counted up by each API calling.
     private int mRequestId;
     
     private final HttpClient httpClient = new DefaultHttpClient();
+    
+    class Call
+      {
+        private final JSONObject request = new JSONObject();
+        
+        private final String url;
+        
+        public Call (final @Nonnull String CAMERA_SERVICE) 
+          throws IOException
+          {
+            try 
+              {
+                url = findActionListUrl(CAMERA_SERVICE) + "/" + CAMERA_SERVICE;
+                request.put("version", "1.0");
+              }
+            catch (JSONException e)
+              {
+                throw new IOException(e);
+              }
+          }
+        
+        @Nonnull
+        public Call put (final @Nonnull String name, final @Nonnull Object value)
+          throws IOException
+          {
+            try 
+              {
+                request.put(name, value);
+                return this;
+              }
+            catch (JSONException e)
+              {
+                throw new IOException(e);
+              }
+          }
+        
+        @Nonnull
+        public Call withMethod (final @Nonnull String methodName)
+          throws IOException
+          {
+            try 
+              {
+                request.put("method", methodName);
+                return this;
+              }
+            catch (JSONException e)
+              {
+                throw new IOException(e);
+              }
+          }
+                
+        @Nonnull
+        public JSONObject post()
+          throws IOException
+          {
+            try 
+              {
+                log("Request:  " + request.toString());
+                final String response = httpClient.post(url, request.toString());
+                log("Response: " + response);
+                
+                return new JSONObject(response);
+              } 
+            catch (JSONException e)
+              {
+                throw new IOException(e);
+              }
+          }
+        
+        @Nonnull
+        public JSONObject post (final @Nonnegative int timeout)
+          throws IOException
+          {
+            try 
+              {
+                log("Request:  " + request.toString());
+                final String response = httpClient.post(url, request.toString(), timeout);
+                log("Response: " + response);
+
+                return new JSONObject(response);
+              } 
+            catch (JSONException e)
+              {
+                throw new IOException(e);
+              }
+          }
+      }
 
     /*******************************************************************************************************************
      * 
@@ -86,24 +176,9 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
     public JSONObject getAvailableApiList()
       throws IOException 
       {
-        String service = "camera";
-        
-        try 
-          {
-            JSONObject requestJson = new JSONObject().put("method",  "getAvailableApiList")
-                                                     .put("params",  new JSONArray()).put("id", id())
-                                                     .put("version", "1.0");
-            String url = findActionListUrl(service) + "/" + service;
-
-            log("Request:  " + requestJson.toString());
-            String responseJson = httpClient.post(url, requestJson.toString());
-            log("Response: " + responseJson);
-            return new JSONObject(responseJson);
-          } 
-        catch (JSONException e) 
-          {
-            throw new IOException(e);
-          }
+        final Call call = new Call(CAMERA_SERVICE).withMethod("getAvailableApiList")
+                                                  .put("params",  new JSONArray()).put("id", id());
+        return call.post();
     }
 
     /*******************************************************************************************************************
@@ -115,24 +190,9 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
     public JSONObject getApplicationInfo()
       throws IOException 
       {
-        String service = "camera";
-        
-        try 
-          {
-            JSONObject requestJson = new JSONObject().put("method", "getApplicationInfo")
-                                                     .put("params", new JSONArray()).put("id", id())
-                                                     .put("version", "1.0");
-            String url = findActionListUrl(service) + "/" + service;
-
-            log("Request:  " + requestJson.toString());
-            String responseJson = httpClient.post(url,  requestJson.toString());
-            log("Response: " + responseJson);
-            return new JSONObject(responseJson);
-          } 
-        catch (JSONException e) 
-          {
-            throw new IOException(e);
-          }
+        final Call call = new Call(CAMERA_SERVICE).withMethod("getApplicationInfo")
+                                                  .put("params",  new JSONArray()).put("id", id());
+        return call.post();
       }
 
     /*******************************************************************************************************************
@@ -144,25 +204,9 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
     public JSONObject getShootMode()
       throws IOException
       {
-        String service = "camera";
-        
-        try 
-          {
-            JSONObject requestJson = new JSONObject()
-                    .put("method", "getShootMode")
-                    .put("params", new JSONArray()).put("id", id())
-                    .put("version", "1.0");
-            String url = findActionListUrl(service) + "/" + service;
-
-            log("Request:  " + requestJson.toString());
-            String responseJson = httpClient.post(url, requestJson.toString());
-            log("Response: " + responseJson);
-            return new JSONObject(responseJson);
-          } 
-        catch (JSONException e) 
-          {
-            throw new IOException(e);
-          }
+        final Call call = new Call(CAMERA_SERVICE).withMethod("getShootMode")
+                                                  .put("params",  new JSONArray()).put("id", id());
+        return call.post();
     }
 
     /*******************************************************************************************************************
@@ -174,25 +218,10 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
     public JSONObject setShootMode (final @Nonnull String shootMode) 
       throws IOException
       {
-        String service = "camera";
-        
-        try 
-          {
-            JSONObject requestJson = new JSONObject()
-                    .put("method", "setShootMode")
-                    .put("params", new JSONArray().put(shootMode))
-                    .put("id", id()).put("version", "1.0");
-            String url = findActionListUrl(service) + "/" + service;
-
-            log("Request:  " + requestJson.toString());
-            String responseJson = httpClient.post(url, requestJson.toString());
-            log("Response: " + responseJson);
-            return new JSONObject(responseJson);
-          }
-        catch (JSONException e)
-          {
-            throw new IOException(e);
-          }
+        final Call call = new Call(CAMERA_SERVICE).withMethod("setShootMode")
+                                                  .put("params", new JSONArray().put(shootMode))
+                                                                                .put("id",     id());
+        return call.post();
       }
 
     /*******************************************************************************************************************
@@ -204,25 +233,9 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
     public JSONObject getAvailableShootMode() 
       throws IOException
       {
-        String service = "camera";
-        
-        try 
-          {
-            JSONObject requestJson = new JSONObject()
-                    .put("method", "getAvailableShootMode")
-                    .put("params", new JSONArray()).put("id", id())
-                    .put("version", "1.0");
-            String url = findActionListUrl(service) + "/" + service;
-
-            log("Request:  " + requestJson.toString());
-            String responseJson = httpClient.post(url, requestJson.toString());
-            log("Response: " + responseJson);
-            return new JSONObject(responseJson);
-          }
-        catch (JSONException e) 
-          {
-            throw new IOException(e);
-          }
+        final Call call = new Call(CAMERA_SERVICE).withMethod("getAvailableShootMode")
+                                                  .put("params",  new JSONArray()).put("id", id());
+        return call.post();
       }
 
     /*******************************************************************************************************************
@@ -234,26 +247,9 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
     public JSONObject getSupportedShootMode()
       throws IOException
       {
-        String service = "camera";
-      
-        try 
-          {
-            JSONObject requestJson = new JSONObject()
-                    .put("method", "getSupportedShootMode")
-                    .put("params", new JSONArray()).put("id", id())
-                    .put("version", "1.0");
-            String url = findActionListUrl(service) + "/" + service;
-
-            log("Request:  " + requestJson.toString());
-            String responseJson = httpClient.post(url,
-                    requestJson.toString());
-            log("Response: " + responseJson);
-            return new JSONObject(responseJson);
-          }
-        catch (JSONException e)
-          {
-            throw new IOException(e);
-          }
+        final Call call = new Call(CAMERA_SERVICE).withMethod("getSupportedShootMode")
+                                                  .put("params",  new JSONArray()).put("id", id());
+        return call.post();
       }
 
     /*******************************************************************************************************************
@@ -265,26 +261,9 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
     public JSONObject startLiveview() 
       throws IOException 
       {
-        String service = "camera";
-      
-        try 
-          {
-            JSONObject requestJson = new JSONObject()
-                    .put("method", "startLiveview")
-                    .put("params", new JSONArray()).put("id", id())
-                    .put("version", "1.0");
-            String url = findActionListUrl(service) + "/" + service;
-
-            log("Request:  " + requestJson.toString());
-            String responseJson = httpClient.post(url,
-                    requestJson.toString());
-            log("Response: " + responseJson);
-            return new JSONObject(responseJson);
-          }
-        catch (JSONException e) 
-          {
-            throw new IOException(e);
-          }
+        final Call call = new Call(CAMERA_SERVICE).withMethod("startLiveview")
+                                                  .put("params", new JSONArray()).put("id", id());
+        return call.post();
       }
 
     /*******************************************************************************************************************
@@ -296,26 +275,9 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
     public JSONObject stopLiveview() 
       throws IOException 
       {
-        String service = "camera";
-      
-        try 
-          {
-            JSONObject requestJson = new JSONObject()
-                    .put("method", "stopLiveview")
-                    .put("params", new JSONArray()).put("id", id())
-                    .put("version", "1.0");
-            String url = findActionListUrl(service) + "/" + service;
-
-            log("Request:  " + requestJson.toString());
-            String responseJson = httpClient.post(url,
-                    requestJson.toString());
-            log("Response: " + responseJson);
-            return new JSONObject(responseJson);
-          }
-        catch (JSONException e)
-          {
-            throw new IOException(e);
-          }
+        final Call call = new Call(CAMERA_SERVICE).withMethod("stopLiveview")
+                                                  .put("params", new JSONArray()).put("id", id());
+        return call.post();
       }
 
     /*******************************************************************************************************************
@@ -327,26 +289,9 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
     public JSONObject startRecMode() 
       throws IOException 
       {
-        String service = "camera";
-        
-        try 
-          {
-            JSONObject requestJson = new JSONObject()
-                    .put("method", "startRecMode")
-                    .put("params", new JSONArray()).put("id", id())
-                    .put("version", "1.0");
-            String url = findActionListUrl(service) + "/" + service;
-
-            log("Request:  " + requestJson.toString());
-            String responseJson = httpClient.post(url,
-                    requestJson.toString());
-            log("Response: " + responseJson);
-            return new JSONObject(responseJson);
-          }
-        catch (JSONException e) 
-          {
-            throw new IOException(e);
-          }
+        final Call call = new Call(CAMERA_SERVICE).withMethod("startRecMode")
+                                                  .put("params", new JSONArray()).put("id", id());
+        return call.post();
       }
 
     /*******************************************************************************************************************
@@ -358,26 +303,9 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
     public JSONObject stopRecMode()
       throws IOException 
       {
-        String service = "camera";
-        
-        try 
-          {
-            JSONObject requestJson = new JSONObject()
-                    .put("method", "stopRecMode")
-                    .put("params", new JSONArray()).put("id", id())
-                    .put("version", "1.0");
-            String url = findActionListUrl(service) + "/" + service;
-
-            log("Request:  " + requestJson.toString());
-            String responseJson = httpClient.post(url,
-                    requestJson.toString());
-            log("Response: " + responseJson);
-            return new JSONObject(responseJson);
-          }
-        catch (JSONException e)
-          {
-            throw new IOException(e);
-          }
+        final Call call = new Call(CAMERA_SERVICE).withMethod("stopRecMode")
+                                                  .put("params", new JSONArray()).put("id", id());
+        return call.post();
       }
 
     /*******************************************************************************************************************
@@ -389,26 +317,9 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
     public JSONObject actTakePicture()
       throws IOException 
       {
-        String service = "camera";
-        
-        try
-          {
-            JSONObject requestJson = new JSONObject()
-                    .put("method", "actTakePicture")
-                    .put("params", new JSONArray()).put("id", id())
-                    .put("version", "1.0");
-            String url = findActionListUrl(service) + "/" + service;
-
-            log("Request:  " + requestJson.toString());
-            String responseJson = httpClient.post(url,
-                    requestJson.toString());
-            log("Response: " + responseJson);
-            return new JSONObject(responseJson);
-          } 
-        catch (JSONException e) 
-          {
-            throw new IOException(e);
-          }
+        final Call call = new Call(CAMERA_SERVICE).put("params", new JSONArray())
+                                                  .put("id", id());
+        return call.post();
       }
 
     /*******************************************************************************************************************
@@ -420,26 +331,9 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
     public JSONObject startMovieRec() 
       throws IOException
       {
-        String service = "camera";
-        
-        try 
-          {
-            JSONObject requestJson = new JSONObject()
-                    .put("method", "startMovieRec")
-                    .put("params", new JSONArray()).put("id", id())
-                    .put("version", "1.0");
-            String url = findActionListUrl(service) + "/" + service;
-
-            log("Request:  " + requestJson.toString());
-            String responseJson = httpClient.post(url,
-                    requestJson.toString());
-            log("Response: " + responseJson);
-            return new JSONObject(responseJson);
-          }
-        catch (JSONException e)
-          {
-            throw new IOException(e);
-          }
+        final Call call = new Call(CAMERA_SERVICE).withMethod("startMovieRec")
+                                                  .put("params", new JSONArray()).put("id", id());
+        return call.post();
       }
 
     /*******************************************************************************************************************
@@ -451,26 +345,9 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
     public JSONObject stopMovieRec() 
       throws IOException 
       {
-        String service = "camera";
-      
-        try 
-          {
-            JSONObject requestJson = new JSONObject()
-                    .put("method", "stopMovieRec")
-                    .put("params", new JSONArray()).put("id", id())
-                    .put("version", "1.0");
-            String url = findActionListUrl(service) + "/" + service;
-
-            log("Request:  " + requestJson.toString());
-            String responseJson = httpClient.post(url,
-                    requestJson.toString());
-            log("Response: " + responseJson);
-            return new JSONObject(responseJson);
-          } 
-        catch (JSONException e)
-          {
-            throw new IOException(e);
-          }
+        final Call call = new Call(CAMERA_SERVICE).withMethod("stopMovieRec")
+                                                  .put("params", new JSONArray()).put("id", id());
+        return call.post();
       }
 
     /*******************************************************************************************************************
@@ -479,29 +356,14 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
      * 
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject getEvent (final boolean longPollingFlag) 
+    public JSONObject getEvent (final boolean longPolling) 
       throws IOException 
       {
-        String service = "camera";
-      
-        try 
-          {
-            JSONObject requestJson = new JSONObject().put("method", "getEvent")
-                    .put("params", new JSONArray().put(longPollingFlag))
-                    .put("id", id()).put("version", "1.0");
-            String url = findActionListUrl(service) + "/" + service;
-            int longPollingTimeout = (longPollingFlag) ? 20000 : 8000; // msec
-
-            log("Request:  " + requestJson.toString());
-            String responseJson = httpClient.post(url,
-                    requestJson.toString(), longPollingTimeout);
-            log("Response: " + responseJson);
-            return new JSONObject(responseJson);
-          } 
-        catch (JSONException e) 
-          {
-            throw new IOException(e);
-          }
+        final Call call = new Call(CAMERA_SERVICE).withMethod("getEvent")
+                                                  .put("params", new JSONArray().put(longPolling))
+                                                                                .put("id", id());
+        final int longPollingTimeout = longPolling ? 20000 : 8000; // msec
+        return call.post(longPollingTimeout);
       }
     
     // Retrieves Action List URL from Server information.
