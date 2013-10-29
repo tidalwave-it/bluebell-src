@@ -77,7 +77,7 @@ public class DefaultServerDevice implements ServerDevice
      * 
      ******************************************************************************************************************/
     @Override @Nullable
-    public String getIpAddres()
+    public String getIpAddress()
       {
         String ip = null;
         
@@ -269,4 +269,4 @@ public class DefaultServerDevice implements ServerDevice
         
         return url.substring(i + 3, j);
       }
-}
+  }
