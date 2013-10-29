@@ -4,21 +4,25 @@
 
 package it.tidalwave.bluebell.mobile;
 
-import android.util.Log;
-import it.tidalwave.bluebell.mobile.utils.DefaultSimpleHttpClient;
-import it.tidalwave.bluebell.mobile.utils.SimpleHttpClient;
-import it.tidalwave.bluebell.mobile.utils.XmlElement;
-
-import java.io.IOException;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.io.IOException;
+import android.util.Log;
+import it.tidalwave.bluebell.mobile.utils.DefaultSimpleHttpClient;
+import it.tidalwave.bluebell.mobile.utils.XmlElement;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A server device description class.
  */
-public class ServerDevice {
-
+public class ServerDevice 
+  {
     private static final String TAG = ServerDevice.class.getSimpleName();
     
 //    private final SimpleHttpClient httpClient = new DefaultSimpleHttpClient();
@@ -27,152 +31,87 @@ public class ServerDevice {
      * Camera Remote API service (category). For example, "camera", "guide" and
      * so on. "Action List URL" is API request target URL of each service.
      */
-    public static class ApiService {
-        private String mName;
-        private String mActionListUrl;
+    @AllArgsConstructor
+    public static class ApiService 
+      {
+        @Getter @Setter @Nonnull
+        private String name;
 
-        /**
-         * Constructor
-         * 
-         * @param name category name
-         * @param actionListUrl action list URL of the category
-         */
-        public ApiService(String name, String actionListUrl) {
-            mName = name;
-            mActionListUrl = actionListUrl;
-        }
-
-        /**
-         * Returns the category name.
-         * 
-         * @return category name.
-         */
-        public String getName() {
-            return mName;
-        }
-
-        /**
-         * Sets a category name.
-         * 
-         * @param name category name
-         */
-        public void setName(String name) {
-            this.mName = name;
-        }
-
-        /**
-         * Returns the action list URL of the category.
-         * 
-         * @return action list URL
-         */
-        public String getActionListUrl() {
-            return mActionListUrl;
-        }
-
-        /**
-         * Sets an action list URL of the category.
-         * 
-         * @param actionListUrl action list URL of the category
-         */
-        public void setActionListUrl(String actionListUrl) {
-            this.mActionListUrl = actionListUrl;
-        }
+        @Getter @Setter @Nonnull
+        private String actionListUrl;
 
         /**
          * Returns the endpoint URL of the category.
          * 
          * @return endpoint URL
          */
-        public String getEndpointUrl() {
+        @Nonnull
+        public String getEndpointUrl()
+          {
             String url = null;
-            if (mActionListUrl == null || mName == null) {
+            
+            if (actionListUrl == null || name == null) 
+              {
                 url = null;
-            } else if (mActionListUrl.endsWith("/")) {
-                url = mActionListUrl + mName;
-            } else {
-                url = mActionListUrl + "/" + mName;
-            }
+              } 
+            else if (actionListUrl.endsWith("/")) 
+              {
+                url = actionListUrl + name;
+              }
+            else 
+              {
+                url = actionListUrl + "/" + name;
+              }
+            
             return url;
-        }
-    }
+          }
+      }
 
-    private String mDDUrl;
-    private String mFriendlyName;
-    private String mModelName;
-    private String mUDN;
-    private String mIconUrl;
-    private List<ApiService> mApiServices;
-
-    private ServerDevice() {
-        mApiServices = new ArrayList<ServerDevice.ApiService>();
-    }
-
-    /**
-     * Returns URL of Device Description XML
-     * 
-     * @return URL string
-     */
-    public String getDDUrl() {
-        return mDDUrl;
-    }
-
-    /**
-     * Returns a value of friendlyName in DD.
-     * 
-     * @return
-     */
-    public String getFriendlyName() {
-        return mFriendlyName;
-    }
-
-    /**
-     * Returns a value of modelName in DD.
-     * 
-     * @return
-     */
-    public String getModelName() {
-        return mModelName;
-    }
-
-    /**
-     * Returns a value of UDN in DD.
-     * 
-     * @return
-     */
-    public String getUDN() {
-        return mUDN;
-    }
-
-    /**
-     * Returns URL of icon in DD.
-     * 
-     * @return
-     */
-    public String getIconUrl() {
-        return mIconUrl;
-    }
+    @Getter
+    private String ddUrl;
+    
+    @Getter
+    private String friendlyName;
+    
+    @Getter
+    private String modelName;
+    
+    @Getter
+    private String udn;
+    
+    @Getter
+    private String iconUrl;
+    
+    private final List<ApiService> apiServices = new ArrayList<ServerDevice.ApiService>();
 
     /**
      * Returns IP address of the DD.
      * 
      * @return
      */
-    public String getIpAddres() {
+    @Nullable
+    public String getIpAddres()
+      {
         String ip = null;
-        if (mDDUrl != null) {
-            return toHost(mDDUrl);
-        }
+        
+        if (ddUrl != null) 
+          {
+            return toHost(ddUrl);
+          }
+        
         return ip;
-    }
+      }
 
     /**
      * Returns a list of categories that the server supports.
      * 
      * @return a list of categories
      */
-    public List<ApiService> getApiServices() {
-        return Collections.unmodifiableList(mApiServices);
-    }
+    @Nonnull
+    public List<ApiService> getApiServices()
+      {
+        return Collections.unmodifiableList(apiServices);
+      }   
 
     /**
      * Checks to see whether the server supports the category.
@@ -180,16 +119,22 @@ public class ServerDevice {
      * @param serviceName category name
      * @return true if it's supported.
      */
-    public boolean hasApiService(String serviceName) {
-        if (serviceName == null) {
-            return false;
-        }
-        for (ApiService apiService : mApiServices) {
-            if (serviceName.equals(apiService.getName())) {
-                return true;
-            }
-        }
-        return false;
+    public boolean hasApiService (final @CheckForNull String serviceName)
+      {
+//        if (serviceName == null) 
+//          {
+//            return false;
+//          }
+//        
+//        for (final ApiService apiService : apiServices) 
+//          {
+//            if (serviceName.equals(apiService.getName()))
+//              {
+//                return true;
+//              }
+//          }
+        
+        return getApiService(serviceName) != null;
     }
 
     /**
@@ -198,23 +143,29 @@ public class ServerDevice {
      * @param serviceName category name
      * @return ApiService object
      */
-    public ApiService getApiService(String serviceName) {
-        if (serviceName == null) {
+    @CheckForNull
+    public ApiService getApiService (@Nullable String serviceName)
+      {
+        if (serviceName == null) 
+          {
             return null;
-        }
-        for (ApiService apiService : mApiServices) {
-            if (serviceName.equals(apiService.getName())) {
+          }
+        
+        for (final ApiService apiService : apiServices)
+          {
+            if (serviceName.equals(apiService.getName())) 
+              {
                 return apiService;
-            }
-        }
+              }
+          }
+        
         return null;
     }
 
-    // Adds a ApiService object.
-    private void addApiService(String name, String actionUrl) {
-        ApiService service = new ApiService(name, actionUrl);
-        mApiServices.add(service);
-    }
+    private void addApiService (final @Nonnull String name, final @Nonnull String actionUrl)
+      {
+        apiServices.add(new ApiService(name, actionUrl));
+      }
 
     /**
      * Fetches device description xml file from server and parses it.
@@ -222,19 +173,26 @@ public class ServerDevice {
      * @param ddUrl URL of device description xml.
      * @return ServerDevice instance
      */
-    public static ServerDevice fetch(String ddUrl) {
-        if (ddUrl == null) {
+    @CheckForNull
+    public static ServerDevice fetch (@Nonnull String ddUrl) 
+      {
+        if (ddUrl == null) 
+          {
             throw new NullPointerException("ddUrl is null.");
-        }
+          }
 
         String ddXml = "";
-        try {
+        try 
+          {
             ddXml = new DefaultSimpleHttpClient().get(ddUrl); // FIXME
-            Log.d(TAG, "fetch () httpGet done.");
-        } catch (IOException e) {
+            Log.d(TAG, "fetch() httpGet done.");
+          } 
+        catch (IOException e) 
+          {
             Log.e(TAG, "fetch: IOException.", e);
             return null;
-        }/*
+          }
+        /*
           * catch (Exception e) { Log.e(TAG, "fetch: Exception.", e); return
           * null; }
           */
@@ -242,49 +200,49 @@ public class ServerDevice {
 
         // "root"
         ServerDevice device = null;
-        if ("root".equals(rootElement.getTagName())) {
+        
+        if ("root".equals(rootElement.getTagName())) 
+          {
             device = new ServerDevice();
-            device.mDDUrl = ddUrl;
+            device.ddUrl = ddUrl;
 
             // "device"
-            XmlElement deviceElement = rootElement.findChild("device");
-            device.mFriendlyName = deviceElement.findChild("friendlyName")
-                    .getValue();
-            device.mModelName = deviceElement.findChild("modelName").getValue();
-            device.mUDN = deviceElement.findChild("UDN").getValue();
+            final XmlElement deviceElement = rootElement.findChild("device");
+            device.friendlyName = deviceElement.findChild("friendlyName").getValue();
+            device.modelName = deviceElement.findChild("modelName").getValue();
+            device.udn = deviceElement.findChild("UDN").getValue();
 
             // "iconList"
-            XmlElement iconListElement = deviceElement.findChild("iconList");
-            List<XmlElement> iconElements = iconListElement
-                    .findChildren("icon");
-            for (XmlElement iconElement : iconElements) {
+            final XmlElement iconListElement = deviceElement.findChild("iconList");
+            final List<XmlElement> iconElements = iconListElement.findChildren("icon");
+            
+            for (final XmlElement iconElement : iconElements)
+              {
                 // Choose png icon to show Android UI.
-                if ("image/png".equals(iconElement.findChild("mimetype")
-                        .getValue())) {
-                    String _uri = iconElement.findChild("url").getValue();
-                    String hostUrl = toSchemeAndHost(ddUrl);
-                    device.mIconUrl = hostUrl + _uri;
-                }
-            }
+                if ("image/png".equals(iconElement.findChild("mimetype").getValue())) 
+                  {
+                    final String _uri = iconElement.findChild("url").getValue();
+                    final String hostUrl = toSchemeAndHost(ddUrl);
+                    device.iconUrl = hostUrl + _uri;
+                  }
+              }
 
             // "av:X_ScalarWebAPI_DeviceInfo"
-            XmlElement wApiElement = deviceElement
-                    .findChild("X_ScalarWebAPI_DeviceInfo");
-            XmlElement wApiServiceListElement = wApiElement
-                    .findChild("X_ScalarWebAPI_ServiceList");
-            List<XmlElement> wApiServiceElements = wApiServiceListElement
-                    .findChildren("X_ScalarWebAPI_Service");
-            for (XmlElement wApiServiceElement : wApiServiceElements) {
-                String serviceName = wApiServiceElement.findChild(
-                        "X_ScalarWebAPI_ServiceType").getValue();
-                String actionUrl = wApiServiceElement.findChild(
-                        "X_ScalarWebAPI_ActionList_URL").getValue();
+            final XmlElement wApiElement = deviceElement.findChild("X_ScalarWebAPI_DeviceInfo");
+            final XmlElement wApiServiceListElement = wApiElement.findChild("X_ScalarWebAPI_ServiceList");
+            final List<XmlElement> wApiServiceElements = wApiServiceListElement.findChildren("X_ScalarWebAPI_Service");
+            
+            for (final XmlElement wApiServiceElement : wApiServiceElements) 
+              {
+                final String serviceName = wApiServiceElement.findChild("X_ScalarWebAPI_ServiceType").getValue();
+                final String actionUrl = wApiServiceElement.findChild("X_ScalarWebAPI_ActionList_URL").getValue();
                 device.addApiService(serviceName, actionUrl);
-            }
-        }
+              }
+          }
+  
         Log.d(TAG, "fetch () parsing XML done.");
         return device;
-    }
+      }
 
     private static String toSchemeAndHost(String url) {
         int i = url.indexOf("://"); // http:// or https://
