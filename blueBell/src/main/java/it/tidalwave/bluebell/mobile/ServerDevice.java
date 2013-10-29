@@ -229,7 +229,7 @@ public class ServerDevice {
 
         String ddXml = "";
         try {
-            ddXml = new SimpleHttpClient().httpGet(ddUrl); // FIXME
+            ddXml = new SimpleHttpClient().get(ddUrl); // FIXME
             Log.d(TAG, "fetch () httpGet done.");
         } catch (IOException e) {
             Log.e(TAG, "fetch: IOException.", e);
