@@ -32,6 +32,8 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
 
     // Request ID of API calling. This will be counted up by each API calling.
     private int mRequestId;
+    
+    private final SimpleHttpClient httpClient = new SimpleHttpClient();
 
     /**
      * Constructor.
@@ -94,7 +96,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
             String url = findActionListUrl(service) + "/" + service;
 
             log("Request:  " + requestJson.toString());
-            String responseJson = SimpleHttpClient.httpPost(url,
+            String responseJson = httpClient.httpPost(url,
                     requestJson.toString());
             log("Response: " + responseJson);
             return new JSONObject(responseJson);
@@ -129,7 +131,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
             String url = findActionListUrl(service) + "/" + service;
 
             log("Request:  " + requestJson.toString());
-            String responseJson = SimpleHttpClient.httpPost(url,
+            String responseJson = httpClient.httpPost(url,
                     requestJson.toString());
             log("Response: " + responseJson);
             return new JSONObject(responseJson);
@@ -164,7 +166,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
             String url = findActionListUrl(service) + "/" + service;
 
             log("Request:  " + requestJson.toString());
-            String responseJson = SimpleHttpClient.httpPost(url,
+            String responseJson = httpClient.httpPost(url,
                     requestJson.toString());
             log("Response: " + responseJson);
             return new JSONObject(responseJson);
@@ -200,7 +202,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
             String url = findActionListUrl(service) + "/" + service;
 
             log("Request:  " + requestJson.toString());
-            String responseJson = SimpleHttpClient.httpPost(url,
+            String responseJson = httpClient.httpPost(url,
                     requestJson.toString());
             log("Response: " + responseJson);
             return new JSONObject(responseJson);
@@ -235,7 +237,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
             String url = findActionListUrl(service) + "/" + service;
 
             log("Request:  " + requestJson.toString());
-            String responseJson = SimpleHttpClient.httpPost(url,
+            String responseJson = httpClient.httpPost(url,
                     requestJson.toString());
             log("Response: " + responseJson);
             return new JSONObject(responseJson);
@@ -270,7 +272,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
             String url = findActionListUrl(service) + "/" + service;
 
             log("Request:  " + requestJson.toString());
-            String responseJson = SimpleHttpClient.httpPost(url,
+            String responseJson = httpClient.httpPost(url,
                     requestJson.toString());
             log("Response: " + responseJson);
             return new JSONObject(responseJson);
@@ -305,7 +307,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
             String url = findActionListUrl(service) + "/" + service;
 
             log("Request:  " + requestJson.toString());
-            String responseJson = SimpleHttpClient.httpPost(url,
+            String responseJson = httpClient.httpPost(url,
                     requestJson.toString());
             log("Response: " + responseJson);
             return new JSONObject(responseJson);
@@ -340,7 +342,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
             String url = findActionListUrl(service) + "/" + service;
 
             log("Request:  " + requestJson.toString());
-            String responseJson = SimpleHttpClient.httpPost(url,
+            String responseJson = httpClient.httpPost(url,
                     requestJson.toString());
             log("Response: " + responseJson);
             return new JSONObject(responseJson);
@@ -375,7 +377,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
             String url = findActionListUrl(service) + "/" + service;
 
             log("Request:  " + requestJson.toString());
-            String responseJson = SimpleHttpClient.httpPost(url,
+            String responseJson = httpClient.httpPost(url,
                     requestJson.toString());
             log("Response: " + responseJson);
             return new JSONObject(responseJson);
@@ -410,7 +412,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
             String url = findActionListUrl(service) + "/" + service;
 
             log("Request:  " + requestJson.toString());
-            String responseJson = SimpleHttpClient.httpPost(url,
+            String responseJson = httpClient.httpPost(url,
                     requestJson.toString());
             log("Response: " + responseJson);
             return new JSONObject(responseJson);
@@ -445,7 +447,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
             String url = findActionListUrl(service) + "/" + service;
 
             log("Request:  " + requestJson.toString());
-            String responseJson = SimpleHttpClient.httpPost(url,
+            String responseJson = httpClient.httpPost(url,
                     requestJson.toString());
             log("Response: " + responseJson);
             return new JSONObject(responseJson);
@@ -480,7 +482,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
             String url = findActionListUrl(service) + "/" + service;
 
             log("Request:  " + requestJson.toString());
-            String responseJson = SimpleHttpClient.httpPost(url,
+            String responseJson = httpClient.httpPost(url,
                     requestJson.toString());
             log("Response: " + responseJson);
             return new JSONObject(responseJson);
@@ -515,7 +517,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
             String url = findActionListUrl(service) + "/" + service;
 
             log("Request:  " + requestJson.toString());
-            String responseJson = SimpleHttpClient.httpPost(url,
+            String responseJson = httpClient.httpPost(url,
                     requestJson.toString());
             log("Response: " + responseJson);
             return new JSONObject(responseJson);
@@ -551,7 +553,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
             int longPollingTimeout = (longPollingFlag) ? 20000 : 8000; // msec
 
             log("Request:  " + requestJson.toString());
-            String responseJson = SimpleHttpClient.httpPost(url,
+            String responseJson = httpClient.httpPost(url,
                     requestJson.toString(), longPollingTimeout);
             log("Response: " + responseJson);
             return new JSONObject(responseJson);

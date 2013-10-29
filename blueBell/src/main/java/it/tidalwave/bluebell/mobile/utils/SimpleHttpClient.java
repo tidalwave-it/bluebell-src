@@ -36,7 +36,7 @@ public class SimpleHttpClient {
      * @throws IOException all errors and exception are wrapped by this
      *             Exception.
      */
-    public static String httpGet(String url) throws IOException {
+    public String httpGet(String url) throws IOException {
         return httpGet(url, DEFAULT_READ_TIMEOUT);
     }
 
@@ -50,7 +50,7 @@ public class SimpleHttpClient {
      * @throws IOException all errors and exception are wrapped by this
      *             Exception.
      */
-    public static String httpGet(String url, int timeout) throws IOException {
+    public String httpGet(String url, int timeout) throws IOException {
         HttpURLConnection httpConn = null;
         InputStream inputStream = null;
 
@@ -127,7 +127,7 @@ public class SimpleHttpClient {
      * @throws IOException all errors and exception are wrapped by this
      *             Exception.
      */
-    public static String httpPost(String url, String postData)
+    public String httpPost(String url, String postData)
             throws IOException {
         return httpPost(url, postData, DEFAULT_READ_TIMEOUT);
     }
@@ -143,7 +143,7 @@ public class SimpleHttpClient {
      * @throws IOException all errors and exception are wrapped by this
      *             Exception.
      */
-    public static String httpPost(String url, String postData, int timeout)
+    public String httpPost(String url, String postData, int timeout)
             throws IOException {
         HttpURLConnection httpConn = null;
         OutputStream outputStream = null;

@@ -20,6 +20,8 @@ import java.util.List;
 public class ServerDevice {
 
     private static final String TAG = ServerDevice.class.getSimpleName();
+    
+    private final SimpleHttpClient httpClient = new SimpleHttpClient();
 
     /**
      * Camera Remote API service (category). For example, "camera", "guide" and
@@ -227,7 +229,7 @@ public class ServerDevice {
 
         String ddXml = "";
         try {
-            ddXml = SimpleHttpClient.httpGet(ddUrl);
+            ddXml = new SimpleHttpClient().httpGet(ddUrl); // FIXME
             Log.d(TAG, "fetch () httpGet done.");
         } catch (IOException e) {
             Log.e(TAG, "fetch: IOException.", e);
