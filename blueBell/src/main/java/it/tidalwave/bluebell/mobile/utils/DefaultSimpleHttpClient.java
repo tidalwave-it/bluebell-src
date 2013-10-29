@@ -12,8 +12,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import lombok.Cleanup;
 
@@ -54,33 +52,22 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
     public String get (final @Nonnull String urlAsString, final @Nonnull int timeout)
       throws IOException 
       {
-        try 
-          {
-            final URL url = new URL(urlAsString);
-            final @Cleanup("disconnect") HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
-            connection.setReadTimeout(timeout);
-            connection.connect();
+        final URL url = new URL(urlAsString);
+        final @Cleanup("disconnect") HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
+        connection.setReadTimeout(timeout);
+        connection.connect();
 
-            final int responseCode = connection.getResponseCode();
-            
-            if (responseCode != HttpURLConnection.HTTP_OK) 
-              {
-                throw new IOException("Response Error:" + responseCode);
-              }
+        final int responseCode = connection.getResponseCode();
 
-            final @Cleanup InputStream is = connection.getInputStream();
-            return readString(is);
-          }
-        catch (SocketTimeoutException e) 
+        if (responseCode != HttpURLConnection.HTTP_OK) 
           {
-            throw new IOException("httpGet: Timeout: " + urlAsString);
+            throw new IOException("Response Error:" + responseCode);
           }
-        catch (MalformedURLException e) 
-          {
-            throw new IOException("httpGet: MalformedUrlException: " + urlAsString);
-          }
+
+        final @Cleanup InputStream is = connection.getInputStream();
+        return readString(is);
       }
 
     /**
@@ -115,42 +102,31 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
     public String post (final @Nonnull String urlAsString, final @Nonnull String postData, final @Nonnull int timeout)
       throws IOException 
       {
-        try 
-          {
-            final URL url = new URL(urlAsString);
-            final @Cleanup("disconnect") HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
-            connection.setReadTimeout(timeout);
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
+        final URL url = new URL(urlAsString);
+        final @Cleanup("disconnect") HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
+        connection.setReadTimeout(timeout);
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
 
-            final @Cleanup OutputStream os = connection.getOutputStream();
-            final @Cleanup OutputStreamWriter w = new OutputStreamWriter(os, "UTF-8");
-            w.write(postData);
-            w.flush();
-            w.close();
-            os.close();
+        final @Cleanup OutputStream os = connection.getOutputStream();
+        final @Cleanup OutputStreamWriter w = new OutputStreamWriter(os, "UTF-8");
+        w.write(postData);
+        w.flush();
+        w.close();
+        os.close();
 
-            connection.connect();
-            final int responseCode = connection.getResponseCode();
-            
-            if (responseCode != HttpURLConnection.HTTP_OK) 
-              {
-                throw new IOException("Response Error:" + responseCode);
-              }
-            
-            final @Cleanup InputStream is = connection.getInputStream();
-            return readString(is);
-          } 
-        catch (SocketTimeoutException e) 
+        connection.connect();
+        final int responseCode = connection.getResponseCode();
+
+        if (responseCode != HttpURLConnection.HTTP_OK) 
           {
-            throw new IOException("httpPost: Timeout: " + urlAsString);
-          } 
-        catch (MalformedURLException e) 
-          {
-            throw new IOException("httpPost: MalformedUrlException: " + urlAsString);
+            throw new IOException("Response Error:" + responseCode);
           }
+
+        final @Cleanup InputStream is = connection.getInputStream();
+        return readString(is);
       }
     
     @Nonnull
