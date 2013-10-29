@@ -12,7 +12,7 @@ import java.io.IOException;
  *
  * @author fritz
  */
-public interface SimpleHttpClient
+public interface HttpClient
   {
     /**
      * Send HTTP GET request to the indicated url. Then returns response as

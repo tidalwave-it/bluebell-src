@@ -7,8 +7,8 @@ package it.tidalwave.sony.impl;
 import android.util.Log;
 
 import it.tidalwave.sony.ServerDevice.ApiService;
-import it.tidalwave.bluebell.mobile.utils.DefaultSimpleHttpClient;
-import it.tidalwave.bluebell.mobile.utils.SimpleHttpClient;
+import it.tidalwave.bluebell.mobile.utils.DefaultHttpClient;
+import it.tidalwave.bluebell.mobile.utils.HttpClient;
 import it.tidalwave.sony.ServerDevice;
 import it.tidalwave.sony.SimpleRemoteApi;
 
@@ -36,7 +36,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
     // Request ID of API calling. This will be counted up by each API calling.
     private int mRequestId;
     
-    private final SimpleHttpClient httpClient = new DefaultSimpleHttpClient();
+    private final HttpClient httpClient = new DefaultHttpClient();
 
     /**
      * Constructor.

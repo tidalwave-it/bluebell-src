@@ -18,7 +18,7 @@ import lombok.Cleanup;
 /**
  * Simple HTTP Client for sample application.
  */
-public class DefaultSimpleHttpClient implements SimpleHttpClient 
+public class DefaultHttpClient implements HttpClient 
   {
     private static final int DEFAULT_CONNECTION_TIMEOUT = 10000; // [msec]
     private static final int DEFAULT_READ_TIMEOUT = 10000; // [msec]
