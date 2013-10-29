@@ -243,8 +243,8 @@
     </profiles>
     
     <modules>
-        <module>blueBell</module>
-        <module>blueBell-it</module>
+        <module>modules/blueBell</module>
+        <module>modules/blueBell-it</module>
     </modules>
 
 </project>
