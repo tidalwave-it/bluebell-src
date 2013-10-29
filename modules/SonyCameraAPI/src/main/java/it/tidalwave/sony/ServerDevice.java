@@ -149,21 +149,8 @@ public class ServerDevice
      */
     public boolean hasApiService (final @CheckForNull String serviceName)
       {
-//        if (serviceName == null) 
-//          {
-//            return false;
-//          }
-//        
-//        for (final ApiService apiService : apiServices) 
-//          {
-//            if (serviceName.equals(apiService.getName()))
-//              {
-//                return true;
-//              }
-//          }
-        
         return getApiService(serviceName) != null;
-    }
+      }
 
     /**
      * Returns a ApiService object.
