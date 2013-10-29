@@ -65,7 +65,7 @@ public class SampleCameraActivity extends Activity {
         mHandler = new Handler();
         SampleApplication app = (SampleApplication) getApplication();
         mTargetServer = app.getTargetServerDevice();
-        mRemoteApi = new SimpleRemoteApi(mTargetServer);
+        mRemoteApi = new DefaultSimpleRemoteApi(mTargetServer);
         mEventObserver = new SimpleCameraEventObserver(mHandler, mRemoteApi);
 
         mImagePictureWipe = (ImageView) findViewById(R.id.image_picture_wipe);
