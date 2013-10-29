@@ -4,16 +4,17 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>it.tidalwave.bluebell</groupId>
-    <artifactId>blueBell-parent</artifactId>
-    <version>1.0-ALPHA-1-SNAPSHOT</version>
+        <groupId>it.tidalwave.bluebell</groupId>
+        <artifactId>bluebell-modules</artifactId>
+        <version>1.0-ALPHA-1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>it.tidalwave.bluebell</groupId>
-  <artifactId>blueBell-it</artifactId>
+  <artifactId>bluebell-it</artifactId>
   <version>1.0-ALPHA-1-SNAPSHOT</version>
   <packaging>apk</packaging>
-  <name>blueBell-it - Integration tests</name>
+  <name>blueBell - Integration tests</name>
 
   <properties>
         <buildNumber></buildNumber> <!-- FIXME -->

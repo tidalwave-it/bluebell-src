@@ -31,12 +31,13 @@
 
     <parent>
         <groupId>it.tidalwave.bluebell</groupId>
-        <artifactId>blueBell-parent</artifactId>
+        <artifactId>bluebell-modules</artifactId>
         <version>1.0-ALPHA-1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.bluebell</groupId>
-    <artifactId>blueBell</artifactId>
+    <artifactId>bluebell-application</artifactId>
     <version>1.0-ALPHA-1-SNAPSHOT</version>
     <packaging>apk</packaging>
     <name>blueBell - Application</name>
