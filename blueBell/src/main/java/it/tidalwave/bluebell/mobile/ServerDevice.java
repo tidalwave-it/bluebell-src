@@ -5,7 +5,7 @@
 package it.tidalwave.bluebell.mobile;
 
 import android.util.Log;
-
+import it.tidalwave.bluebell.mobile.utils.DefaultSimpleHttpClient;
 import it.tidalwave.bluebell.mobile.utils.SimpleHttpClient;
 import it.tidalwave.bluebell.mobile.utils.XmlElement;
 
@@ -21,7 +21,7 @@ public class ServerDevice {
 
     private static final String TAG = ServerDevice.class.getSimpleName();
     
-    private final SimpleHttpClient httpClient = new SimpleHttpClient();
+//    private final SimpleHttpClient httpClient = new DefaultSimpleHttpClient();
 
     /**
      * Camera Remote API service (category). For example, "camera", "guide" and
@@ -229,7 +229,7 @@ public class ServerDevice {
 
         String ddXml = "";
         try {
-            ddXml = new SimpleHttpClient().get(ddUrl); // FIXME
+            ddXml = new DefaultSimpleHttpClient().get(ddUrl); // FIXME
             Log.d(TAG, "fetch () httpGet done.");
         } catch (IOException e) {
             Log.e(TAG, "fetch: IOException.", e);
