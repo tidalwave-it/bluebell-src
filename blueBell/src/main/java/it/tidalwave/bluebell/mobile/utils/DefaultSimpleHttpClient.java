@@ -4,8 +4,6 @@
 
 package it.tidalwave.bluebell.mobile.utils;
 
-import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import lombok.Cleanup;
 
 /**
  * Simple HTTP Client for sample application.
@@ -55,8 +54,8 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
     @Override
     public String get(String url, int timeout) throws IOException 
       {
-        HttpURLConnection httpConn = null;
-        InputStream inputStream = null;
+        @Cleanup("disconnect") HttpURLConnection httpConn = null;
+        @Cleanup InputStream inputStream = null;
 
         // Open connection and input stream
         try 
@@ -84,63 +83,17 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
           {
             throw new IOException("httpGet: MalformedUrlException: " + url);
           }
-        catch (final IOException e) 
+
+        @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder responseBuf = new StringBuilder();
+        int c;
+
+        while ((c = reader.read()) != -1) 
           {
-            if (httpConn != null) 
-              {
-                httpConn.disconnect();
-              }
-            
-            throw e;
+            responseBuf.append((char)c);
           }
 
-        // Read stream as String
-        BufferedReader reader = null;
-        try 
-          {
-            StringBuilder responseBuf = new StringBuilder();
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-            int c;
-          
-            while ((c = reader.read()) != -1) 
-              {
-                responseBuf.append((char) c);
-              }
-            
-            return responseBuf.toString();
-          }
-        catch (IOException e) 
-          {
-            Log.w(TAG, "httpGet: read error: " + e.getMessage());
-            throw e;
-          } 
-        finally 
-          {
-            try 
-              {
-                if (reader != null)
-                  {
-                    reader.close();
-                  }
-            
-              } 
-            catch (IOException e) 
-              {
-                Log.w(TAG, "IOException while closing BufferedReader");
-              }
-            
-            try 
-              {
-                if (inputStream != null) 
-                  {
-                    inputStream.close();
-                }
-              }
-            catch (IOException e) 
-              {
-                Log.w(TAG, "IOException while closing InputStream");
-              }
-          }
+        return responseBuf.toString();
       }
 
     /**
@@ -175,9 +128,9 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
     public String post(String url, String postData, int timeout)
       throws IOException 
       {
-        HttpURLConnection httpConn = null;
-        OutputStream outputStream = null;
-        OutputStreamWriter writer = null;
+        @Cleanup("disconnect") HttpURLConnection httpConn = null;
+        @Cleanup OutputStream outputStream = null;
+        @Cleanup OutputStreamWriter writer = null;
         InputStream inputStream = null;
 
         // Open connection and input stream
@@ -195,10 +148,8 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
             writer = new OutputStreamWriter(outputStream, "UTF-8");
             writer.write(postData);
             writer.flush();
-            writer.close();
-            writer = null;
-            outputStream.close();
-            outputStream = null;
+//            writer.close();
+//            outputStream.close();
 
             httpConn.connect();
             int responseCode = httpConn.getResponseCode();
@@ -221,73 +172,16 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
           {
             throw new IOException("httpPost: MalformedUrlException: " + url);
           }
-        catch (final IOException e) 
-          {
-            if (httpConn != null) 
-              {
-                httpConn.disconnect();
-              }
-            
-            throw e;
-          }
-        finally 
-          {
-            try 
-              {
-                if (writer != null) 
-                  {
-                    writer.close();
-                  }
-              } 
-            catch (IOException e)
-              {
-                Log.w(TAG, "IOException while closing OutputStreamWriter");
-              }
-            try 
-              {
-                if (outputStream != null) 
-                  {
-                    outputStream.close();
-                  }
-              }
-            catch (IOException e)
-              {
-                Log.w(TAG, "IOException while closing OutputStream");
-              }
-          }
 
-        // Read stream as String
-        BufferedReader reader = null;
-        try 
-          {
-            StringBuilder responseBuf = new StringBuilder();
-            reader = new BufferedReader(new InputStreamReader(inputStream));
+        @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder responseBuf = new StringBuilder();
+        int c;
 
-            int c;
-            
-            while ((c = reader.read()) != -1) 
-              {
-                responseBuf.append((char) c);
-              }
-            return responseBuf.toString();
-          }
-        catch (IOException e) 
+        while ((c = reader.read()) != -1) 
           {
-            throw e;
+            responseBuf.append((char) c);
           }
-        finally 
-          {
-            try 
-              {
-                if (reader != null)
-                  {
-                    reader.close();
-                  }
-              }
-            catch (IOException e) 
-              {
-                Log.w(TAG, "IOException while closing BufferedReader");
-              }
-          }
+        
+        return responseBuf.toString();
       }
   }
