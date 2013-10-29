@@ -4,6 +4,7 @@
 
 package it.tidalwave.bluebell.mobile;
 
+import it.tidalwave.sony.ServerDevice;
 import android.app.Application;
 
 /**

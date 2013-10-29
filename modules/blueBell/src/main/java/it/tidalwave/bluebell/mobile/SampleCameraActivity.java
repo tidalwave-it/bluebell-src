@@ -4,6 +4,10 @@
 
 package it.tidalwave.bluebell.mobile;
 
+import it.tidalwave.sony.impl.DefaultSimpleRemoteApi;
+import it.tidalwave.sony.SimpleCameraEventObserver;
+import it.tidalwave.sony.SimpleRemoteApi;
+import it.tidalwave.sony.ServerDevice;
 import android.app.Activity;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;

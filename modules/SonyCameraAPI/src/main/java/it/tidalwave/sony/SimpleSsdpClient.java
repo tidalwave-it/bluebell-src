@@ -2,7 +2,7 @@
  * Copyright 2013 Sony Corporation
  */
 
-package it.tidalwave.bluebell.mobile;
+package it.tidalwave.sony;
 
 import android.util.Log;
 

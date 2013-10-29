@@ -2,7 +2,7 @@
  * Copyright 2013 Sony Corporation
  */
 
-package it.tidalwave.bluebell.mobile.utils;
+package it.tidalwave.sony;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

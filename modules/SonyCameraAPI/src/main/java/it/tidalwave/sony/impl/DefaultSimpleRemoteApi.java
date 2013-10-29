@@ -2,13 +2,15 @@
  * Copyright 2013 Sony Corporation
  */
 
-package it.tidalwave.bluebell.mobile;
+package it.tidalwave.sony.impl;
 
 import android.util.Log;
 
-import it.tidalwave.bluebell.mobile.ServerDevice.ApiService;
+import it.tidalwave.sony.ServerDevice.ApiService;
 import it.tidalwave.bluebell.mobile.utils.DefaultSimpleHttpClient;
 import it.tidalwave.bluebell.mobile.utils.SimpleHttpClient;
+import it.tidalwave.sony.ServerDevice;
+import it.tidalwave.sony.SimpleRemoteApi;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -4,6 +4,8 @@
 
 package it.tidalwave.bluebell.mobile;
 
+import it.tidalwave.sony.SimpleSsdpClient;
+import it.tidalwave.sony.ServerDevice;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +25,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import it.tidalwave.bluebell.mobile.ServerDevice.ApiService;
+import it.tidalwave.sony.ServerDevice.ApiService;
 
 import java.util.ArrayList;
 import java.util.List;

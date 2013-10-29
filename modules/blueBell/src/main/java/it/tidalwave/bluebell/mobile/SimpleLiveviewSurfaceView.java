@@ -5,6 +5,7 @@
 package it.tidalwave.bluebell.mobile;
 
 //import android.annotation.TargetApi;
+import it.tidalwave.sony.SimpleRemoteApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,8 +19,8 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import it.tidalwave.bluebell.mobile.utils.SimpleLiveviewSlicer;
-import it.tidalwave.bluebell.mobile.utils.SimpleLiveviewSlicer.Payload;
+import it.tidalwave.sony.SimpleLiveviewSlicer;
+import it.tidalwave.sony.SimpleLiveviewSlicer.Payload;
 
 import org.json.JSONArray;
 import org.json.JSONException;
