@@ -55,23 +55,21 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
         try 
           {
             final URL _url = new URL(url);
-            final @Cleanup("disconnect") HttpURLConnection httpConn = (HttpURLConnection) _url.openConnection();
-            httpConn.setRequestMethod("GET");
-            httpConn.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
-            httpConn.setReadTimeout(timeout);
-            httpConn.connect();
+            final @Cleanup("disconnect") HttpURLConnection connection = (HttpURLConnection)_url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
+            connection.setReadTimeout(timeout);
+            connection.connect();
 
-            final int responseCode = httpConn.getResponseCode();
+            final int responseCode = connection.getResponseCode();
             
-            if (responseCode == HttpURLConnection.HTTP_OK) 
-              {
-                final @Cleanup InputStream is = httpConn.getInputStream();
-                return readString(is);
-              }
-            else 
+            if (responseCode != HttpURLConnection.HTTP_OK) 
               {
                 throw new IOException("Response Error:" + responseCode);
               }
+
+            final @Cleanup InputStream is = connection.getInputStream();
+            return readString(is);
           }
         catch (SocketTimeoutException e) 
           {
@@ -118,32 +116,30 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
         try 
           {
             final URL _url = new URL(url);
-            final @Cleanup("disconnect") HttpURLConnection httpConn = (HttpURLConnection) _url.openConnection();
-            httpConn.setRequestMethod("POST");
-            httpConn.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
-            httpConn.setReadTimeout(timeout);
-            httpConn.setDoInput(true);
-            httpConn.setDoOutput(true);
+            final @Cleanup("disconnect") HttpURLConnection connection = (HttpURLConnection) _url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
+            connection.setReadTimeout(timeout);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
 
-            final @Cleanup OutputStream os = httpConn.getOutputStream();
+            final @Cleanup OutputStream os = connection.getOutputStream();
             final @Cleanup OutputStreamWriter w = new OutputStreamWriter(os, "UTF-8");
             w.write(postData);
             w.flush();
 //            w.close();
 //            os.close();
 
-            httpConn.connect();
-            final int responseCode = httpConn.getResponseCode();
+            connection.connect();
+            final int responseCode = connection.getResponseCode();
             
-            if (responseCode == HttpURLConnection.HTTP_OK) 
-              {
-                final @Cleanup InputStream is = httpConn.getInputStream();
-                return readString(is);
-              }
-            else
+            if (responseCode != HttpURLConnection.HTTP_OK) 
               {
                 throw new IOException("Response Error:" + responseCode);
               }
+            
+            final @Cleanup InputStream is = connection.getInputStream();
+            return readString(is);
           } 
         catch (SocketTimeoutException e) 
           {
