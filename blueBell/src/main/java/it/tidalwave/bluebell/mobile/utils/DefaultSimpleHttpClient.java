@@ -21,8 +21,6 @@ import lombok.Cleanup;
  */
 public class DefaultSimpleHttpClient implements SimpleHttpClient 
   {
-    private static final String TAG = DefaultSimpleHttpClient.class.getSimpleName();
-
     private static final int DEFAULT_CONNECTION_TIMEOUT = 10000; // [msec]
     private static final int DEFAULT_READ_TIMEOUT = 10000; // [msec]
 
@@ -54,46 +52,35 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
     @Override
     public String get(String url, int timeout) throws IOException 
       {
-        @Cleanup("disconnect") HttpURLConnection httpConn = null;
-        @Cleanup InputStream inputStream = null;
-
-        // Open connection and input stream
         try 
           {
             final URL _url = new URL(url);
-            httpConn = (HttpURLConnection) _url.openConnection();
+            final @Cleanup("disconnect") HttpURLConnection httpConn = (HttpURLConnection) _url.openConnection();
             httpConn.setRequestMethod("GET");
             httpConn.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
             httpConn.setReadTimeout(timeout);
             httpConn.connect();
 
-            int responseCode = httpConn.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                inputStream = httpConn.getInputStream();
-            }
-            if (inputStream == null) {
+            final int responseCode = httpConn.getResponseCode();
+            
+            if (responseCode == HttpURLConnection.HTTP_OK) 
+              {
+                final @Cleanup InputStream is = httpConn.getInputStream();
+                return readString(is);
+              }
+            else 
+              {
                 throw new IOException("Response Error:" + responseCode);
-            }
+              }
           }
-        catch (final SocketTimeoutException e) 
+        catch (SocketTimeoutException e) 
           {
             throw new IOException("httpGet: Timeout: " + url);
           }
-        catch (final MalformedURLException e) 
+        catch (MalformedURLException e) 
           {
             throw new IOException("httpGet: MalformedUrlException: " + url);
           }
-
-        @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        StringBuilder responseBuf = new StringBuilder();
-        int c;
-
-        while ((c = reader.read()) != -1) 
-          {
-            responseBuf.append((char)c);
-          }
-
-        return responseBuf.toString();
       }
 
     /**
@@ -128,60 +115,58 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
     public String post(String url, String postData, int timeout)
       throws IOException 
       {
-        @Cleanup("disconnect") HttpURLConnection httpConn = null;
-        @Cleanup OutputStream outputStream = null;
-        @Cleanup OutputStreamWriter writer = null;
-        InputStream inputStream = null;
-
-        // Open connection and input stream
         try 
           {
             final URL _url = new URL(url);
-            httpConn = (HttpURLConnection) _url.openConnection();
+            final @Cleanup("disconnect") HttpURLConnection httpConn = (HttpURLConnection) _url.openConnection();
             httpConn.setRequestMethod("POST");
             httpConn.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
             httpConn.setReadTimeout(timeout);
             httpConn.setDoInput(true);
             httpConn.setDoOutput(true);
 
-            outputStream = httpConn.getOutputStream();
-            writer = new OutputStreamWriter(outputStream, "UTF-8");
-            writer.write(postData);
-            writer.flush();
-//            writer.close();
-//            outputStream.close();
+            final @Cleanup OutputStream os = httpConn.getOutputStream();
+            final @Cleanup OutputStreamWriter w = new OutputStreamWriter(os, "UTF-8");
+            w.write(postData);
+            w.flush();
+//            w.close();
+//            os.close();
 
             httpConn.connect();
-            int responseCode = httpConn.getResponseCode();
+            final int responseCode = httpConn.getResponseCode();
             
             if (responseCode == HttpURLConnection.HTTP_OK) 
               {
-                inputStream = httpConn.getInputStream();
+                final @Cleanup InputStream is = httpConn.getInputStream();
+                return readString(is);
               }
-            
-            if (inputStream == null) 
+            else
               {
                 throw new IOException("Response Error:" + responseCode);
               }
           } 
-        catch (final SocketTimeoutException e) 
+        catch (SocketTimeoutException e) 
           {
             throw new IOException("httpPost: Timeout: " + url);
           } 
-        catch (final MalformedURLException e) 
+        catch (MalformedURLException e) 
           {
             throw new IOException("httpPost: MalformedUrlException: " + url);
           }
-
-        @Cleanup BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        StringBuilder responseBuf = new StringBuilder();
+      }
+    
+    private static String readString (final InputStream is) 
+      throws IOException 
+      {
+        final @Cleanup BufferedReader r = new BufferedReader(new InputStreamReader(is));
+        final StringBuilder buffer = new StringBuilder();
         int c;
-
-        while ((c = reader.read()) != -1) 
+        
+        while ((c = r.read()) != -1)
           {
-            responseBuf.append((char) c);
+            buffer.append((char)c);
           }
         
-        return responseBuf.toString();
+        return buffer.toString();
       }
   }
