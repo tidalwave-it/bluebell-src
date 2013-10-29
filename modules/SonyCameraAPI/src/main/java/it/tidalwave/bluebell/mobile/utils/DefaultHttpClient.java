@@ -20,9 +20,6 @@ import lombok.Cleanup;
  */
 public class DefaultHttpClient implements HttpClient 
   {
-    private static final int DEFAULT_CONNECTION_TIMEOUT = 10000; // [msec]
-    private static final int DEFAULT_READ_TIMEOUT = 10000; // [msec]
-
     /**
      * Send HTTP GET request to the indicated url. Then returns response as
      * string.

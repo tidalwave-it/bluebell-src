@@ -14,6 +14,10 @@ import java.io.IOException;
  */
 public interface HttpClient
   {
+    public static final int DEFAULT_CONNECTION_TIMEOUT = 10000; // msec
+    
+    public static final int DEFAULT_READ_TIMEOUT = 10000; // msec
+
     /**
      * Send HTTP GET request to the indicated url. Then returns response as
      * string.
