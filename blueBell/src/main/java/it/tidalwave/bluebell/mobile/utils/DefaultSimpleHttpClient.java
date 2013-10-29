@@ -4,6 +4,7 @@
 
 package it.tidalwave.bluebell.mobile.utils;
 
+import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,8 +34,8 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
      * @throws IOException all errors and exception are wrapped by this
      *             Exception.
      */
-    @Override
-    public String get(String url) throws IOException 
+    @Override @Nonnull
+    public String get (@Nonnull String url) throws IOException 
       {
         return get(url, DEFAULT_READ_TIMEOUT);
       }
@@ -49,8 +50,9 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
      * @throws IOException all errors and exception are wrapped by this
      *             Exception.
      */
-    @Override
-    public String get(String urlAsString, int timeout) throws IOException 
+    @Override @Nonnull
+    public String get (final @Nonnull String urlAsString, final @Nonnull int timeout)
+      throws IOException 
       {
         try 
           {
@@ -91,8 +93,8 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
      * @throws IOException all errors and exception are wrapped by this
      *             Exception.
      */
-    @Override
-    public String post (String url, String postData)
+    @Override @Nonnull
+    public String post (final @Nonnull String url, final @Nonnull String postData)
       throws IOException 
       {
         return post(url, postData, DEFAULT_READ_TIMEOUT);
@@ -109,8 +111,8 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
      * @throws IOException all errors and exception are wrapped by this
      *             Exception.
      */
-    @Override
-    public String post(String urlAsString, String postData, int timeout)
+    @Override @Nonnull
+    public String post (final @Nonnull String urlAsString, final @Nonnull String postData, final @Nonnull int timeout)
       throws IOException 
       {
         try 
@@ -151,7 +153,8 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
           }
       }
     
-    private static String readString (final InputStream is) 
+    @Nonnull
+    private static String readString (final @Nonnull InputStream is) 
       throws IOException 
       {
         final @Cleanup BufferedReader r = new BufferedReader(new InputStreamReader(is));
