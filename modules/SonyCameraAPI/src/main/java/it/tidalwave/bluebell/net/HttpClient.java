@@ -25,7 +25,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.bluebell.mobile.utils;
+package it.tidalwave.bluebell.net;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;

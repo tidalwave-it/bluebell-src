@@ -25,7 +25,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.bluebell.mobile.utils;
+package it.tidalwave.bluebell.net.impl;
 
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;
@@ -36,6 +36,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import it.tidalwave.bluebell.net.HttpClient;
 import lombok.Cleanup;
 
 /***********************************************************************************************************************

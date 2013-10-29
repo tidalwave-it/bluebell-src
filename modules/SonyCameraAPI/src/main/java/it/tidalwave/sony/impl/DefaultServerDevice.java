@@ -35,8 +35,8 @@ import java.util.Collections;
 import java.util.List;
 import java.io.IOException;
 import android.util.Log;
-import it.tidalwave.bluebell.mobile.utils.DefaultHttpClient;
-import it.tidalwave.bluebell.mobile.utils.XmlElement;
+import it.tidalwave.bluebell.net.impl.DefaultHttpClient;
+import it.tidalwave.bluebell.net.impl.XmlElement;
 import it.tidalwave.sony.ServerDevice;
 import lombok.Getter;
 

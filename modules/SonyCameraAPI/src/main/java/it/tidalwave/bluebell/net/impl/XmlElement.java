@@ -25,7 +25,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.bluebell.mobile.utils;
+package it.tidalwave.bluebell.net.impl;
 
 //import android.util.Log;
 //import android.util.Xml;
