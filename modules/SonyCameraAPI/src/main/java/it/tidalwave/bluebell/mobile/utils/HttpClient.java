@@ -43,57 +43,57 @@ public interface HttpClient
     
     public static final int DEFAULT_READ_TIMEOUT = 10000; // msec
 
-    /**
-     * Send HTTP GET request to the indicated url. Then returns response as
-     * string.
+    /*******************************************************************************************************************
+     * 
+     * Sends an HTTP GET request.
      *
-     * @param url request target
-     * @return response as string
-     * @throws IOException all errors and exception are wrapped by this
-     *             Exception.
-     */
+     * @param   url             the request target
+     * @return                  the response as string
+     * @throws  IOException     in case of error
+     * 
+     ******************************************************************************************************************/
     @Nonnull 
     public String get (@Nonnull String url)
       throws IOException;
 
-    /**
-     * Send HTTP GET request to the indicated url. Then returns response as
-     * string.
+    /*******************************************************************************************************************
+     * 
+     * Sends an HTTP GET request with a timeout.
      *
-     * @param url request target
-     * @param timeout Request timeout
-     * @return response as string
-     * @throws IOException all errors and exception are wrapped by this
-     *             Exception.
-     */
+     * @param   url             the request target
+     * @param   timeout         the request timeout
+     * @return                  the response as string
+     * @throws  IOException     in case of error
+     * 
+     ******************************************************************************************************************/
     @Nonnull 
     public String get (@Nonnull String url, @Nonnegative int timeout)
       throws IOException;
 
-    /**
-     * Send HTTP POST request to the indicated url. Then returns response as
-     * string.
+    /*******************************************************************************************************************
+     * 
+     * Sends an HTTP POST request.
      *
-     * @param url request target
-     * @param postData POST body data as string (ex. JSON)
-     * @return response as string
-     * @throws IOException all errors and exception are wrapped by this
-     *             Exception.
-     */
+     * @param   url             the request target
+     * @param   postData        the POST data
+     * @return                  the response as string
+     * @throws  IOException     in case of error
+     * 
+     ******************************************************************************************************************/
     public String post (@Nonnull String url, @Nonnull String postData) 
       throws IOException;
 
-    /**
-     * Send HTTP POST request to the indicated url. Then returns response as
-     * string.
+    /*******************************************************************************************************************
+     * 
+     * Sends an HTTP POST request with a timeout.
      *
-     * @param url request target
-     * @param postData POST body data as string (ex. JSON)
-     * @param timeout Request timeout
-     * @return response as string
-     * @throws IOException all errors and exception are wrapped by this
-     *             Exception.
-     */
+     * @param   url             the request target
+     * @param   postData        the POST data
+     * @param   timeout         the request timeout
+     * @return                  the response as string
+     * @throws  IOException     in case of error
+     * 
+     ******************************************************************************************************************/
     @Nonnull 
     public String post (@Nonnull String url, @Nonnull String postData, @Nonnegative int timeout)
       throws IOException; 

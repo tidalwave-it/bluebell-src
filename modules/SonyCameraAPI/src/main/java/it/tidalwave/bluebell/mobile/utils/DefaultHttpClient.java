@@ -46,31 +46,23 @@ import lombok.Cleanup;
  **********************************************************************************************************************/
 public class DefaultHttpClient implements HttpClient 
   {
-    /**
-     * Send HTTP GET request to the indicated url. Then returns response as
-     * string.
+    /*******************************************************************************************************************
      * 
-     * @param url request target
-     * @return response as string
-     * @throws IOException all errors and exception are wrapped by this
-     *             Exception.
-     */
+     * {@inheritDoc}
+     * 
+     ******************************************************************************************************************/
     @Override @Nonnull
-    public String get (@Nonnull String url) throws IOException 
+    public String get (@Nonnull String url) 
+      throws IOException 
       {
         return get(url, DEFAULT_READ_TIMEOUT);
       }
 
-    /**
-     * Send HTTP GET request to the indicated url. Then returns response as
-     * string.
+    /*******************************************************************************************************************
      * 
-     * @param urlAsString request target
-     * @param timeout Request timeout
-     * @return response as string
-     * @throws IOException all errors and exception are wrapped by this
-     *             Exception.
-     */
+     * {@inheritDoc}
+     * 
+     ******************************************************************************************************************/
     @Override @Nonnull
     public String get (final @Nonnull String urlAsString, final @Nonnull int timeout)
       throws IOException 
@@ -93,16 +85,11 @@ public class DefaultHttpClient implements HttpClient
         return readString(is);
       }
 
-    /**
-     * Send HTTP POST request to the indicated url. Then returns response as
-     * string.
+    /*******************************************************************************************************************
      * 
-     * @param url request target
-     * @param postData POST body data as string (ex. JSON)
-     * @return response as string
-     * @throws IOException all errors and exception are wrapped by this
-     *             Exception.
-     */
+     * {@inheritDoc}
+     * 
+     ******************************************************************************************************************/
     @Override @Nonnull
     public String post (final @Nonnull String url, final @Nonnull String postData)
       throws IOException 
@@ -110,17 +97,11 @@ public class DefaultHttpClient implements HttpClient
         return post(url, postData, DEFAULT_READ_TIMEOUT);
       }
 
-    /**
-     * Send HTTP POST request to the indicated url. Then returns response as
-     * string.
+    /*******************************************************************************************************************
      * 
-     * @param urlAsString request target
-     * @param postData POST body data as string (ex. JSON)
-     * @param timeout Request timeout
-     * @return response as string
-     * @throws IOException all errors and exception are wrapped by this
-     *             Exception.
-     */
+     * {@inheritDoc}
+     * 
+     ******************************************************************************************************************/
     @Override @Nonnull
     public String post (final @Nonnull String urlAsString, final @Nonnull String postData, final @Nonnull int timeout)
       throws IOException 
@@ -152,6 +133,11 @@ public class DefaultHttpClient implements HttpClient
         return readString(is);
       }
     
+    /*******************************************************************************************************************
+     * 
+     * 
+     * 
+     ******************************************************************************************************************/
     @Nonnull
     private static String readString (final @Nonnull InputStream is) 
       throws IOException 
