@@ -6,6 +6,8 @@
 
 package it.tidalwave.bluebell.mobile.utils;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -27,7 +29,9 @@ public interface HttpClient
      * @throws IOException all errors and exception are wrapped by this
      *             Exception.
      */
-    public String get(String url) throws IOException;
+    @Nonnull 
+    public String get (@Nonnull String url)
+      throws IOException;
 
     /**
      * Send HTTP GET request to the indicated url. Then returns response as
@@ -39,7 +43,9 @@ public interface HttpClient
      * @throws IOException all errors and exception are wrapped by this
      *             Exception.
      */
-    public String get(String url, int timeout) throws IOException;
+    @Nonnull 
+    public String get (@Nonnull String url, @Nonnegative int timeout)
+      throws IOException;
 
     /**
      * Send HTTP POST request to the indicated url. Then returns response as
@@ -51,7 +57,8 @@ public interface HttpClient
      * @throws IOException all errors and exception are wrapped by this
      *             Exception.
      */
-    public String post(String url, String postData) throws IOException;
+    public String post (@Nonnull String url, @Nonnull String postData) 
+      throws IOException;
 
     /**
      * Send HTTP POST request to the indicated url. Then returns response as
@@ -64,5 +71,7 @@ public interface HttpClient
      * @throws IOException all errors and exception are wrapped by this
      *             Exception.
      */
-    public String post(String url, String postData, int timeout) throws IOException; 
+    @Nonnull 
+    public String post (@Nonnull String url, @Nonnull String postData, @Nonnegative int timeout)
+      throws IOException; 
   }
