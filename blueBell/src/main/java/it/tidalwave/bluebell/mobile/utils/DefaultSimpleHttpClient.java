@@ -43,19 +43,19 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
      * Send HTTP GET request to the indicated url. Then returns response as
      * string.
      * 
-     * @param url request target
+     * @param urlAsString request target
      * @param timeout Request timeout
      * @return response as string
      * @throws IOException all errors and exception are wrapped by this
      *             Exception.
      */
     @Override
-    public String get(String url, int timeout) throws IOException 
+    public String get(String urlAsString, int timeout) throws IOException 
       {
         try 
           {
-            final URL _url = new URL(url);
-            final @Cleanup("disconnect") HttpURLConnection connection = (HttpURLConnection)_url.openConnection();
+            final URL url = new URL(urlAsString);
+            final @Cleanup("disconnect") HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.setRequestMethod("GET");
             connection.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
             connection.setReadTimeout(timeout);
@@ -73,11 +73,11 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
           }
         catch (SocketTimeoutException e) 
           {
-            throw new IOException("httpGet: Timeout: " + url);
+            throw new IOException("httpGet: Timeout: " + urlAsString);
           }
         catch (MalformedURLException e) 
           {
-            throw new IOException("httpGet: MalformedUrlException: " + url);
+            throw new IOException("httpGet: MalformedUrlException: " + urlAsString);
           }
       }
 
@@ -102,7 +102,7 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
      * Send HTTP POST request to the indicated url. Then returns response as
      * string.
      * 
-     * @param url request target
+     * @param urlAsString request target
      * @param postData POST body data as string (ex. JSON)
      * @param timeout Request timeout
      * @return response as string
@@ -110,13 +110,13 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
      *             Exception.
      */
     @Override
-    public String post(String url, String postData, int timeout)
+    public String post(String urlAsString, String postData, int timeout)
       throws IOException 
       {
         try 
           {
-            final URL _url = new URL(url);
-            final @Cleanup("disconnect") HttpURLConnection connection = (HttpURLConnection) _url.openConnection();
+            final URL url = new URL(urlAsString);
+            final @Cleanup("disconnect") HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.setRequestMethod("POST");
             connection.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
             connection.setReadTimeout(timeout);
@@ -127,8 +127,8 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
             final @Cleanup OutputStreamWriter w = new OutputStreamWriter(os, "UTF-8");
             w.write(postData);
             w.flush();
-//            w.close();
-//            os.close();
+            w.close();
+            os.close();
 
             connection.connect();
             final int responseCode = connection.getResponseCode();
@@ -143,11 +143,11 @@ public class DefaultSimpleHttpClient implements SimpleHttpClient
           } 
         catch (SocketTimeoutException e) 
           {
-            throw new IOException("httpPost: Timeout: " + url);
+            throw new IOException("httpPost: Timeout: " + urlAsString);
           } 
         catch (MalformedURLException e) 
           {
-            throw new IOException("httpPost: MalformedUrlException: " + url);
+            throw new IOException("httpPost: MalformedUrlException: " + urlAsString);
           }
       }
     
