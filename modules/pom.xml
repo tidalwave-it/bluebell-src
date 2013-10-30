@@ -45,13 +45,22 @@
 
     <properties>
         <android.version>4.0.1.2</android.version>
+        <logback.version>1.0.12</logback.version>
         <xmlpull.version>1.1.3.1</xmlpull.version>
         <slf4j.version>1.6.1</slf4j.version>
-        <!--<tft.lombok.version>1.12.2</tft.lombok.version>-->
+        <thesefoolishthings.version>1.35</thesefoolishthings.version>
+        <!--<tft.lombok.version>1.12.2</tft.lombok.version>--> <!-- FIXME: breaks NetBeans refactoring -->
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>it.tidalwave.thesefoolishthings</groupId>
+                <artifactId>thesefoolishthings</artifactId>
+                <version>${thesefoolishthings.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>com.google.android</groupId>
                 <artifactId>android</artifactId>
@@ -75,6 +84,7 @@
                 <artifactId>jsr305</artifactId>
                 <version>1.3.7</version>
             </dependency>
+
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -84,6 +94,16 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-android</artifactId>
                 <version>${slf4j.version}-RC1</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
             </dependency>
 
             <!-- Androlog is a logging and reporting library for Android -->
@@ -111,6 +131,33 @@
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
+        </dependency>
+
+        <!-- TEST DEPENDENCIES -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-util-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
