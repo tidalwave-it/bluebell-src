@@ -92,23 +92,6 @@ public class DefaultSimpleSsdpClientTest
         assertThat(device, is(notNullValue()));
         final CameraApi cameraApi = device.getApi();
 
-//        for (int i = 0; i < 10; i++)
-//          {
-//            try
-//              {
-//                final CameraApi.EventResponse event = cameraApi.getEvent(i == 0);
-//                log.info("Event: {}", event);
-//                log.info(">>>> available APIs: {}", event.getAvailableApiList());
-//                log.info(">>>> camera status:  {}", event.getCameraStatus());
-//                log.info(">>>> shoot mode:     {}", event.getShootMode());
-//                break;
-//              }
-//            catch (RuntimeException e)
-//              {
-//                e.printStackTrace();
-//              }
-//          }
-
         final CameraObserver observer = device.getObserver();
         observer.setListener(new CameraObserver.ChangeListener()
           {
