@@ -31,13 +31,16 @@ import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.SsdpDiscoverer;
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.CoreMatchers.*;
 /**
  *
  * @author fritz
@@ -53,26 +56,20 @@ public class DefaultSimpleSsdpClientTest
         fixture = new DefaultSsdpDiscoverer();
       }
 
-    @Test
+    @Test(timeOut = 30000)
     public void test()
-      throws InterruptedException
+      throws Exception
       {
+        final CountDownLatch latch = new CountDownLatch(1);
+        final AtomicReference<CameraApi> remoteApi = new AtomicReference<CameraApi>();
+
         fixture.search(new SsdpDiscoverer.Callback()
           {
             public void onDeviceFound (final @Nonnull CameraDevice device)
               {
                 log.info("onDeviceFound({})", device);
-                final CameraApi remoteApi = new DefaultCameraApi(device);
-
-                try
-                  {
-                    remoteApi.startRecMode();
-                    remoteApi.actTakePicture();
-                  }
-                catch (IOException ex)
-                  {
-                    ex.printStackTrace();
-                  }
+                remoteApi.set(new DefaultCameraApi(device));
+                latch.countDown();
               }
 
             public void onFinished()
@@ -86,6 +83,10 @@ public class DefaultSimpleSsdpClientTest
               }
           });
 
-        Thread.sleep(20000);
+        latch.await();
+        assertThat(remoteApi.get(), is(notNullValue()));
+
+        remoteApi.get().startRecMode();
+        remoteApi.get().actTakePicture();
       }
   }
