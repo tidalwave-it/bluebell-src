@@ -77,17 +77,15 @@ public class SimpleCameraEventObserver
 
     private Handler mHandler;
 
-    private CameraApi mRemoteApi;
+    private CameraApi cameraApi;
 
-    private ChangeListener mListener;
+    private ChangeListener listener;
 
-    private boolean mWhileEventMonitoring = false;
+    private boolean running = false;
 
-    // Current Camera Status value.
-    private String mCameraStatus;
+    private String cameraStatus;
 
-    // Current Shoot Mode value.
-    private String mShootMode;
+    private String shootMode;
 
     // :
     // : add attributes for Event data as necessary.
@@ -111,7 +109,7 @@ public class SimpleCameraEventObserver
           }
 
         mHandler = handler;
-        mRemoteApi = apiClient;
+        cameraApi = apiClient;
       }
 
     /**
@@ -122,13 +120,13 @@ public class SimpleCameraEventObserver
      */
     public boolean start()
       {
-        if (mWhileEventMonitoring)
+        if (running)
           {
             log.warn("start() already starting.");
             return false;
           }
 
-        mWhileEventMonitoring = true;
+        running = true;
 
         new Thread()
           {
@@ -138,14 +136,14 @@ public class SimpleCameraEventObserver
                 log.debug("start() exec.");
                 // Call getEvent API continuously.
                 boolean fisrtCall = true;
-                MONITORLOOP: while (mWhileEventMonitoring)
+                MONITORLOOP: while (running)
                   {
                     // At first, call as non-Long Polling.
                     boolean longPolling = fisrtCall ? false : true;
 
                     try
                       {
-                        final EventResponse response = mRemoteApi.getEvent(longPolling);
+                        final EventResponse response = cameraApi.getEvent(longPolling);
                         final StatusCode errorCode = response.getStatusCode();
                         log.debug("getEvent errorCode {}", errorCode);
 
@@ -187,9 +185,9 @@ public class SimpleCameraEventObserver
                         String cameraStatus = response.getCameraStatus();
                         log.debug("getEvent cameraStatus: {}", cameraStatus);
 
-                        if (cameraStatus != null && !cameraStatus.equals(mCameraStatus))
+                        if (cameraStatus != null && !cameraStatus.equals(cameraStatus))
                           {
-                            mCameraStatus = cameraStatus;
+                            cameraStatus = cameraStatus;
                             fireCameraStatusChangeListener(cameraStatus);
                           }
 
@@ -197,9 +195,9 @@ public class SimpleCameraEventObserver
                         String shootMode = response.getShootMode();
                         log.debug("getEvent shootMode: {}", shootMode);
 
-                        if (shootMode != null && !shootMode.equals(mShootMode))
+                        if (shootMode != null && !shootMode.equals(shootMode))
                           {
-                            mShootMode = shootMode;
+                            shootMode = shootMode;
                             fireShootModeChangeListener(shootMode);
                           }
                       }
@@ -218,7 +216,7 @@ public class SimpleCameraEventObserver
                     fisrtCall = false;
                   } // MONITORLOOP end.
 
-                mWhileEventMonitoring = false;
+                running = false;
               }
           }.start();
 
@@ -230,7 +228,7 @@ public class SimpleCameraEventObserver
      */
     public void stop()
       {
-        mWhileEventMonitoring = false;
+        running = false;
       }
 
     /**
@@ -240,7 +238,7 @@ public class SimpleCameraEventObserver
      */
     public boolean isStarted()
       {
-        return mWhileEventMonitoring;
+        return running;
       }
 
     /**
@@ -250,7 +248,7 @@ public class SimpleCameraEventObserver
      */
     public void setEventChangeListener(ChangeListener listener)
       {
-        mListener = listener;
+        listener = listener;
       }
 
     /**
@@ -258,7 +256,7 @@ public class SimpleCameraEventObserver
      */
     public void clearEventChangeListener()
       {
-        mListener = null;
+        listener = null;
       }
 
     /**
@@ -268,7 +266,7 @@ public class SimpleCameraEventObserver
      */
     public String getCameraStatus()
       {
-        return mCameraStatus;
+        return cameraStatus;
       }
 
     /**
@@ -278,7 +276,7 @@ public class SimpleCameraEventObserver
      */
     public String getShootMode()
       {
-        return mShootMode;
+        return shootMode;
       }
 
     // Notifies the listener of available APIs change.
@@ -289,9 +287,9 @@ public class SimpleCameraEventObserver
             @Override
             public void run()
               {
-                if (mListener != null)
+                if (listener != null)
                   {
-                    mListener.onApiListModified(availableApis);
+                    listener.onApiListModified(availableApis);
                   }
               }
           });
@@ -305,9 +303,9 @@ public class SimpleCameraEventObserver
             @Override
             public void run()
               {
-                if (mListener != null)
+                if (listener != null)
                   {
-                    mListener.onCameraStatusChanged(status);
+                    listener.onCameraStatusChanged(status);
                   }
               }
           });
@@ -321,9 +319,9 @@ public class SimpleCameraEventObserver
             @Override
             public void run()
               {
-                if (mListener != null)
+                if (listener != null)
                   {
-                    mListener.onShootModeChanged(shootMode);
+                    listener.onShootModeChanged(shootMode);
                   }
               }
           });
