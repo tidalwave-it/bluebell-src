@@ -30,8 +30,8 @@ package it.tidalwave.sony;
 import java.util.List;
 import java.io.IOException;
 import android.os.Handler;
-import android.util.Log;
 import it.tidalwave.sony.CameraApi.EventResponse;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -42,6 +42,7 @@ import it.tidalwave.sony.CameraApi.EventResponse;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class SimpleCameraEventObserver
   {
     private static final String TAG = SimpleCameraEventObserver.class.getSimpleName();
@@ -123,7 +124,7 @@ public class SimpleCameraEventObserver
       {
         if (mWhileEventMonitoring)
           {
-            Log.w(TAG, "start() already starting.");
+            log.warn("start() already starting.");
             return false;
           }
 
@@ -134,7 +135,7 @@ public class SimpleCameraEventObserver
             @Override
             public void run()
               {
-                Log.d(TAG, "start() exec.");
+                log.debug("start() exec.");
                 // Call getEvent API continuously.
                 boolean fisrtCall = true;
                 MONITORLOOP: while (mWhileEventMonitoring)
@@ -146,7 +147,7 @@ public class SimpleCameraEventObserver
                       {
                         final EventResponse response = mRemoteApi.getEvent(longPolling);
                         final StatusCode errorCode = response.getStatusCode();
-                        Log.d(TAG, "getEvent errorCode: " + errorCode);
+                        log.debug("getEvent errorCode {}", errorCode);
 
                         switch (errorCode)
                           {
@@ -176,9 +177,7 @@ public class SimpleCameraEventObserver
                                 continue MONITORLOOP;
 
                             default:
-                                Log.w(TAG,
-                                        "SimpleCameraEventObserver: Unexpected error: "
-                                                + errorCode);
+                                log.warn("SimpleCameraEventObserver: Unexpected error: {}", errorCode);
                                 break MONITORLOOP; // end monitoring.
                           }
 
@@ -186,7 +185,7 @@ public class SimpleCameraEventObserver
 
                         // CameraStatus
                         String cameraStatus = response.getCameraStatus();
-                        Log.d(TAG, "getEvent cameraStatus: " + cameraStatus);
+                        log.debug("getEvent cameraStatus: {}", cameraStatus);
 
                         if (cameraStatus != null && !cameraStatus.equals(mCameraStatus))
                           {
@@ -196,7 +195,7 @@ public class SimpleCameraEventObserver
 
                         // ShootMode
                         String shootMode = response.getShootMode();
-                        Log.d(TAG, "getEvent shootMode: " + shootMode);
+                        log.debug("getEvent shootMode: {}", shootMode);
 
                         if (shootMode != null && !shootMode.equals(mShootMode))
                           {
@@ -207,12 +206,12 @@ public class SimpleCameraEventObserver
                     catch (IOException e)
                       {
                         // Occurs when the server is not available now.
-                        Log.d(TAG, "getEvent timeout by client trigger.");
+                        log.debug(TAG, "getEvent timeout by client trigger.");
                         break MONITORLOOP;
                       }
                     catch (RuntimeException e)
                       {
-                        Log.w(TAG, "getEvent: JSON format error. " + e.getMessage());
+                        log.warn("getEvent: JSON format error. ", e);
                         break MONITORLOOP;
                       }
 
