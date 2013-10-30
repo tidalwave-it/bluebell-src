@@ -45,8 +45,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SimpleCameraEventObserver
   {
-    private static final String TAG = SimpleCameraEventObserver.class.getSimpleName();
-
     /**
      * A listener interface to receive these changes. These methods will be
      * called by UI thread.
@@ -204,7 +202,7 @@ public class SimpleCameraEventObserver
                     catch (IOException e)
                       {
                         // Occurs when the server is not available now.
-                        log.debug(TAG, "getEvent timeout by client trigger.");
+                        log.debug("getEvent timeout by client trigger.");
                         break MONITORLOOP;
                       }
                     catch (RuntimeException e)
