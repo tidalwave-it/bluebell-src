@@ -143,11 +143,6 @@ public class DefaultCameraDevice implements CameraDevice
     @CheckForNull
     public static DefaultCameraDevice fetch (@Nonnull String ddUrl)
       {
-        if (ddUrl == null)
-          {
-            throw new NullPointerException("ddUrl is null.");
-          }
-
         String ddXml = "";
         try
           {
