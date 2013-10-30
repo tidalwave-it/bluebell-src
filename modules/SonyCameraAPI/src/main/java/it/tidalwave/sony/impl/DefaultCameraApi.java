@@ -39,6 +39,8 @@ import it.tidalwave.bluebell.net.HttpClient;
 import it.tidalwave.sony.CameraDevice.ApiService;
 import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraApi;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -78,6 +80,29 @@ public class DefaultCameraApi implements CameraApi
         public GenericResponse (final @Nonnull JSONObject jsonObject)
           {
             this.jsonObject = jsonObject;
+          }
+      }
+
+    class DefaultRecModeResponse extends GenericResponse implements RecModeResponse
+      {
+        public DefaultRecModeResponse (final @Nonnull JSONObject jsonObject)
+          throws CameraApiException
+          {
+            super(jsonObject);
+            try
+              {
+                final JSONArray resultsObj = jsonObject.getJSONArray("result");
+                final int code = resultsObj.getInt(0);
+
+                if (code == 1)
+                  {
+                    throw new CameraApiException(this, resultsObj.getString(1), null);
+                  }
+              }
+            catch (JSONException e)
+              {
+                throw new RuntimeException("malformed JSON", e);
+              }
           }
       }
 
@@ -295,11 +320,11 @@ public class DefaultCameraApi implements CameraApi
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Response startRecMode()
+    public RecModeResponse startRecMode()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("startRecMode");
-        return new GenericResponse(call.post());
+        return new DefaultRecModeResponse(call.post());
       }
 
     /*******************************************************************************************************************
@@ -308,11 +333,11 @@ public class DefaultCameraApi implements CameraApi
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Response stopRecMode()
+    public RecModeResponse stopRecMode()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("stopRecMode");
-        return new GenericResponse(call.post());
+        return new DefaultRecModeResponse(call.post());
       }
 
     /*******************************************************************************************************************

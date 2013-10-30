@@ -184,7 +184,7 @@ public class SampleCameraActivity extends Activity {
                     // startRecMode if necessary.
                     if (isApiAvailable("startRecMode")) {
                         Log.d(TAG, "openConnection(): startRecMode()");
-                        replyJson = mRemoteApi.startRecMode().getJsonObject();
+                        mRemoteApi.startRecMode().getJsonObject();
 
                         // Call again.
                         replyJson = mRemoteApi.getAvailableApiList().getJsonObject();

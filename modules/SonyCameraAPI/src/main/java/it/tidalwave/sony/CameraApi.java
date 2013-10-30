@@ -27,9 +27,10 @@
  */
 package it.tidalwave.sony;
 
-import java.io.IOException;
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import org.json.JSONObject;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -39,10 +40,29 @@ import org.json.JSONObject;
  **********************************************************************************************************************/
 public interface CameraApi
   {
+    public static class CameraApiException extends IOException
+      {
+        @Getter @Nonnull
+        private final Response response;
+
+        public CameraApiException (final @Nonnull Response response,
+                                   final @Nonnull String message,
+                                   final @Nonnull Throwable cause)
+          {
+            super(message, cause);
+            this.response = response;
+          }
+      }
+
     public static interface Response
       {
         @Nonnull
         public JSONObject getJsonObject();
+      }
+
+    public static interface RecModeResponse extends Response
+      {
+
       }
 
     /*******************************************************************************************************************
@@ -287,7 +307,7 @@ public interface CameraApi
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Response startRecMode()
+    public RecModeResponse startRecMode()
       throws IOException;
 
     /*******************************************************************************************************************
@@ -353,6 +373,6 @@ public interface CameraApi
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Response stopRecMode()
+    public RecModeResponse stopRecMode()
       throws IOException;
   }
