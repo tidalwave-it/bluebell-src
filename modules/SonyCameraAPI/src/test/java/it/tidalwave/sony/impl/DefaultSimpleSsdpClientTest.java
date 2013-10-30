@@ -75,11 +75,13 @@ public class DefaultSimpleSsdpClientTest
             public void onFinished()
               {
                 log.info("onFinished()");
+                latch.countDown();
               }
 
             public void onErrorFinished()
               {
                 log.info("onErrorFinished()");
+                latch.countDown();
               }
           });
 
