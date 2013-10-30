@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nonnull;
 
 /**
  * An Activity class of Sample Camera screen.
@@ -71,7 +72,7 @@ public class SampleCameraActivity extends Activity {
         SampleApplication app = (SampleApplication) getApplication();
         mTargetServer = app.getTargetServerDevice();
         mRemoteApi = new DefaultCameraApi(mTargetServer);
-        mEventObserver = new DefaultCameraObserver(mHandler, mRemoteApi);
+        mEventObserver = new DefaultCameraObserver(mRemoteApi);
 
         mImagePictureWipe = (ImageView) findViewById(R.id.image_picture_wipe);
         mRadiosShootMode = (RadioGroup) findViewById(R.id.radio_group_shoot_mode);
@@ -106,32 +107,53 @@ public class SampleCameraActivity extends Activity {
                 }
             }
         });
-        mEventObserver
-                .setEventChangeListener(new CameraObserver.ChangeListener() {
 
+        mEventObserver.setEventChangeListener(new CameraObserver.ChangeListener()
+          {
+            @Override
+            public void onShootModeChanged (final @Nonnull String shootMode)
+              {
+                Log.d(TAG, "onShootModeChanged() called: " + shootMode);
+                mHandler.post(new Runnable()
+                  {
                     @Override
-                    public void onShootModeChanged(String shootMode) {
-                        Log.d(TAG, "onShootModeChanged() called: " + shootMode);
+                    public void run()
+                      {
                         refreshUi();
-                    }
+                      }
+                  });
+              }
 
+            @Override
+            public void onCameraStatusChanged (final @Nonnull String status)
+              {
+                Log.d(TAG, "onCameraStatusChanged() called: " + status);
+                mHandler.post(new Runnable()
+                  {
                     @Override
-                    public void onCameraStatusChanged(String status) {
-                        Log.d(TAG, "onCameraStatusChanged() called: " + status);
+                    public void run()
+                      {
                         refreshUi();
-                    }
+                      }
+                  });
+              }
 
-                    @Override
-                    public void onApiListModified(List<String> apis) {
-                        Log.d(TAG, "onApiListModified() called");
-                        synchronized (mAvailableApiSet) {
-                            mAvailableApiSet.clear();
-                            for (String api : apis) {
-                                mAvailableApiSet.add(api);
-                            }
-                        }
-                    }
-                });
+            @Override
+            public void onApiListModified (final @Nonnull List<String> apis)
+              {
+                Log.d(TAG, "onApiListModified() called");
+                synchronized (mAvailableApiSet)
+                  {
+                    mAvailableApiSet.clear();
+
+                    for (final String api : apis)
+                      {
+                        mAvailableApiSet.add(api);
+                      }
+                  }
+              }
+          });
+
         mImagePictureWipe.setOnClickListener(new View.OnClickListener() {
 
             @Override

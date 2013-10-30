@@ -29,7 +29,6 @@ package it.tidalwave.sony;
 
 import java.util.List;
 import java.io.IOException;
-import android.os.Handler;
 import it.tidalwave.sony.CameraApi.EventResponse;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,8 +44,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultCameraObserver implements CameraObserver
   {
-    private Handler mHandler;
-
     private CameraApi cameraApi;
 
     private ChangeListener listener;
@@ -62,19 +59,13 @@ public class DefaultCameraObserver implements CameraObserver
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public DefaultCameraObserver (Handler handler, CameraApi apiClient)
+    public DefaultCameraObserver (CameraApi apiClient)
       {
-        if (handler == null)
-          {
-            throw new IllegalArgumentException("handler is null.");
-          }
-
         if (apiClient == null)
           {
             throw new IllegalArgumentException("apiClient is null.");
           }
 
-        mHandler = handler;
         cameraApi = apiClient;
       }
 
@@ -262,17 +253,10 @@ public class DefaultCameraObserver implements CameraObserver
     // Notifies the listener of available APIs change.
     private void fireApiListModifiedListener(final List<String> availableApis)
       {
-        mHandler.post(new Runnable()
+        if (listener != null)
           {
-            @Override
-            public void run()
-              {
-                if (listener != null)
-                  {
-                    listener.onApiListModified(availableApis);
-                  }
-              }
-          });
+            listener.onApiListModified(availableApis);
+          }
       }
 
     /*******************************************************************************************************************
@@ -283,17 +267,10 @@ public class DefaultCameraObserver implements CameraObserver
     // Notifies the listener of Camera Status change.
     private void fireCameraStatusChangeListener(final String status)
       {
-        mHandler.post(new Runnable()
+        if (listener != null)
           {
-            @Override
-            public void run()
-              {
-                if (listener != null)
-                  {
-                    listener.onCameraStatusChanged(status);
-                  }
-              }
-          });
+            listener.onCameraStatusChanged(status);
+          }
       }
 
     /*******************************************************************************************************************
@@ -304,16 +281,9 @@ public class DefaultCameraObserver implements CameraObserver
     // Notifies the listener of Shoot Mode change.
     private void fireShootModeChangeListener(final String shootMode)
       {
-        mHandler.post(new Runnable()
+        if (listener != null)
           {
-            @Override
-            public void run()
-              {
-                if (listener != null)
-                  {
-                    listener.onShootModeChanged(shootMode);
-                  }
-              }
-          });
+            listener.onShootModeChanged(shootMode);
+          }
       }
   }
