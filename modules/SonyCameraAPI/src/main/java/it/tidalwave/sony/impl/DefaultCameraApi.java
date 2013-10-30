@@ -40,6 +40,7 @@ import it.tidalwave.sony.CameraDevice.ApiService;
 import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.StatusCode;
+import java.util.ArrayList;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -74,21 +75,59 @@ public class DefaultCameraApi implements CameraApi
     class GenericResponse implements Response
       {
         @Nonnull @Getter
-        private final JSONObject jsonObject;
+        protected final JSONObject jsonObject;
+
+        @Nonnull @Getter
+        protected /*final*/ StatusCode statusCode;
 
         public GenericResponse (final @Nonnull JSONObject jsonObject)
           {
             this.jsonObject = jsonObject;
+            this.statusCode = statusCode.OK;
           }
 
-        @Nonnull
-        public StatusCode getStatusCode()
+//        @Nonnull
+//        public StatusCode getStatusCode()
+//          {
+//            try
+//              {
+//                final JSONArray resultsObj = jsonObject.getJSONArray("result");
+//                final int code = resultsObj.getInt(0);
+//                return StatusCode.findStatusCode(code);
+//              }
+//            catch (JSONException e)
+//              {
+//                throw new RuntimeException("malformed JSON", e);
+//              }
+//          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * FIXME: merge with GenericResponse once all the error management code has been refactored.
+     *
+     ******************************************************************************************************************/
+    class ErrorCheckingResponse extends GenericResponse
+      {
+        public ErrorCheckingResponse (final @Nonnull JSONObject jsonObject)
+          throws CameraApiException
           {
+            super(jsonObject);
             try
               {
-                final JSONArray resultsObj = jsonObject.getJSONArray("result");
-                final int code = resultsObj.getInt(0);
-                return StatusCode.findStatusCode(code);
+                if (jsonObject.has("error"))
+                  {
+                    final JSONArray errorObj = jsonObject.getJSONArray("error");
+                    final int code = errorObj.getInt(0);
+                    statusCode = StatusCode.findStatusCode(code);
+                    throw new CameraApiException(this, errorObj.getString(1), null);
+                  }
+
+//                if ((getStatusCode() != StatusCode.OK) && (getStatusCode() != StatusCode.ANY))
+//                  {
+//                    final JSONArray resultsObj = jsonObject.getJSONArray("result");
+//                    throw new CameraApiException(this, resultsObj.getString(1), null);
+//                  }
               }
             catch (JSONException e)
               {
@@ -102,19 +141,124 @@ public class DefaultCameraApi implements CameraApi
      *
      *
      ******************************************************************************************************************/
-    class DefaultRecModeResponse extends GenericResponse implements RecModeResponse
+    class DefaultRecModeResponse extends ErrorCheckingResponse implements RecModeResponse
       {
         public DefaultRecModeResponse (final @Nonnull JSONObject jsonObject)
           throws CameraApiException
           {
             super(jsonObject);
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    class DefaultEventResponse extends DefaultRecModeResponse implements EventResponse
+      {
+        public DefaultEventResponse (final @Nonnull JSONObject jsonObject)
+          throws CameraApiException
+          {
+            super(jsonObject);
+          }
+
+    // Finds and extracts a list of available APIs from reply JSON data.
+    // As for getEvent v1.0, results[0] => "availableApiList"
+        @Override @Nonnull
+        public List<String> getAvailableApiList()
+          {
             try
               {
-                if (getStatusCode() != StatusCode.OK)
+                final List<String> availableApis = new ArrayList<String>();
+                int indexOfAvailableApiList = 0;
+                final JSONArray resultsObj = jsonObject.getJSONArray("result");
+
+                if (!resultsObj.isNull(indexOfAvailableApiList))
                   {
-                    final JSONArray resultsObj = jsonObject.getJSONArray("result");
-                    throw new CameraApiException(this, resultsObj.getString(1), null);
+                    final JSONObject availableApiListObj = resultsObj.getJSONObject(indexOfAvailableApiList);
+                    final String type = availableApiListObj.getString("type");
+
+                    if ("availableApiList".equals(type))
+                      {
+                        JSONArray apiArray = availableApiListObj.getJSONArray("names");
+
+                        for (int i = 0; i < apiArray.length(); i++)
+                          {
+                            availableApis.add(apiArray.getString(i));
+                          }
+                      }
+                    else
+                      {
+                        log.warn("Event reply: Illegal Index (0: AvailableApiList) {}", type);
+                      }
                   }
+
+                return availableApis;
+              }
+            catch (JSONException e)
+              {
+                throw new RuntimeException("malformed JSON", e);
+              }
+          }
+
+        @Override @Nonnull
+        public String getCameraStatus()
+          {
+            try
+              {
+                String cameraStatus = null;
+                int indexOfCameraStatus = 1;
+                JSONArray resultsObj = jsonObject.getJSONArray("result");
+
+                if (!resultsObj.isNull(indexOfCameraStatus))
+                  {
+                    JSONObject cameraStatusObj = resultsObj.getJSONObject(indexOfCameraStatus);
+                    String type = cameraStatusObj.getString("type");
+
+                    if ("cameraStatus".equals(type))
+                      {
+                        cameraStatus = cameraStatusObj.getString("cameraStatus");
+                      }
+                    else
+                      {
+                        log.warn("Event reply: Illegal Index (1: CameraStatus) ", type);
+                      }
+                  }
+
+                return cameraStatus;
+              }
+            catch (JSONException e)
+              {
+                throw new RuntimeException("malformed JSON", e);
+              }
+          }
+
+        @Override @Nonnull
+        public String getShootMode()
+          {
+            try
+              {
+                String shootMode = null;
+                int indexOfShootMode = 21;
+                JSONArray resultsObj = jsonObject.getJSONArray("result");
+
+                if (!resultsObj.isNull(indexOfShootMode))
+                  {
+                    JSONObject shootModeObj = resultsObj.getJSONObject(indexOfShootMode);
+                    String type = shootModeObj.getString("type");
+
+                    if ("shootMode".equals(type))
+                      {
+                        shootMode = shootModeObj.getString("currentShootMode");
+                      }
+                    else
+                      {
+                        log.warn("Event reply: Illegal Index (21: ShootMode) ", type);
+                      }
+                  }
+
+                return shootMode;
               }
             catch (JSONException e)
               {
@@ -402,13 +546,13 @@ public class DefaultCameraApi implements CameraApi
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Response getEvent (final boolean longPolling)
+    public EventResponse getEvent (final boolean longPolling)
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("getEvent")
                                                   .withParam(longPolling);
         final int longPollingTimeout = longPolling ? 20000 : 8000; // msec
-        return new GenericResponse(call.post(longPollingTimeout));
+        return new DefaultEventResponse(call.post(longPollingTimeout));
       }
 
     @Nonnull

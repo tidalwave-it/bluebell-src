@@ -29,8 +29,10 @@ package it.tidalwave.sony;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.List;
 import org.json.JSONObject;
 import lombok.Getter;
+import org.json.JSONException;
 
 /***********************************************************************************************************************
  *
@@ -83,6 +85,22 @@ public interface CameraApi
      ******************************************************************************************************************/
     public static interface RecModeResponse extends Response
       {
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    public static interface EventResponse extends Response
+      {
+        @Nonnull
+        public List<String> getAvailableApiList();
+
+        @Nonnull
+        public String getShootMode();
+
+        @Nonnull
+        public String getCameraStatus();
       }
 
     /*******************************************************************************************************************
@@ -194,7 +212,7 @@ public interface CameraApi
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Response getEvent (boolean longPollingFlag)
+    public EventResponse getEvent (boolean longPollingFlag)
       throws IOException;
 
     /*******************************************************************************************************************

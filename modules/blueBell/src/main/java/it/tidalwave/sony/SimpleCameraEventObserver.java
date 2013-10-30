@@ -27,15 +27,11 @@
  */
 package it.tidalwave.sony;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import android.os.Handler;
 import android.util.Log;
-import it.tidalwave.sony.CameraApi;
+import it.tidalwave.sony.CameraApi.EventResponse;
 
 /***********************************************************************************************************************
  *
@@ -146,14 +142,10 @@ public class SimpleCameraEventObserver
                     // At first, call as non-Long Polling.
                     boolean longPolling = fisrtCall ? false : true;
 
-                    try {
-                        final CameraApi.Response response = mRemoteApi.getEvent(longPolling);
-                        // Call getEvent API.
-//                        JSONObject replyJson = response.getJsonObject();
-
-                        // Check error code at first.
+                    try
+                      {
+                        final EventResponse response = mRemoteApi.getEvent(longPolling);
                         final StatusCode errorCode = response.getStatusCode();
-//                        int errorCode = findErrorCode(replyJson);
                         Log.d(TAG, "getEvent errorCode: " + errorCode);
 
                         switch (errorCode)
@@ -190,11 +182,10 @@ public class SimpleCameraEventObserver
                                 break MONITORLOOP; // end monitoring.
                           }
 
-                        JSONObject replyJson = response.getJsonObject();
-                        fireApiListModifiedListener(findAvailableApiList(replyJson));
+                        fireApiListModifiedListener(response.getAvailableApiList());
 
                         // CameraStatus
-                        String cameraStatus = findCameraStatus(replyJson);
+                        String cameraStatus = response.getCameraStatus();
                         Log.d(TAG, "getEvent cameraStatus: " + cameraStatus);
 
                         if (cameraStatus != null && !cameraStatus.equals(mCameraStatus))
@@ -204,7 +195,7 @@ public class SimpleCameraEventObserver
                           }
 
                         // ShootMode
-                        String shootMode = findShootMode(replyJson);
+                        String shootMode = response.getShootMode();
                         Log.d(TAG, "getEvent shootMode: " + shootMode);
 
                         if (shootMode != null && !shootMode.equals(mShootMode))
@@ -219,7 +210,7 @@ public class SimpleCameraEventObserver
                         Log.d(TAG, "getEvent timeout by client trigger.");
                         break MONITORLOOP;
                       }
-                    catch (JSONException e)
+                    catch (RuntimeException e)
                       {
                         Log.w(TAG, "getEvent: JSON format error. " + e.getMessage());
                         break MONITORLOOP;
@@ -353,92 +344,4 @@ public class SimpleCameraEventObserver
 //
 //        return code;
 //      }
-
-    // Finds and extracts a list of available APIs from reply JSON data.
-    // As for getEvent v1.0, results[0] => "availableApiList"
-    private static List<String> findAvailableApiList (JSONObject replyJson)
-      throws JSONException
-      {
-        List<String> availableApis = new ArrayList<String>();
-        int indexOfAvailableApiList = 0;
-        JSONArray resultsObj = replyJson.getJSONArray("result");
-
-        if (!resultsObj.isNull(indexOfAvailableApiList))
-          {
-            JSONObject availableApiListObj = resultsObj
-                    .getJSONObject(indexOfAvailableApiList);
-            String type = availableApiListObj.getString("type");
-
-            if ("availableApiList".equals(type))
-              {
-                JSONArray apiArray = availableApiListObj.getJSONArray("names");
-
-                for (int i = 0; i < apiArray.length(); i++)
-                  {
-                    availableApis.add(apiArray.getString(i));
-                  }
-              }
-            else
-              {
-                Log.w(TAG, "Event reply: Illegal Index (0: AvailableApiList) "
-                        + type);
-              }
-          }
-
-        return availableApis;
-      }
-
-    // Finds and extracts a value of Camera Status from reply JSON data.
-    // As for getEvent v1.0, results[1] => "cameraStatus"
-    private static String findCameraStatus (JSONObject replyJson)
-      throws JSONException
-      {
-        String cameraStatus = null;
-        int indexOfCameraStatus = 1;
-        JSONArray resultsObj = replyJson.getJSONArray("result");
-
-        if (!resultsObj.isNull(indexOfCameraStatus))
-          {
-            JSONObject cameraStatusObj = resultsObj.getJSONObject(indexOfCameraStatus);
-            String type = cameraStatusObj.getString("type");
-
-            if ("cameraStatus".equals(type))
-              {
-                cameraStatus = cameraStatusObj.getString("cameraStatus");
-              }
-            else
-              {
-                Log.w(TAG, "Event reply: Illegal Index (1: CameraStatus) " + type);
-              }
-          }
-
-        return cameraStatus;
-      }
-
-    // Finds and extracts a value of Shoot Mode from reply JSON data.
-    // As for getEvent v1.0, results[21] => "shootMode"
-    private static String findShootMode (JSONObject replyJson)
-      throws JSONException
-      {
-        String shootMode = null;
-        int indexOfShootMode = 21;
-        JSONArray resultsObj = replyJson.getJSONArray("result");
-
-        if (!resultsObj.isNull(indexOfShootMode))
-          {
-            JSONObject shootModeObj = resultsObj.getJSONObject(indexOfShootMode);
-            String type = shootModeObj.getString("type");
-
-            if ("shootMode".equals(type))
-              {
-                shootMode = shootModeObj.getString("currentShootMode");
-              }
-            else
-              {
-                Log.w(TAG, "Event reply: Illegal Index (21: ShootMode) " + type);
-              }
-          }
-
-        return shootMode;
-      }
   }

@@ -89,7 +89,22 @@ public class DefaultSimpleSsdpClientTest
         final CameraApi cameraApi = cameraApiHolder.get();
         assertThat(cameraApi, is(notNullValue()));
 
-        cameraApi.startRecMode();
-        cameraApi.actTakePicture();
+        for (int i = 0; i < 10; i++)
+          {
+            try
+              {
+                final CameraApi.EventResponse event = cameraApi.getEvent(i == 0);
+                log.info("Event: {}", event);
+                log.info(">>>> available APIs: {}", event.getAvailableApiList());
+                log.info(">>>> camera status:  {}", event.getCameraStatus());
+                log.info(">>>> shoot mode:     {}", event.getShootMode());
+              }
+            catch (RuntimeException e)
+              {
+                e.printStackTrace();
+              }
+          }
+//        cameraApi.startRecMode();
+//        cameraApi.actTakePicture();
       }
   }
