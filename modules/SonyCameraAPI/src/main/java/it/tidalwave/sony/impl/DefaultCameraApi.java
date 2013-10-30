@@ -39,6 +39,8 @@ import it.tidalwave.bluebell.net.HttpClient;
 import it.tidalwave.sony.CameraDevice.ApiService;
 import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraApi;
+import lombok.Getter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -62,6 +64,28 @@ public class DefaultCameraApi implements CameraApi
 
     private final HttpClient httpClient = new DefaultHttpClient();
 
+    /*******************************************************************************************************************
+     *
+     * A generic implementation of {@link Response}, it just wraps the returned {@link JSONObject}.
+     *
+     ******************************************************************************************************************/
+    @ToString
+    class GenericResponse implements Response
+      {
+        @Nonnull @Getter
+        private final JSONObject jsonObject;
+
+        public GenericResponse (final @Nonnull JSONObject jsonObject)
+          {
+            this.jsonObject = jsonObject;
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     class Call
       {
         private final JSONObject request = new JSONObject();
@@ -166,24 +190,11 @@ public class DefaultCameraApi implements CameraApi
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject getAvailableApiList()
+    public Response getAvailableApiList()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("getAvailableApiList");
-        return call.post();
-    }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public JSONObject getApplicationInfo()
-      throws IOException
-      {
-        final Call call = createCall(CAMERA_SERVICE).withMethod("getApplicationInfo");
-        return call.post();
+        return new GenericResponse(call.post());
       }
 
     /*******************************************************************************************************************
@@ -192,11 +203,24 @@ public class DefaultCameraApi implements CameraApi
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject getShootMode()
+    public Response getApplicationInfo()
+      throws IOException
+      {
+        final Call call = createCall(CAMERA_SERVICE).withMethod("getApplicationInfo");
+        return new GenericResponse(call.post());
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public Response getShootMode()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("getShootMode");
-        return call.post();
+        return new GenericResponse(call.post());
     }
 
     /*******************************************************************************************************************
@@ -205,12 +229,12 @@ public class DefaultCameraApi implements CameraApi
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject setShootMode (final @Nonnull String shootMode)
+    public Response setShootMode (final @Nonnull String shootMode)
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("setShootMode")
                                                   .withParam(shootMode);
-        return call.post();
+        return new GenericResponse(call.post());
       }
 
     /*******************************************************************************************************************
@@ -219,11 +243,11 @@ public class DefaultCameraApi implements CameraApi
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject getAvailableShootMode()
+    public Response getAvailableShootMode()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("getAvailableShootMode");
-        return call.post();
+        return new GenericResponse(call.post());
       }
 
     /*******************************************************************************************************************
@@ -232,11 +256,11 @@ public class DefaultCameraApi implements CameraApi
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject getSupportedShootMode()
+    public Response getSupportedShootMode()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("getSupportedShootMode");
-        return call.post();
+        return new GenericResponse(call.post());
       }
 
     /*******************************************************************************************************************
@@ -245,11 +269,11 @@ public class DefaultCameraApi implements CameraApi
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject startLiveview()
+    public Response startLiveview()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("startLiveview");
-        return call.post();
+        return new GenericResponse(call.post());
       }
 
     /*******************************************************************************************************************
@@ -258,11 +282,11 @@ public class DefaultCameraApi implements CameraApi
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject stopLiveview()
+    public Response stopLiveview()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("stopLiveview");
-        return call.post();
+        return new GenericResponse(call.post());
       }
 
     /*******************************************************************************************************************
@@ -271,11 +295,11 @@ public class DefaultCameraApi implements CameraApi
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject startRecMode()
+    public Response startRecMode()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("startRecMode");
-        return call.post();
+        return new GenericResponse(call.post());
       }
 
     /*******************************************************************************************************************
@@ -284,11 +308,11 @@ public class DefaultCameraApi implements CameraApi
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject stopRecMode()
+    public Response stopRecMode()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("stopRecMode");
-        return call.post();
+        return new GenericResponse(call.post());
       }
 
     /*******************************************************************************************************************
@@ -297,11 +321,11 @@ public class DefaultCameraApi implements CameraApi
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject actTakePicture()
+    public Response actTakePicture()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("actTakePicture");
-        return call.post();
+        return new GenericResponse(call.post());
       }
 
     /*******************************************************************************************************************
@@ -310,11 +334,11 @@ public class DefaultCameraApi implements CameraApi
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject startMovieRec()
+    public Response startMovieRec()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("startMovieRec");
-        return call.post();
+        return new GenericResponse(call.post());
       }
 
     /*******************************************************************************************************************
@@ -323,11 +347,11 @@ public class DefaultCameraApi implements CameraApi
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject stopMovieRec()
+    public Response stopMovieRec()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("stopMovieRec");
-        return call.post();
+        return new GenericResponse(call.post());
       }
 
     /*******************************************************************************************************************
@@ -336,13 +360,13 @@ public class DefaultCameraApi implements CameraApi
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject getEvent (final boolean longPolling)
+    public Response getEvent (final boolean longPolling)
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("getEvent")
                                                   .withParam(longPolling);
         final int longPollingTimeout = longPolling ? 20000 : 8000; // msec
-        return call.post(longPollingTimeout);
+        return new GenericResponse(call.post(longPollingTimeout));
       }
 
     @Nonnull

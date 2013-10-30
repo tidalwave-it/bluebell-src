@@ -164,13 +164,13 @@ public class SampleCameraActivity extends Activity {
                     JSONObject replyJson = null;
 
                     // getAvailableApiList
-                    replyJson = mRemoteApi.getAvailableApiList();
+                    replyJson = mRemoteApi.getAvailableApiList().getJsonObject();
                     loadAvailableApiList(replyJson);
 
                     // check version of the server device
                     if (isApiAvailable("getApplicationInfo")) {
                         Log.d(TAG, "openConnection(): getApplicationInfo()");
-                        replyJson = mRemoteApi.getApplicationInfo();
+                        replyJson = mRemoteApi.getApplicationInfo().getJsonObject();
                         if (!isSupportedServerVersion(replyJson)) {
                             toast(R.string.msg_error_non_supported_device);
                             SampleCameraActivity.this.finish();
@@ -184,10 +184,10 @@ public class SampleCameraActivity extends Activity {
                     // startRecMode if necessary.
                     if (isApiAvailable("startRecMode")) {
                         Log.d(TAG, "openConnection(): startRecMode()");
-                        replyJson = mRemoteApi.startRecMode();
+                        replyJson = mRemoteApi.startRecMode().getJsonObject();
 
                         // Call again.
-                        replyJson = mRemoteApi.getAvailableApiList();
+                        replyJson = mRemoteApi.getAvailableApiList().getJsonObject();
                         loadAvailableApiList(replyJson);
                     }
 
@@ -353,7 +353,7 @@ public class SampleCameraActivity extends Activity {
                 Log.d(TAG, "prepareShootModeRadioButtons(): exec.");
                 JSONObject replyJson = null;
                 try {
-                    replyJson = mRemoteApi.getAvailableShootMode();
+                    replyJson = mRemoteApi.getAvailableShootMode().getJsonObject();
 
                     JSONArray resultsObj = replyJson.getJSONArray("result");
                     final String currentMode = resultsObj.getString(0);
@@ -435,7 +435,7 @@ public class SampleCameraActivity extends Activity {
             @Override
             public void run() {
                 try {
-                    JSONObject replyJson = mRemoteApi.setShootMode(mode);
+                    JSONObject replyJson = mRemoteApi.setShootMode(mode).getJsonObject();
                     JSONArray resultsObj = replyJson.getJSONArray("result");
                     int resultCode = resultsObj.getInt(0);
                     if (resultCode == 0) {
@@ -465,7 +465,7 @@ public class SampleCameraActivity extends Activity {
             @Override
             public void run() {
                 try {
-                    JSONObject replyJson = mRemoteApi.actTakePicture();
+                    JSONObject replyJson = mRemoteApi.actTakePicture().getJsonObject();
                     JSONArray resultsObj = replyJson.getJSONArray("result");
                     JSONArray imageUrlsObj = resultsObj.getJSONArray(0);
                     String postImageUrl = null;
@@ -518,7 +518,7 @@ public class SampleCameraActivity extends Activity {
             public void run() {
                 try {
                     Log.d(TAG, "startMovieRec: exec.");
-                    JSONObject replyJson = mRemoteApi.startMovieRec();
+                    JSONObject replyJson = mRemoteApi.startMovieRec().getJsonObject();
                     JSONArray resultsObj = replyJson.getJSONArray("result");
                     int resultCode = resultsObj.getInt(0);
                     if (resultCode == 0) {
@@ -544,7 +544,7 @@ public class SampleCameraActivity extends Activity {
             public void run() {
                 try {
                     Log.d(TAG, "stopMovieRec: exec.");
-                    JSONObject replyJson = mRemoteApi.stopMovieRec();
+                    JSONObject replyJson = mRemoteApi.stopMovieRec().getJsonObject();
                     JSONArray resultsObj = replyJson.getJSONArray("result");
                     String thumbnailUrl = resultsObj.getString(0);
                     if (thumbnailUrl != null) {

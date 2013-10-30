@@ -37,10 +37,16 @@ import org.json.JSONObject;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface CameraApi 
+public interface CameraApi
   {
+    public static interface Response
+      {
+        @Nonnull
+        public JSONObject getJsonObject();
+      }
+
     /*******************************************************************************************************************
-     * 
+     *
      * Calls actTakePicture API to the target server. Request JSON data is such
      * like as below.
      *
@@ -55,14 +61,14 @@ public interface CameraApi
      *
      * @throws IOException  in case of error
      * @return              the JSON response
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
-    public JSONObject actTakePicture() 
+    public Response actTakePicture()
       throws IOException;
 
     /*******************************************************************************************************************
-     * 
+     *
      * Calls getApplicationInfo API to the target server. Request JSON data is
      * such like as below.
      *
@@ -77,15 +83,15 @@ public interface CameraApi
      *
      * @throws IOException  in case of error
      * @return              the JSON response
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
-    public JSONObject getApplicationInfo()
+    public Response getApplicationInfo()
       throws IOException;
 
     // Camera Service APIs
     /*******************************************************************************************************************
-     * 
+     *
      * Calls getAvailableApiList API to the target server. Request JSON data is
      * such like as below.
      *
@@ -100,14 +106,14 @@ public interface CameraApi
      *
      * @throws IOException  in case of error
      * @return              the JSON response
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
-    public JSONObject getAvailableApiList()
+    public Response getAvailableApiList()
       throws IOException;
 
     /*******************************************************************************************************************
-     * 
+     *
      * Calls getAvailableShootMode API to the target server. Request JSON data
      * is such like as below.
      *
@@ -122,14 +128,14 @@ public interface CameraApi
      *
      * @throws IOException  in case of error
      * @return              the JSON response
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
-    public JSONObject getAvailableShootMode()
+    public Response getAvailableShootMode()
       throws IOException;
 
     /*******************************************************************************************************************
-     * 
+     *
      * Calls getEvent API to the target server. Request JSON data is such like
      * as below.
      *
@@ -145,14 +151,14 @@ public interface CameraApi
      * @param longPollingFlag true means long polling request.
      * @throws IOException  in case of error
      * @return              the JSON response
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
-    public JSONObject getEvent (boolean longPollingFlag)
+    public Response getEvent (boolean longPollingFlag)
       throws IOException;
 
     /*******************************************************************************************************************
-     * 
+     *
      * Calls getShootMode API to the target server. Request JSON data is such
      * like as below.
      *
@@ -167,14 +173,14 @@ public interface CameraApi
      *
      * @throws IOException  in case of error
      * @return              the JSON response
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
-    public JSONObject getShootMode() 
+    public Response getShootMode()
       throws IOException;
 
     /*******************************************************************************************************************
-     * 
+     *
      * Calls getSupportedShootMode API to the target server. Request JSON data
      * is such like as below.
      *
@@ -189,14 +195,14 @@ public interface CameraApi
      *
      * @throws IOException  in case of error
      * @return              the JSON response
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
-    public JSONObject getSupportedShootMode()
+    public Response getSupportedShootMode()
       throws IOException;
 
     /*******************************************************************************************************************
-     * 
+     *
      * Calls setShootMode API to the target server. Request JSON data is such
      * like as below.
      *
@@ -212,14 +218,14 @@ public interface CameraApi
      * @param shootMode shoot mode (ex. "still")
      * @throws IOException  in case of error
      * @return              the JSON response
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
-    public JSONObject setShootMode (@Nonnull String shootMode) 
+    public Response setShootMode (@Nonnull String shootMode)
       throws IOException;
 
     /*******************************************************************************************************************
-     * 
+     *
      * Calls startLiveview API to the target server. Request JSON data is such
      * like as below.
      *
@@ -234,14 +240,14 @@ public interface CameraApi
      *
      * @throws IOException  in case of error
      * @return              the JSON response
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
-    public JSONObject startLiveview() 
+    public Response startLiveview()
       throws IOException;
 
     /*******************************************************************************************************************
-     * 
+     *
      * Calls startMovieRec API to the target server. Request JSON data is such
      * like as below.
      *
@@ -256,14 +262,14 @@ public interface CameraApi
      *
      * @throws IOException  in case of error
      * @return              the JSON response
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
-    public JSONObject startMovieRec()
+    public Response startMovieRec()
       throws IOException;
 
     /*******************************************************************************************************************
-     * 
+     *
      * Calls startRecMode API to the target server. Request JSON data is such
      * like as below.
      *
@@ -278,14 +284,14 @@ public interface CameraApi
      *
      * @throws IOException  in case of error
      * @return              the JSON response
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
-    public JSONObject startRecMode() 
+    public Response startRecMode()
       throws IOException;
 
     /*******************************************************************************************************************
-     * 
+     *
      * Calls stopLiveview API to the target server. Request JSON data is such
      * like as below.
      *
@@ -300,14 +306,14 @@ public interface CameraApi
      *
      * @throws IOException  in case of error
      * @return              the JSON response
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
-    public JSONObject stopLiveview()
+    public Response stopLiveview()
       throws IOException;
 
     /*******************************************************************************************************************
-     * 
+     *
      * Calls stopMovieRec API to the target server. Request JSON data is such
      * like as below.
      *
@@ -322,14 +328,14 @@ public interface CameraApi
      *
      * @throws IOException  in case of error
      * @return              the JSON response
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
-    public JSONObject stopMovieRec() 
+    public Response stopMovieRec()
       throws IOException;
 
     /*******************************************************************************************************************
-     * 
+     *
      * Calls stopRecMode API to the target server. Request JSON data is such
      * like as below.
      *
@@ -344,9 +350,9 @@ public interface CameraApi
      *
      * @throws IOException  in case of error
      * @return              the JSON response
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
-    public JSONObject stopRecMode() 
+    public Response stopRecMode()
       throws IOException;
   }

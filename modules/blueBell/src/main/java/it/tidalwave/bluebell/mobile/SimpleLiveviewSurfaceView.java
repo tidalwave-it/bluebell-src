@@ -51,7 +51,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements
 
     /**
      * Contractor
-     * 
+     *
      * @param context
      */
     public SimpleLiveviewSurfaceView(Context context) {
@@ -63,7 +63,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements
 
     /**
      * Contractor
-     * 
+     *
      * @param context
      * @param attrs
      */
@@ -76,7 +76,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements
 
     /**
      * Contractor
-     * 
+     *
      * @param context
      * @param attrs
      * @param defStyle
@@ -108,7 +108,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements
     /**
      * Bind a Remote API object to communicate with Camera device. Need to call
      * this method before calling start() method.
-     * 
+     *
      * @param remoteApi
      */
     public void bindRemoteApi(CameraApi remoteApi) {
@@ -117,7 +117,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements
 
     /**
      * Start retrieving and drawing liveview frame data by new threads.
-     * 
+     *
      * @return true if the starting is completed successfully, false otherwise.
      * @exception IllegalStateException when Remote API object is not set.
      * @see SimpleLiveviewSurfaceView#bindRemoteApi(SimpleRemoteApi)
@@ -144,7 +144,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements
                     // Prepare for connecting.
                     JSONObject replyJson = null;
 
-                    replyJson = mRemoteApi.startLiveview();
+                    replyJson = mRemoteApi.startLiveview().getJsonObject();
                     if (!isErrorReply(replyJson)) {
                         JSONArray resultsObj = replyJson.getJSONArray("result");
                         String liveviewUrl = null;
@@ -255,7 +255,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements
 
     /**
      * Check to see whether start() is already called.
-     * 
+     *
      * @return true if start() is already called, false otherwise.
      */
     public boolean isStarted() {
