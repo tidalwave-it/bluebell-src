@@ -27,17 +27,21 @@
  */
 package it.tidalwave.bluebell.net.impl;
 
-import android.util.Xml;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
-import java.io.StringReader;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.io.IOException;
+import java.io.StringReader;
+import org.xmlpull.v1.XmlPullParserFactory;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -45,72 +49,38 @@ import java.util.Map;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class XmlElement {
-
+@Slf4j @ToString(exclude = "parent")
+public class XmlElement
+  {
     public static final XmlElement NULL_ELEMENT = new XmlElement();
 
-    private static final String TAG = XmlElement.class.getSimpleName();
+    @Getter @Setter
+    protected String tagName;
 
-    protected String mTagName;
+    @Getter @Setter
+    protected String value = "";
 
-    protected String mValue;
+    protected final LinkedList<XmlElement> children = new LinkedList<XmlElement>();
 
-    protected LinkedList<XmlElement> mChildElements;
+    protected final Map<String, String> attributes = new HashMap<String, String>();
 
-    protected Map<String, String> mAttributes;
-
-    protected XmlElement mParentElement;
-
-    /**
-     * Constructor. Creates new empty element.
-     */
-    public XmlElement() {
-        mParentElement = null;
-        mChildElements = new LinkedList<XmlElement>();
-        mAttributes = new HashMap<String, String>();
-        mValue = "";
-    }
-
-    private void setTagName(String name) {
-        mTagName = name;
-    }
-
-    /**
-     * Returns the tag name of this XML element.
-     * 
-     * @return tag name
-     */
-    public String getTagName() {
-        return mTagName;
-    }
-
-    private void setValue(String value) {
-        mValue = value;
-    }
-
-    /**
-     * Returns the content value of this XML element.
-     * 
-     * @return content value
-     */
-    public String getValue() {
-        return mValue;
-    }
+    @Getter @Setter
+    protected XmlElement parent;
 
     /**
      * Returns the content value of this XML element as integer.
-     * 
+     *
      * @param defaultValue returned value if this content value cannot be
      *            converted into integer.
      * @return integer value of this content or default value indicated by the
      *         parameter.
      */
     public int getIntValue(int defaultValue) {
-        if (mValue == null) {
+        if (value == null) {
             return defaultValue;
         } else {
             try {
-                return Integer.valueOf(mValue);
+                return Integer.valueOf(value);
             } catch (NumberFormatException e) {
                 return defaultValue;
             }
@@ -118,19 +88,19 @@ public class XmlElement {
     }
 
     private void putAttribute(String name, String value) {
-        mAttributes.put(name, value);
+        attributes.put(name, value);
     }
 
     /**
      * Returns a value of attribute in this XML element.
-     * 
+     *
      * @param name attribute name
      * @param defaultValue returned value if a value of the attribute is not
      *            found.
      * @return a value of the attribute or the default value
      */
     public String getAttribute(String name, String defaultValue) {
-        String ret = mAttributes.get(name);
+        String ret = attributes.get(name);
         if (ret == null) {
             ret = defaultValue;
         }
@@ -139,14 +109,14 @@ public class XmlElement {
 
     /**
      * Returns a value of attribute in this XML element as integer.
-     * 
+     *
      * @param name attribute name
      * @param defaultValue returned value if a value of the attribute is not
      *            found.
      * @return a value of the attribute or the default value
      */
     public int getIntAttribute(String name, int defaultValue) {
-        String attrValue = mAttributes.get(name);
+        String attrValue = attributes.get(name);
         if (attrValue == null) {
             return defaultValue;
         } else {
@@ -159,20 +129,20 @@ public class XmlElement {
     }
 
     private void putChild(XmlElement childItem) {
-        mChildElements.add(childItem);
+        children.add(childItem);
         childItem.setParent(this);
     }
 
     /**
      * Returns a child XML element. If a child element is not found, returns an
      * empty element instead of null.
-     * 
+     *
      * @param name name of child element
      * @return an element
      */
     public XmlElement findChild(String name) {
 
-        for (final XmlElement child : mChildElements) {
+        for (final XmlElement child : children) {
             if (child.getTagName().equals(name)) {
                 return child;
             }
@@ -183,13 +153,13 @@ public class XmlElement {
     /**
      * Returns a list of child elements. If there is no child element, returns a
      * empty list instead of null.
-     * 
+     *
      * @param name name of child element
      * @return a list of child elements
      */
     public List<XmlElement> findChildren(String name) {
         final List<XmlElement> tagItemList = new ArrayList<XmlElement>();
-        for (final XmlElement child : mChildElements) {
+        for (final XmlElement child : children) {
             if (child.getTagName().equals(name)) {
                 tagItemList.add(child);
             }
@@ -198,98 +168,107 @@ public class XmlElement {
     }
 
     /**
-     * Returns the parent element of this one.
-     * 
-     * @return the parent element.
-     */
-    public XmlElement getParent() {
-        return mParentElement;
-    }
-
-    private void setParent(XmlElement parent) {
-        mParentElement = parent;
-    }
-
-    /**
      * Checks to see whether this element is empty.
-     * 
+     *
      * @return true if empty, false otherwise.
      */
     public boolean isEmpty() {
-        return (mTagName == null);
+        return (tagName == null);
     }
 
     /**
      * Parses XML data and returns the root element.
-     * 
-     * @param xmlPullParser parser
+     *
+     * @param parser parser
      * @return root element
      */
-    public static XmlElement parse(XmlPullParser xmlPullParser) {
-
+    @Nonnull
+    public static XmlElement parse (final @Nonnull XmlPullParser parser)
+      {
         XmlElement rootElement = XmlElement.NULL_ELEMENT;
-        try {
+
+        try
+          {
             XmlElement parsingElement = XmlElement.NULL_ELEMENT;
-            MAINLOOP: while (true) {
-                switch (xmlPullParser.next()) {
+
+MAINLOOP:   while (true)
+              {
+                switch (parser.next())
+                  {
                     case XmlPullParser.START_DOCUMENT:
                         break;
+
                     case XmlPullParser.START_TAG:
                         final XmlElement childItem = new XmlElement();
-                        childItem.setTagName(xmlPullParser.getName());
-                        if (parsingElement == XmlElement.NULL_ELEMENT) {
+                        childItem.setTagName(parser.getName());
+
+                        if (parsingElement == XmlElement.NULL_ELEMENT)
+                          {
                             rootElement = childItem;
-                        } else {
+                          }
+                        else
+                          {
                             parsingElement.putChild(childItem);
-                        }
+                          }
+
                         parsingElement = childItem;
 
-                        // Set Attribute
-                        for (int i = 0; i < xmlPullParser.getAttributeCount(); i++) {
-                            parsingElement.putAttribute(
-                                    xmlPullParser.getAttributeName(i),
-                                    xmlPullParser.getAttributeValue(i));
-                        }
+                        for (int i = 0; i < parser.getAttributeCount(); i++)
+                          {
+                            parsingElement.putAttribute(parser.getAttributeName(i), parser.getAttributeValue(i));
+                          }
+
                         break;
+
                     case XmlPullParser.TEXT:
-                        parsingElement.setValue(xmlPullParser.getText());
+                        parsingElement.setValue(parser.getText());
                         break;
+
                     case XmlPullParser.END_TAG:
                         parsingElement = parsingElement.getParent();
                         break;
+
                     case XmlPullParser.END_DOCUMENT:
                         break MAINLOOP;
-                }
-            }
-        } catch (final XmlPullParserException e) {
-//            Log.e(TAG, "parseXml: XmlPullParserException.");
+                  }
+              }
+          }
+        catch (final XmlPullParserException e)
+          {
+            log.error("parseXml: XmlPullParserException.", e);
             rootElement = XmlElement.NULL_ELEMENT;
-        } catch (final IOException e) {
-//            Log.e(TAG, "parseXml: IOException.");
+          }
+        catch (final IOException e)
+          {
+            log.error("parseXml: IOException.", e);
             rootElement = XmlElement.NULL_ELEMENT;
-        }
+          }
+
         return rootElement;
-    }
+      }
 
     /**
      * Parses XML data and returns the root element.
-     * 
-     * @param xmlStr XML data
+     *
+     * @param xml XML data
      * @return root element
      */
-    public static XmlElement parse(String xmlStr) {
-        if (xmlStr == null) {
-            throw new NullPointerException("parseXml: input is null.");
-        }
-        try {
-            
-//            XmlPullParser xmlPullParser = XmlPullParserFactory.newInstance().newPullParser();
-            XmlPullParser xmlPullParser = Xml.newPullParser();
-            xmlPullParser.setInput(new StringReader(xmlStr));
+    @Nonnull
+    public static XmlElement parse (final @Nonnull String xml)
+      {
+        try
+          {
+            final XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            factory.setNamespaceAware(false);
+            final XmlPullParser xmlPullParser = factory.newPullParser();
+//            XmlPullParser xmlPullParser = Xml.newPullParser();
+            xmlPullParser.setInput(new StringReader(xml));
             return parse(xmlPullParser);
-        } catch (final XmlPullParserException e) {
-//            Log.e(TAG, "parseXml: XmlPullParserException occured.");
+          }
+        catch (final XmlPullParserException e)
+          {
+            log.error("parseXml: XmlPullParserException occured.", e);
             return XmlElement.NULL_ELEMENT;
-        }
-    }
-}
+          }
+      }
+  }

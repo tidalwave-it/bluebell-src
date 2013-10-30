@@ -38,71 +38,72 @@ import it.tidalwave.bluebell.net.impl.DefaultHttpClient;
 import it.tidalwave.bluebell.net.impl.XmlElement;
 import it.tidalwave.sony.ServerDevice;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
  * A server device description class.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
-public class DefaultServerDevice implements ServerDevice 
+@Slf4j @ToString
+public class DefaultServerDevice implements ServerDevice
   {
 //    private final SimpleHttpClient httpClient = new DefaultSimpleHttpClient();
 
     @Getter
     private String ddUrl;
-    
+
     @Getter
     private String friendlyName;
-    
+
     @Getter
     private String modelName;
-    
+
     @Getter
     private String udn;
-    
+
     @Getter
     private String iconUrl;
-    
+
     private final List<ApiService> apiServices = new ArrayList<ApiService>();
 
     /*******************************************************************************************************************
-     * 
+     *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override @Nullable
     public String getIpAddress()
       {
         String ip = null;
-        
-        if (ddUrl != null) 
+
+        if (ddUrl != null)
           {
             return toHost(ddUrl);
           }
-        
+
         return ip;
       }
 
     /*******************************************************************************************************************
-     * 
+     *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override @Nonnull
     public List<ApiService> getApiServices()
       {
         return Collections.unmodifiableList(apiServices);
-      }   
+      }
 
     /*******************************************************************************************************************
-     * 
+     *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override
     public boolean hasApiService (final @CheckForNull String serviceName)
@@ -111,49 +112,49 @@ public class DefaultServerDevice implements ServerDevice
       }
 
     /*******************************************************************************************************************
-     * 
+     *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override @CheckForNull
     public ApiService getApiService (final @Nullable String serviceName)
       {
-        if (serviceName == null) 
+        if (serviceName == null)
           {
             return null;
           }
-        
+
         for (final ApiService apiService : apiServices)
           {
-            if (serviceName.equals(apiService.getName())) 
+            if (serviceName.equals(apiService.getName()))
               {
                 return apiService;
               }
           }
-        
+
         return null;
     }
 
     /*******************************************************************************************************************
-     * 
-     * 
-     * 
+     *
+     *
+     *
      ******************************************************************************************************************/
     @CheckForNull
-    public static DefaultServerDevice fetch (@Nonnull String ddUrl) 
+    public static DefaultServerDevice fetch (@Nonnull String ddUrl)
       {
-        if (ddUrl == null) 
+        if (ddUrl == null)
           {
             throw new NullPointerException("ddUrl is null.");
           }
 
         String ddXml = "";
-        try 
+        try
           {
             ddXml = new DefaultHttpClient().get(ddUrl); // FIXME
             log.debug("fetch() httpGet done.");
-          } 
-        catch (IOException e) 
+          }
+        catch (IOException e)
           {
             log.error("fetch(): IOException.", e);
             return null;
@@ -164,10 +165,11 @@ public class DefaultServerDevice implements ServerDevice
           */
         XmlElement rootElement = XmlElement.parse(ddXml);
 
+          System.err.println("XMLELEMENT " + rootElement);
         // "root"
         DefaultServerDevice device = null;
-        
-        if ("root".equals(rootElement.getTagName())) 
+
+        if ("root".equals(rootElement.getTagName()))
           {
             device = new DefaultServerDevice();
             device.ddUrl = ddUrl;
@@ -181,11 +183,11 @@ public class DefaultServerDevice implements ServerDevice
             // "iconList"
             final XmlElement iconListElement = deviceElement.findChild("iconList");
             final List<XmlElement> iconElements = iconListElement.findChildren("icon");
-            
+
             for (final XmlElement iconElement : iconElements)
               {
                 // Choose png icon to show Android UI.
-                if ("image/png".equals(iconElement.findChild("mimetype").getValue())) 
+                if ("image/png".equals(iconElement.findChild("mimetype").getValue()))
                   {
                     final String _uri = iconElement.findChild("url").getValue();
                     final String hostUrl = toSchemeAndHost(ddUrl);
@@ -194,26 +196,26 @@ public class DefaultServerDevice implements ServerDevice
               }
 
             // "av:X_ScalarWebAPI_DeviceInfo"
-            final XmlElement wApiElement = deviceElement.findChild("X_ScalarWebAPI_DeviceInfo");
-            final XmlElement wApiServiceListElement = wApiElement.findChild("X_ScalarWebAPI_ServiceList");
-            final List<XmlElement> wApiServiceElements = wApiServiceListElement.findChildren("X_ScalarWebAPI_Service");
-            
-            for (final XmlElement wApiServiceElement : wApiServiceElements) 
+            final XmlElement wApiElement = deviceElement.findChild("av:X_ScalarWebAPI_DeviceInfo");
+            final XmlElement wApiServiceListElement = wApiElement.findChild("av:X_ScalarWebAPI_ServiceList");
+            final List<XmlElement> wApiServiceElements = wApiServiceListElement.findChildren("av:X_ScalarWebAPI_Service");
+
+            for (final XmlElement wApiServiceElement : wApiServiceElements)
               {
-                final String serviceName = wApiServiceElement.findChild("X_ScalarWebAPI_ServiceType").getValue();
-                final String actionUrl = wApiServiceElement.findChild("X_ScalarWebAPI_ActionList_URL").getValue();
+                final String serviceName = wApiServiceElement.findChild("av:X_ScalarWebAPI_ServiceType").getValue();
+                final String actionUrl = wApiServiceElement.findChild("av:X_ScalarWebAPI_ActionList_URL").getValue();
                 device.addApiService(serviceName, actionUrl);
               }
           }
-  
+
         log.debug("fetch() parsing XML done.");
         return device;
       }
 
     /*******************************************************************************************************************
-     * 
-     * 
-     * 
+     *
+     *
+     *
      ******************************************************************************************************************/
     private void addApiService (final @Nonnull String name, final @Nonnull String actionUrl)
       {
@@ -221,51 +223,51 @@ public class DefaultServerDevice implements ServerDevice
       }
 
     /*******************************************************************************************************************
-     * 
-     * 
-     * 
+     *
+     *
+     *
      ******************************************************************************************************************/
     @Nonnull
-    private static String toSchemeAndHost (final @Nonnull String url) 
+    private static String toSchemeAndHost (final @Nonnull String url)
       {
         int i = url.indexOf("://"); // http:// or https://
-        
+
         if (i == -1)
           {
             return "";
           }
-        
+
         int j = url.indexOf("/", i + 3);
-        
+
         if (j == -1)
           {
             return "";
           }
-        
+
         return url.substring(0, j);
       }
 
     /*******************************************************************************************************************
-     * 
-     * 
-     * 
+     *
+     *
+     *
      ******************************************************************************************************************/
     private static String toHost(String url)
       {
         int i = url.indexOf("://"); // http:// or https://
-      
+
         if (i == -1)
           {
             return "";
           }
-        
+
         int j = url.indexOf(":", i + 3);
-        
+
         if (j == -1)
           {
             return "";
           }
-        
+
         return url.substring(i + 3, j);
       }
   }

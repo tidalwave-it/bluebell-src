@@ -36,18 +36,18 @@
         <version>1.0-ALPHA-1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    
+
     <groupId>it.tidalwave.bluebell</groupId>
     <artifactId>bluebell-modules</artifactId>
     <version>1.0-ALPHA-1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>blueBell (modules)</name>
-   
+
     <properties>
         <android.version>4.0.1.2</android.version>
         <xmlpull.version>1.1.3.1</xmlpull.version>
         <slf4j.version>1.6.1</slf4j.version>
-        <tft.lombok.version>1.12.2</tft.lombok.version>
+        <!--<tft.lombok.version>1.12.2</tft.lombok.version>-->
     </properties>
 
     <dependencyManagement>
@@ -101,7 +101,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -113,7 +113,7 @@
             <artifactId>jsr305</artifactId>
         </dependency>
     </dependencies>
-   
+
     <modules>
         <module>SonyCameraAPI</module>
         <module>blueBell</module>

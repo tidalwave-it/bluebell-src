@@ -35,25 +35,26 @@ import it.tidalwave.sony.ServerDevice.ApiService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
  * A server device description class.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ServerDevice 
+public interface ServerDevice // FIXME: rename to CameraDevice
   {
     /*******************************************************************************************************************
-     * 
+     *
      * Camera Remote API service (category). For example, "camera", "guide" and
      * so on. "Action List URL" is API request target URL of each service.
-     * 
+     *
      ******************************************************************************************************************/
-    @AllArgsConstructor
-    public static class ApiService 
+    @AllArgsConstructor @ToString
+    public static class ApiService
       {
         @Getter @Setter @Nonnull
         private String name;
@@ -62,110 +63,110 @@ public interface ServerDevice
         private String actionListUrl;
 
         /***************************************************************************************************************
-         * 
+         *
          * Returns the endpoint URL of the category.
-         * 
+         *
          * @return endpoint URL
-         * 
+         *
          **************************************************************************************************************/
         @Nonnull
         public String getEndpointUrl()
           {
             String url = null;
-            
-            if (actionListUrl == null || name == null) 
+
+            if (actionListUrl == null || name == null)
               {
                 url = null;
-              } 
-            else if (actionListUrl.endsWith("/")) 
+              }
+            else if (actionListUrl.endsWith("/"))
               {
                 url = actionListUrl + name;
               }
-            else 
+            else
               {
                 url = actionListUrl + "/" + name;
               }
-            
+
             return url;
           }
       }
 
     /*******************************************************************************************************************
-     * 
+     *
      * Returns a ApiService object.
      *
      * @param serviceName category name
      * @return ApiService object
-     * 
+     *
      ******************************************************************************************************************/
     @CheckForNull
     public ApiService getApiService (@Nullable String serviceName);
 
     /*******************************************************************************************************************
-     * 
-     * 
-     * 
+     *
+     *
+     *
      ******************************************************************************************************************/
     @Nonnull
     public List<ApiService> getApiServices();
 
     /*******************************************************************************************************************
-     * 
+     *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
     public String getDdUrl();
 
     /*******************************************************************************************************************
-     * 
-     * 
-     * 
+     *
+     *
+     *
      ******************************************************************************************************************/
     @Nonnull
     public String getFriendlyName();
 
     /*******************************************************************************************************************
-     * 
-     * 
-     * 
+     *
+     *
+     *
      ******************************************************************************************************************/
     @Nonnull
     public String getIconUrl();
 
     /*******************************************************************************************************************
-     * 
+     *
      * Returns IP address of the DD.
      *
      * @return
-     * 
+     *
      ******************************************************************************************************************/
     @Nullable
     public String getIpAddress();
 
     /*******************************************************************************************************************
-     * 
-     * 
-     * 
+     *
+     *
+     *
      ******************************************************************************************************************/
     @Nonnull
     public String getModelName();
 
     /*******************************************************************************************************************
-     * 
-     * 
-     * 
+     *
+     *
+     *
      ******************************************************************************************************************/
     @Nonnull
     public String getUdn();
 
     /*******************************************************************************************************************
-     * 
+     *
      * Checks to see whether the server supports the category.
      *
      * @param serviceName category name
      * @return true if it's supported.
-     * 
+     *
      ******************************************************************************************************************/
-    public boolean hasApiService (@CheckForNull String serviceName);    
+    public boolean hasApiService (@CheckForNull String serviceName);
   }

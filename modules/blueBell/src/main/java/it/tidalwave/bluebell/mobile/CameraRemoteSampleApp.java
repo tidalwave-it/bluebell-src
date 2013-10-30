@@ -14,7 +14,6 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,14 +29,13 @@ import it.tidalwave.sony.impl.DefaultSimpleSsdpClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * An Activity class of Device Discovery screen.
  */
+@Slf4j
 public class CameraRemoteSampleApp extends Activity {
-
-    private static final String TAG = CameraRemoteSampleApp.class
-            .getSimpleName();
 
     private Handler mHandler;
     private SimpleSsdpClient mSsdpClient;
@@ -55,7 +53,7 @@ public class CameraRemoteSampleApp extends Activity {
         mSsdpClient = new DefaultSimpleSsdpClient();
         mListAdapter = new DeviceListAdapter(this);
 
-        Log.d(TAG, "onCreate() completed.");
+        log.debug("onCreate() completed.");
     }
 
     @Override
@@ -101,7 +99,7 @@ public class CameraRemoteSampleApp extends Activity {
             textWifiSsid.setText(R.string.msg_wifi_disconnect);
         }
 
-        Log.d(TAG, "onResume() completed.");
+        log.debug("onResume() completed.");
     }
 
     @Override
@@ -112,7 +110,7 @@ public class CameraRemoteSampleApp extends Activity {
             mSsdpClient.cancelSearching();
         }
 
-        Log.d(TAG, "onPause() completed.");
+        log.debug("onPause() completed.");
     }
 
     // Start searching supported devices.
@@ -124,8 +122,7 @@ public class CameraRemoteSampleApp extends Activity {
             @Override
             public void onDeviceFound(final ServerDevice device) {
                 // Called by non-UI thread.
-                Log.d(TAG,
-                        ">> Search device found: " + device.getFriendlyName());
+                log.info(">>>> Search device found: {}", device.getFriendlyName());
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -136,8 +133,7 @@ public class CameraRemoteSampleApp extends Activity {
 
             @Override
             public void onFinished() {
-                // Called by non-UI thread.
-                Log.d(TAG, ">> Search finished.");
+                log.info(">>>> Search finished.");
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -154,8 +150,7 @@ public class CameraRemoteSampleApp extends Activity {
 
             @Override
             public void onErrorFinished() {
-                // Called by non-UI thread.
-                Log.d(TAG, ">> Search Error finished.");
+                log.info(">>>> Search Error finished.");
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -228,28 +223,30 @@ public class CameraRemoteSampleApp extends Activity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
+        public View getView (final int position, final View convertView, final ViewGroup parent) 
+          {
             TextView textView = (TextView) convertView;
-            if (textView == null) {
-                textView = (TextView) mInflater.inflate(
-                        R.layout.device_list_item, null);
-            }
+            
+            if (textView == null) 
+              {
+                textView = (TextView)mInflater.inflate(R.layout.device_list_item, null);
+              }
+            
             ServerDevice device = (ServerDevice) getItem(position);
+            log.info(">>>> found {}, services: {}", device.getFriendlyName(), device.getApiServices());
             ApiService apiService = device.getApiService("camera");
-            String endpointUrl = null;
-            if (apiService != null) {
+            String endpointUrl = "?";
+            
+            if (apiService != null) 
+              {
                 endpointUrl = apiService.getEndpointUrl();
-            }
+              }
 
-            // Label
-            String htmlLabel = String.format("%s ", device.getFriendlyName())
-                    + String.format(
-                            "<br><small>Endpoint URL:  <font color=\"blue\">%s</font></small>",
-                            endpointUrl);
+            final String htmlLabel = String.format("%s ", device.getFriendlyName())
+                    + String.format("<br><small>Endpoint URL:  <font color=\"blue\">%s</font></small>", endpointUrl);
             textView.setText(Html.fromHtml(htmlLabel));
 
             return textView;
-        }
-    }
+          }
+      }
 }

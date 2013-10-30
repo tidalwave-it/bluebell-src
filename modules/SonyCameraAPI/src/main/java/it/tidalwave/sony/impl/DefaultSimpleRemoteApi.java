@@ -44,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * Simple Camera Remote API wrapper class. (JSON based API <--> Java API)
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -53,27 +53,27 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultSimpleRemoteApi implements SimpleRemoteApi
   {
     private static final String CAMERA_SERVICE = "camera";
-      
+
     // API server device you want to send requests.
     private final ServerDevice mTargetServer;
 
     // Request ID of API calling. This will be counted up by each API calling.
     private int mRequestId;
-    
+
     private final HttpClient httpClient = new DefaultHttpClient();
-    
+
     class Call
       {
         private final JSONObject request = new JSONObject();
-        
+
         private final JSONArray params = new JSONArray();
-        
+
         private final String url;
-        
-        public Call (final @Nonnull String service) 
+
+        public Call (final @Nonnull String service)
           throws IOException
           {
-            try 
+            try
               {
                 url = findActionListUrl(service) + "/" + service;
                 request.put("version", "1.0");
@@ -84,7 +84,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
                 throw new IOException(e);
               }
           }
-        
+
         @Nonnull
         public Call withParam (final @Nonnull Object value)
           throws IOException
@@ -92,12 +92,12 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
             params.put(value);
             return this;
           }
-        
+
         @Nonnull
         public Call withMethod (final @Nonnull String methodName)
           throws IOException
           {
-            try 
+            try
               {
                 request.put("method", methodName);
                 return this;
@@ -107,31 +107,31 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
                 throw new IOException(e);
               }
           }
-                
+
         @Nonnull
         public JSONObject post()
           throws IOException
           {
-            try 
+            try
               {
                 request.put("params", params);
                 log.info("Request: {}", request);
                 final String response = httpClient.post(url, request.toString());
                 log.info("Response: {}", response);
-                
+
                 return new JSONObject(response);
-              } 
+              }
             catch (JSONException e)
               {
                 throw new IOException(e);
               }
           }
-        
+
         @Nonnull
         public JSONObject post (final @Nonnegative int timeout)
           throws IOException
           {
-            try 
+            try
               {
                 request.put("params", params);
                 log.info("Request: {}", request);
@@ -139,7 +139,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
                 log.info("Response: {}", response);
 
                 return new JSONObject(response);
-              } 
+              }
             catch (JSONException e)
               {
                 throw new IOException(e);
@@ -148,216 +148,223 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
       }
 
     /*******************************************************************************************************************
-     * 
+     *
      * Constructor.
-     * 
+     *
      * @param target server device of Remote API
-     * 
+     *
      ******************************************************************************************************************/
-    public DefaultSimpleRemoteApi (final @Nonnull ServerDevice target) 
+    public DefaultSimpleRemoteApi (final @Nonnull ServerDevice target)
       {
         mTargetServer = target;
         mRequestId = 1;
       }
 
     /*******************************************************************************************************************
-     * 
+     *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override @Nonnull
     public JSONObject getAvailableApiList()
-      throws IOException 
+      throws IOException
       {
-        final Call call = new Call(CAMERA_SERVICE).withMethod("getAvailableApiList");
+        final Call call = createCall(CAMERA_SERVICE).withMethod("getAvailableApiList");
         return call.post();
     }
 
     /*******************************************************************************************************************
-     * 
+     *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override @Nonnull
     public JSONObject getApplicationInfo()
-      throws IOException 
+      throws IOException
       {
-        final Call call = new Call(CAMERA_SERVICE).withMethod("getApplicationInfo");
+        final Call call = createCall(CAMERA_SERVICE).withMethod("getApplicationInfo");
         return call.post();
       }
 
     /*******************************************************************************************************************
-     * 
+     *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override @Nonnull
     public JSONObject getShootMode()
       throws IOException
       {
-        final Call call = new Call(CAMERA_SERVICE).withMethod("getShootMode");
+        final Call call = createCall(CAMERA_SERVICE).withMethod("getShootMode");
         return call.post();
     }
 
     /*******************************************************************************************************************
-     * 
+     *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject setShootMode (final @Nonnull String shootMode) 
+    public JSONObject setShootMode (final @Nonnull String shootMode)
       throws IOException
       {
-        final Call call = new Call(CAMERA_SERVICE).withMethod("setShootMode")
+        final Call call = createCall(CAMERA_SERVICE).withMethod("setShootMode")
                                                   .withParam(shootMode);
         return call.post();
       }
 
     /*******************************************************************************************************************
-     * 
+     *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject getAvailableShootMode() 
+    public JSONObject getAvailableShootMode()
       throws IOException
       {
-        final Call call = new Call(CAMERA_SERVICE).withMethod("getAvailableShootMode");
+        final Call call = createCall(CAMERA_SERVICE).withMethod("getAvailableShootMode");
         return call.post();
       }
 
     /*******************************************************************************************************************
-     * 
+     *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override @Nonnull
     public JSONObject getSupportedShootMode()
       throws IOException
       {
-        final Call call = new Call(CAMERA_SERVICE).withMethod("getSupportedShootMode");
+        final Call call = createCall(CAMERA_SERVICE).withMethod("getSupportedShootMode");
         return call.post();
       }
 
     /*******************************************************************************************************************
-     * 
+     *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject startLiveview() 
-      throws IOException 
+    public JSONObject startLiveview()
+      throws IOException
       {
-        final Call call = new Call(CAMERA_SERVICE).withMethod("startLiveview");
+        final Call call = createCall(CAMERA_SERVICE).withMethod("startLiveview");
         return call.post();
       }
 
     /*******************************************************************************************************************
-     * 
+     *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject stopLiveview() 
-      throws IOException 
+    public JSONObject stopLiveview()
+      throws IOException
       {
-        final Call call = new Call(CAMERA_SERVICE).withMethod("stopLiveview");
+        final Call call = createCall(CAMERA_SERVICE).withMethod("stopLiveview");
         return call.post();
       }
 
     /*******************************************************************************************************************
-     * 
+     *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject startRecMode() 
-      throws IOException 
+    public JSONObject startRecMode()
+      throws IOException
       {
-        final Call call = new Call(CAMERA_SERVICE).withMethod("startRecMode");
+        final Call call = createCall(CAMERA_SERVICE).withMethod("startRecMode");
         return call.post();
       }
 
     /*******************************************************************************************************************
-     * 
+     *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override @Nonnull
     public JSONObject stopRecMode()
-      throws IOException 
+      throws IOException
       {
-        final Call call = new Call(CAMERA_SERVICE).withMethod("stopRecMode");
+        final Call call = createCall(CAMERA_SERVICE).withMethod("stopRecMode");
         return call.post();
       }
 
     /*******************************************************************************************************************
-     * 
+     *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override @Nonnull
     public JSONObject actTakePicture()
-      throws IOException 
-      {
-        final Call call = new Call(CAMERA_SERVICE).withMethod("actTakePicture");
-        return call.post();
-      }
-
-    /*******************************************************************************************************************
-     * 
-     * {@inheritDoc}
-     * 
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public JSONObject startMovieRec() 
       throws IOException
       {
-        final Call call = new Call(CAMERA_SERVICE).withMethod("startMovieRec");
+        final Call call = createCall(CAMERA_SERVICE).withMethod("actTakePicture");
         return call.post();
       }
 
     /*******************************************************************************************************************
-     * 
+     *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject stopMovieRec() 
-      throws IOException 
+    public JSONObject startMovieRec()
+      throws IOException
       {
-        final Call call = new Call(CAMERA_SERVICE).withMethod("stopMovieRec");
+        final Call call = createCall(CAMERA_SERVICE).withMethod("startMovieRec");
         return call.post();
       }
 
     /*******************************************************************************************************************
-     * 
+     *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public JSONObject getEvent (final boolean longPolling) 
-      throws IOException 
+    public JSONObject stopMovieRec()
+      throws IOException
       {
-        final Call call = new Call(CAMERA_SERVICE).withMethod("getEvent")
+        final Call call = createCall(CAMERA_SERVICE).withMethod("stopMovieRec");
+        return call.post();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public JSONObject getEvent (final boolean longPolling)
+      throws IOException
+      {
+        final Call call = createCall(CAMERA_SERVICE).withMethod("getEvent")
                                                   .withParam(longPolling);
         final int longPollingTimeout = longPolling ? 20000 : 8000; // msec
         return call.post(longPollingTimeout);
       }
-    
+
+    @Nonnull
+    private Call createCall (final @Nonnull String service)
+      throws IOException
+      {
+        return new Call(service);
+      }
+
     // Retrieves Action List URL from Server information.
-    private String findActionListUrl (final @Nonnull String service) 
+    private String findActionListUrl (final @Nonnull String service)
       {
         final List<ApiService> services = mTargetServer.getApiServices();
-      
-        for (final ApiService apiService : services) 
+
+        for (final ApiService apiService : services)
           {
             if (apiService.getName().equals(service))
               {
                 return apiService.getActionListUrl();
               }
           }
-        
-        throw new IllegalStateException("actionUrl not found.");
+
+        throw new IllegalStateException("actionUrl not found for service: " + service);
       }
   }

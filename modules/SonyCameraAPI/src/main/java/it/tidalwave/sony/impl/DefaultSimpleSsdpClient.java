@@ -148,6 +148,7 @@ public class DefaultSimpleSsdpClient implements SimpleSsdpClient
                   {
                     try 
                       {
+                        log.info(">>>> receiving packets...");
                         socket.setSoTimeout(SSDP_RECEIVE_TIMEOUT);
                         socket.receive(receivePacket);
                         final String ssdpReplyMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
