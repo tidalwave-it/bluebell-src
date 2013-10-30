@@ -61,14 +61,14 @@ public class DefaultSimpleSsdpClientTest
       throws Exception
       {
         final CountDownLatch latch = new CountDownLatch(1);
-        final AtomicReference<CameraApi> remoteApi = new AtomicReference<CameraApi>();
+        final AtomicReference<CameraApi> cameraApiHolder = new AtomicReference<CameraApi>();
 
         fixture.search(new SsdpDiscoverer.Callback()
           {
             public void onDeviceFound (final @Nonnull CameraDevice device)
               {
                 log.info("onDeviceFound({})", device);
-                remoteApi.set(new DefaultCameraApi(device));
+                cameraApiHolder.set(new DefaultCameraApi(device));
                 latch.countDown();
               }
 
@@ -84,9 +84,10 @@ public class DefaultSimpleSsdpClientTest
           });
 
         latch.await();
-        assertThat(remoteApi.get(), is(notNullValue()));
+        final CameraApi cameraApi = cameraApiHolder.get();
+        assertThat(cameraApi, is(notNullValue()));
 
-        remoteApi.get().startRecMode();
-        remoteApi.get().actTakePicture();
+        cameraApi.startRecMode();
+        cameraApi.actTakePicture();
       }
   }
