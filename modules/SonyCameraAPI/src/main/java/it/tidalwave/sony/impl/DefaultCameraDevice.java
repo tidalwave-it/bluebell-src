@@ -165,7 +165,7 @@ public class DefaultCameraDevice implements CameraDevice
           */
         XmlElement rootElement = XmlElement.parse(ddXml);
 
-          System.err.println("XMLELEMENT " + rootElement);
+        log.info("response XLM element: {}", rootElement);
         // "root"
         DefaultCameraDevice device = null;
 
