@@ -27,9 +27,9 @@
  */
 package it.tidalwave.sony.impl;
 
-import it.tidalwave.sony.CameraApi;
 import java.util.List;
 import java.io.IOException;
+import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraApi.EventResponse;
 import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.sony.StatusCode;
@@ -45,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class DefaultCameraObserver implements CameraObserver
+/* package */ class DefaultCameraObserver implements CameraObserver
   {
     private CameraApi cameraApi;
 

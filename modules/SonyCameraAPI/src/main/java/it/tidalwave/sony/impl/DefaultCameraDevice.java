@@ -36,7 +36,9 @@ import java.util.List;
 import java.io.IOException;
 import it.tidalwave.bluebell.net.impl.DefaultHttpClient;
 import it.tidalwave.bluebell.net.impl.XmlElement;
+import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraDevice;
+import it.tidalwave.sony.CameraObserver;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -70,6 +72,10 @@ public class DefaultCameraDevice implements CameraDevice
     private String iconUrl;
 
     private final List<ApiService> apiServices = new ArrayList<ApiService>();
+
+    private CameraApi api;
+
+    private CameraObserver observer;
 
     /*******************************************************************************************************************
      *
@@ -205,6 +211,38 @@ public class DefaultCameraDevice implements CameraDevice
 
         log.debug("fetch() parsing XML done.");
         return device;
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public synchronized CameraApi getApi()
+      {
+        if (api == null)
+          {
+            api = new DefaultCameraApi(this);
+          }
+
+        return api;
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public synchronized CameraObserver getObserver()
+      {
+        if (observer == null)
+          {
+            observer = new DefaultCameraObserver(getApi());
+          }
+
+        return observer;
       }
 
     /*******************************************************************************************************************

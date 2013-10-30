@@ -4,7 +4,6 @@
 
 package it.tidalwave.bluebell.mobile;
 
-import it.tidalwave.sony.impl.DefaultCameraApi;
 import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraDevice;
@@ -24,7 +23,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import it.tidalwave.sony.impl.DefaultCameraObserver;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,10 +53,14 @@ public class SampleCameraActivity extends Activity {
     private Button mButtonRecStartStop;
     private TextView mTextCameraStatus;
 
-    private CameraDevice mTargetServer;
-    private CameraApi mRemoteApi;
+    private CameraDevice cameraDevice;
+    
+    private CameraApi cameraApi;
+
+    private CameraObserver cameraObserver;
+
     private SimpleLiveviewSurfaceView mLiveviewSurface;
-    private CameraObserver mEventObserver;
+
     private final Set<String> mAvailableApiSet = new HashSet<String>();
     private boolean mRadioInitialChecked;
 
@@ -70,9 +72,9 @@ public class SampleCameraActivity extends Activity {
 
         mHandler = new Handler();
         SampleApplication app = (SampleApplication) getApplication();
-        mTargetServer = app.getTargetServerDevice();
-        mRemoteApi = new DefaultCameraApi(mTargetServer);
-        mEventObserver = new DefaultCameraObserver(mRemoteApi);
+        cameraDevice = app.getTargetServerDevice();
+        cameraApi = cameraDevice.getApi();
+        cameraObserver = cameraDevice.getObserver();
 
         mImagePictureWipe = (ImageView) findViewById(R.id.image_picture_wipe);
         mRadiosShootMode = (RadioGroup) findViewById(R.id.radio_group_shoot_mode);
@@ -80,7 +82,7 @@ public class SampleCameraActivity extends Activity {
         mButtonRecStartStop = (Button) findViewById(R.id.button_rec_start_stop);
         mTextCameraStatus = (TextView) findViewById(R.id.text_camera_status);
         mLiveviewSurface = (SimpleLiveviewSurfaceView) findViewById(R.id.surfaceview_liveview);
-        mLiveviewSurface.bindRemoteApi(mRemoteApi);
+        mLiveviewSurface.bindRemoteApi(cameraApi);
 
         Log.d(TAG, "onCreate() completed.");
     }
@@ -100,15 +102,15 @@ public class SampleCameraActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                if ("MovieRecording".equals(mEventObserver.getCameraStatus())) {
+                if ("MovieRecording".equals(cameraObserver.getCameraStatus())) {
                     stopMovieRec();
-                } else if ("IDLE".equals(mEventObserver.getCameraStatus())) {
+                } else if ("IDLE".equals(cameraObserver.getCameraStatus())) {
                     startMovieRec();
                 }
             }
         });
 
-        mEventObserver.setEventChangeListener(new CameraObserver.ChangeListener()
+        cameraObserver.setEventChangeListener(new CameraObserver.ChangeListener()
           {
             @Override
             public void onShootModeChanged (final @Nonnull String shootMode)
@@ -187,13 +189,13 @@ public class SampleCameraActivity extends Activity {
                     JSONObject replyJson = null;
 
                     // getAvailableApiList
-                    replyJson = mRemoteApi.getAvailableApiList().getJsonObject();
+                    replyJson = cameraApi.getAvailableApiList().getJsonObject();
                     loadAvailableApiList(replyJson);
 
                     // check version of the server device
                     if (isApiAvailable("getApplicationInfo")) {
                         Log.d(TAG, "openConnection(): getApplicationInfo()");
-                        replyJson = mRemoteApi.getApplicationInfo().getJsonObject();
+                        replyJson = cameraApi.getApplicationInfo().getJsonObject();
                         if (!isSupportedServerVersion(replyJson)) {
                             toast(R.string.msg_error_non_supported_device);
                             SampleCameraActivity.this.finish();
@@ -207,17 +209,17 @@ public class SampleCameraActivity extends Activity {
                     // startRecMode if necessary.
                     if (isApiAvailable("startRecMode")) {
                         Log.d(TAG, "openConnection(): startRecMode()");
-                        mRemoteApi.startRecMode().getJsonObject();
+                        cameraApi.startRecMode().getJsonObject();
 
                         // Call again.
-                        replyJson = mRemoteApi.getAvailableApiList().getJsonObject();
+                        replyJson = cameraApi.getAvailableApiList().getJsonObject();
                         loadAvailableApiList(replyJson);
                     }
 
                     // getEvent start
                     if (isApiAvailable("getEvent")) {
                         Log.d(TAG, "openConnection(): EventObserver.start()");
-                        mEventObserver.start();
+                        cameraObserver.start();
                     }
 
                     // Liveview start
@@ -258,12 +260,12 @@ public class SampleCameraActivity extends Activity {
 
                     // getEvent stop
                     Log.d(TAG, "closeConnection(): EventObserver.stop()");
-                    mEventObserver.stop();
+                    cameraObserver.stop();
 
                     // stopRecMode if necessary.
                     if (isApiAvailable("stopRecMode")) {
                         Log.d(TAG, "closeConnection(): stopRecMode()");
-                        mRemoteApi.stopRecMode();
+                        cameraApi.stopRecMode();
                     }
 
                     Log.d(TAG, "closeConnection(): completed.");
@@ -277,8 +279,8 @@ public class SampleCameraActivity extends Activity {
 
     // Refresh UI appearance along current "cameraStatus" and "shootMode".
     private void refreshUi() {
-        String cameraStatus = mEventObserver.getCameraStatus();
-        String shootMode = mEventObserver.getShootMode();
+        String cameraStatus = cameraObserver.getCameraStatus();
+        String shootMode = cameraObserver.getShootMode();
 
         // CameraStatus TextView
         mTextCameraStatus.setText(cameraStatus);
@@ -376,7 +378,7 @@ public class SampleCameraActivity extends Activity {
                 Log.d(TAG, "prepareShootModeRadioButtons(): exec.");
                 JSONObject replyJson = null;
                 try {
-                    replyJson = mRemoteApi.getAvailableShootMode().getJsonObject();
+                    replyJson = cameraApi.getAvailableShootMode().getJsonObject();
 
                     JSONArray resultsObj = replyJson.getJSONArray("result");
                     final String currentMode = resultsObj.getString(0);
@@ -458,7 +460,7 @@ public class SampleCameraActivity extends Activity {
             @Override
             public void run() {
                 try {
-                    JSONObject replyJson = mRemoteApi.setShootMode(mode).getJsonObject();
+                    JSONObject replyJson = cameraApi.setShootMode(mode).getJsonObject();
                     JSONArray resultsObj = replyJson.getJSONArray("result");
                     int resultCode = resultsObj.getInt(0);
                     if (resultCode == 0) {
@@ -488,7 +490,7 @@ public class SampleCameraActivity extends Activity {
             @Override
             public void run() {
                 try {
-                    JSONObject replyJson = mRemoteApi.actTakePicture().getJsonObject();
+                    JSONObject replyJson = cameraApi.actTakePicture().getJsonObject();
                     JSONArray resultsObj = replyJson.getJSONArray("result");
                     JSONArray imageUrlsObj = resultsObj.getJSONArray(0);
                     String postImageUrl = null;
@@ -541,7 +543,7 @@ public class SampleCameraActivity extends Activity {
             public void run() {
                 try {
                     Log.d(TAG, "startMovieRec: exec.");
-                    JSONObject replyJson = mRemoteApi.startMovieRec().getJsonObject();
+                    JSONObject replyJson = cameraApi.startMovieRec().getJsonObject();
                     JSONArray resultsObj = replyJson.getJSONArray("result");
                     int resultCode = resultsObj.getInt(0);
                     if (resultCode == 0) {
@@ -567,7 +569,7 @@ public class SampleCameraActivity extends Activity {
             public void run() {
                 try {
                     Log.d(TAG, "stopMovieRec: exec.");
-                    JSONObject replyJson = mRemoteApi.stopMovieRec().getJsonObject();
+                    JSONObject replyJson = cameraApi.stopMovieRec().getJsonObject();
                     JSONArray resultsObj = replyJson.getJSONArray("result");
                     String thumbnailUrl = resultsObj.getString(0);
                     if (thumbnailUrl != null) {
