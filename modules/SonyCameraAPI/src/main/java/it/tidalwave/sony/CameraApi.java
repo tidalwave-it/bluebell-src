@@ -30,9 +30,9 @@ package it.tidalwave.sony;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import org.json.JSONObject;
 import lombok.Getter;
-import org.json.JSONException;
 
 /***********************************************************************************************************************
  *
@@ -105,6 +105,16 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
+     *
+     ******************************************************************************************************************/
+    public static interface AvailableApisResponse extends Response
+      {
+        @Nonnull
+        public Set<String> getApis();
+      }
+
+    /*******************************************************************************************************************
+     *
      * Calls actTakePicture API to the target server. Request JSON data is such
      * like as below.
      *
@@ -167,7 +177,7 @@ public interface CameraApi
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Response getAvailableApiList()
+    public AvailableApisResponse getAvailableApiList()
       throws IOException;
 
     /*******************************************************************************************************************

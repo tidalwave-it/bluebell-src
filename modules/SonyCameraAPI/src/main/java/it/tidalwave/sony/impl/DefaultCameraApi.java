@@ -41,6 +41,8 @@ import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.StatusCode;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.TreeSet;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -155,7 +157,7 @@ import lombok.extern.slf4j.Slf4j;
      *
      *
      ******************************************************************************************************************/
-    class DefaultEventResponse extends DefaultRecModeResponse implements EventResponse
+    class DefaultEventResponse extends ErrorCheckingResponse implements EventResponse
       {
         public DefaultEventResponse (final @Nonnull JSONObject jsonObject)
           throws CameraApiException
@@ -259,6 +261,44 @@ import lombok.extern.slf4j.Slf4j;
                   }
 
                 return shootMode;
+              }
+            catch (JSONException e)
+              {
+                throw new RuntimeException("malformed JSON", e);
+              }
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    class DefaultAvailableApisResponse extends ErrorCheckingResponse implements AvailableApisResponse
+      {
+        public DefaultAvailableApisResponse (final @Nonnull JSONObject jsonObject)
+          throws CameraApiException
+          {
+            super(jsonObject);
+          }
+
+    // Finds and extracts a list of available APIs from reply JSON data.
+    // As for getEvent v1.0, results[0] => "availableApiList"
+        @Override @Nonnull
+        public Set<String> getApis()
+          {
+            try
+              {
+                final Set<String> availableApis = new TreeSet<String>();
+                final JSONArray resultArrayJson = jsonObject.getJSONArray("result");
+                final JSONArray apiListJson = resultArrayJson.getJSONArray(0);
+
+                for (int i = 0; i < apiListJson.length(); i++)
+                  {
+                    availableApis.add(apiListJson.getString(i));
+                  }
+
+                return availableApis;
               }
             catch (JSONException e)
               {
@@ -376,11 +416,11 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Response getAvailableApiList()
+    public AvailableApisResponse getAvailableApiList()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("getAvailableApiList");
-        return new GenericResponse(call.post());
+        return new DefaultAvailableApisResponse(call.post());
       }
 
     /*******************************************************************************************************************

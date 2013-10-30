@@ -34,6 +34,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -59,7 +60,7 @@ public class SampleCameraActivity extends Activity
 
     private SimpleLiveviewSurfaceView mLiveviewSurface;
 
-    private final Set<String> availableApis = new TreeSet<String>();
+    private final Set<String> availableApis = Collections.synchronizedSet(new TreeSet<String>());
 
     private boolean mRadioInitialChecked;
 
@@ -122,7 +123,7 @@ public class SampleCameraActivity extends Activity
             @Override
             public void onShootModeChanged (final @Nonnull String shootMode)
               {
-                log.info("onShootModeChanged() called: {}", shootMode);
+                log.info("onShootModeChanged({})", shootMode);
                 mHandler.post(new Runnable()
                   {
                     @Override
@@ -136,7 +137,7 @@ public class SampleCameraActivity extends Activity
             @Override
             public void onStatusChanged (final @Nonnull String status)
               {
-                log.info("onCameraStatusChanged() called: {}", status);
+                log.info("onStatusChanged({})", status);
                 mHandler.post(new Runnable()
                   {
                     @Override
@@ -150,16 +151,8 @@ public class SampleCameraActivity extends Activity
             @Override
             public void onApisChanged (final @Nonnull List<String> apis)
               {
-                log.info("onApiListModified() called");
-                synchronized (availableApis)
-                  {
-                    availableApis.clear();
-
-                    for (final String api : apis)
-                      {
-                        availableApis.add(api);
-                      }
-                  }
+                log.info("onApisChanged({})", apis);
+                setAvailableApis(new TreeSet<String>(apis)); // FIXME
               }
           });
 
@@ -200,14 +193,13 @@ public class SampleCameraActivity extends Activity
 
                 try
                   {
-                    JSONObject replyJson = cameraApi.getAvailableApiList().getJsonObject();
-                    loadAvailableApiList(replyJson);
+                    setAvailableApis(cameraApi.getAvailableApiList().getApis());
 
                     // check version of the server device
                     if (isApiAvailable("getApplicationInfo"))
                       {
                         log.info("openConnection(): getApplicationInfo()");
-                        replyJson = cameraApi.getApplicationInfo().getJsonObject();
+                        final JSONObject replyJson = cameraApi.getApplicationInfo().getJsonObject();
 
                         if (!isSupportedServerVersion(replyJson))
                           {
@@ -222,37 +214,29 @@ public class SampleCameraActivity extends Activity
                         return;
                       }
 
-                    // startRecMode if necessary.
                     if (isApiAvailable("startRecMode"))
                       {
                         log.info("openConnection(): startRecMode()");
-                        cameraApi.startRecMode().getJsonObject();
-
-                        // Call again.
-                        replyJson = cameraApi.getAvailableApiList().getJsonObject();
-                        loadAvailableApiList(replyJson);
+                        cameraApi.startRecMode();
+                        setAvailableApis(cameraApi.getAvailableApiList().getApis());
                       }
 
-                    // getEvent start
                     if (isApiAvailable("getEvent"))
                       {
                         log.info("openConnection(): EventObserver.start()");
                         cameraObserver.start();
                       }
 
-                    // Liveview start
                     if (isApiAvailable("startLiveview"))
                       {
                         log.info("openConnection(): LiveviewSurface.start()");
                         mLiveviewSurface.start();
                       }
 
-                    // prepare UIs
                     if (isApiAvailable("getAvailableShootMode"))
                       {
                         log.info("openConnection(): prepareShootModeRadioButtons()");
                         prepareShootModeRadioButtons();
-                        // Note: hide progress bar on title after this calling.
                       }
 
                     log.info("openConnection(): completed.");
@@ -297,6 +281,16 @@ public class SampleCameraActivity extends Activity
         }.start();
     }
 
+    private void setAvailableApis (final @Nonnull Set<String> availableApis)
+      {
+        synchronized (this.availableApis)
+          {
+            this.availableApis.clear();
+            this.availableApis.addAll(availableApis);
+            log.info(">>>> available APIs: {}", availableApis);
+          }
+      }
+
     // Refresh UI appearance along current "cameraStatus" and "shootMode".
     private void refreshUi()
       {
@@ -322,15 +316,7 @@ public class SampleCameraActivity extends Activity
             mButtonRecStartStop.setEnabled(false);
           }
 
-        // Take picture Button
-        if ("still".equals(shootMode) && "IDLE".equals(cameraStatus))
-          {
-            mButtonTakePicture.setEnabled(true);
-          }
-        else
-          {
-            mButtonTakePicture.setEnabled(false);
-          }
+        mButtonTakePicture.setEnabled("still".equals(shootMode) && "IDLE".equals(cameraStatus));
 
         // Picture wipe Image
         if (!"still".equals(shootMode))
@@ -347,6 +333,7 @@ public class SampleCameraActivity extends Activity
               }
 
             View radioButton = mRadiosShootMode.findViewWithTag(shootMode);
+
             if (radioButton != null)
               {
                 mRadiosShootMode.check(radioButton.getId());
@@ -366,40 +353,11 @@ public class SampleCameraActivity extends Activity
           }
       }
 
-    // Retrieve a list of APIs that are available at present.
-    private void loadAvailableApiList (final JSONObject replyJson)
-      {
-        synchronized (availableApis)
-          {
-            availableApis.clear();
-
-            try
-              {
-                final JSONArray resultArrayJson = replyJson.getJSONArray("result");
-                final JSONArray apiListJson = resultArrayJson.getJSONArray(0);
-
-                for (int i = 0; i < apiListJson.length(); i++)
-                  {
-                    availableApis.add(apiListJson.getString(i));
-                  }
-
-                log.info(">>>> available APIs: {}", availableApis);
-              }
-            catch (JSONException e)
-              {
-                log.warn("loadAvailableApiList: JSON format error.");
-              }
-          }
-      }
-
     // Check if the indicated API is available at present.
-    private boolean isApiAvailable(String apiName) {
-        boolean isAvailable = false;
-        synchronized (availableApis) {
-            isAvailable = availableApis.contains(apiName);
-        }
-        return isAvailable;
-    }
+    private boolean isApiAvailable(String apiName)
+      {
+        return availableApis.contains(apiName);
+      }
 
     // Check if the version of the server is supported in this application.
     private boolean isSupportedServerVersion(JSONObject replyJson) {
@@ -455,7 +413,6 @@ public class SampleCameraActivity extends Activity
                         public void run()
                           {
                             prepareShootModeRadioButtonsUi(availableModes.toArray(new String[0]), currentMode);
-                            // Hide progress indeterminate on title bar.
                             setProgressBarIndeterminateVisibility(false);
                         }
                       });
@@ -556,60 +513,73 @@ public class SampleCameraActivity extends Activity
       }
 
     // Take a picture and retrieve the image data.
-    private void takeAndFetchPicture() {
-        if (!mLiveviewSurface.isStarted()) {
+    private void takeAndFetchPicture()
+      {
+        if (!mLiveviewSurface.isStarted())
+          {
             toast(R.string.msg_error_take_picture);
             return;
-        }
+          }
 
-        new Thread() {
-
+        new Thread()
+          {
             @Override
-            public void run() {
-                try {
-                    JSONObject replyJson = cameraApi.actTakePicture().getJsonObject();
-                    JSONArray resultsObj = replyJson.getJSONArray("result");
-                    JSONArray imageUrlsObj = resultsObj.getJSONArray(0);
+            public void run()
+              {
+                try
+                  {
+                    final JSONObject replyJson = cameraApi.actTakePicture().getJsonObject();
+                    final JSONArray resultsObj = replyJson.getJSONArray("result");
+                    final JSONArray imageUrlsObj = resultsObj.getJSONArray(0);
                     String postImageUrl = null;
-                    if (1 <= imageUrlsObj.length()) {
+
+                    if (1 <= imageUrlsObj.length())
+                      {
                         postImageUrl = imageUrlsObj.getString(0);
-                    }
-                    if (postImageUrl == null) {
+                      }
+
+                    if (postImageUrl == null)
+                      {
                         log.warn("takeAndFetchPicture: post image URL is null.");
                         toast(R.string.msg_error_take_picture);
                         return;
-                    }
-                    setProgressIndicator(true); // Show progress indicator
-                    URL url = new URL(postImageUrl);
-                    InputStream istream = new BufferedInputStream(
-                            url.openStream());
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inSampleSize = 4; // irresponsible value
-                    final Drawable pictureDrawable = new BitmapDrawable(
-                            getResources(), BitmapFactory.decodeStream(istream,
-                                    null, options));
-                    istream.close();
-                    mHandler.post(new Runnable() {
+                      }
 
+                    setProgressIndicator(true); // Show progress indicator
+                    final URL url = new URL(postImageUrl);
+                    final InputStream istream = new BufferedInputStream(url.openStream());
+                    final BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inSampleSize = 4; // irresponsible value
+                    final Drawable pictureDrawable = new BitmapDrawable(getResources(),
+                                                                BitmapFactory.decodeStream(istream, null, options));
+                    istream.close();
+                    mHandler.post(new Runnable()
+                      {
                         @Override
-                        public void run() {
+                        public void run()
+                          {
                             mImagePictureWipe.setVisibility(View.VISIBLE);
                             mImagePictureWipe.setImageDrawable(pictureDrawable);
-                        }
-                    });
-
-                } catch (IOException e) {
+                          }
+                      });
+                  }
+                catch (IOException e)
+                  {
                     log.warn("IOException while closing slicer: ", e);
                     toast(R.string.msg_error_take_picture);
-                } catch (JSONException e) {
+                  }
+                catch (JSONException e)
+                  {
                     log.warn("JSONException while closing slicer");
                     toast(R.string.msg_error_take_picture);
-                } finally {
+                  }
+                finally
+                  {
                     setProgressIndicator(false);
-                }
-            }
-        }.start();
-    }
+                  }
+              }
+          }.start();
+      }
 
     // Call startMovieRec
     private void startMovieRec() {
