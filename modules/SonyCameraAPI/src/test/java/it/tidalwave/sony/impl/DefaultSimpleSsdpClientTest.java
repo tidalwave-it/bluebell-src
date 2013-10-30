@@ -32,7 +32,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraApi;
+import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.sony.SsdpDiscoverer;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -56,19 +58,19 @@ public class DefaultSimpleSsdpClientTest
         fixture = new DefaultSsdpDiscoverer();
       }
 
-    @Test(timeOut = 30000)
+    @Test(timeOut = 60000)
     public void test()
       throws Exception
       {
         final CountDownLatch latch = new CountDownLatch(1);
-        final AtomicReference<CameraApi> cameraApiHolder = new AtomicReference<CameraApi>();
+        final AtomicReference<CameraDevice> deviceHolder = new AtomicReference<CameraDevice>();
 
         fixture.search(new SsdpDiscoverer.Callback()
           {
             public void onDeviceFound (final @Nonnull CameraDevice device)
               {
                 log.info("onDeviceFound({})", device);
-                cameraApiHolder.set(new DefaultCameraApi(device));
+                deviceHolder.set(device);
                 latch.countDown();
               }
 
@@ -86,25 +88,51 @@ public class DefaultSimpleSsdpClientTest
           });
 
         latch.await();
-        final CameraApi cameraApi = cameraApiHolder.get();
-        assertThat(cameraApi, is(notNullValue()));
+        final CameraDevice device = deviceHolder.get();
+        assertThat(device, is(notNullValue()));
+        final CameraApi cameraApi = device.getApi();
 
-        for (int i = 0; i < 10; i++)
+//        for (int i = 0; i < 10; i++)
+//          {
+//            try
+//              {
+//                final CameraApi.EventResponse event = cameraApi.getEvent(i == 0);
+//                log.info("Event: {}", event);
+//                log.info(">>>> available APIs: {}", event.getAvailableApiList());
+//                log.info(">>>> camera status:  {}", event.getCameraStatus());
+//                log.info(">>>> shoot mode:     {}", event.getShootMode());
+//                break;
+//              }
+//            catch (RuntimeException e)
+//              {
+//                e.printStackTrace();
+//              }
+//          }
+
+        final CameraObserver observer = device.getObserver();
+        observer.setListener(new CameraObserver.ChangeListener()
           {
-            try
+            public void onApisChanged (final @Nonnull List<String> apis)
               {
-                final CameraApi.EventResponse event = cameraApi.getEvent(i == 0);
-                log.info("Event: {}", event);
-                log.info(">>>> available APIs: {}", event.getAvailableApiList());
-                log.info(">>>> camera status:  {}", event.getCameraStatus());
-                log.info(">>>> shoot mode:     {}", event.getShootMode());
+                log.info("APIs changed: {}", apis);
               }
-            catch (RuntimeException e)
+
+            public void onStatusChanged (final @Nonnull String status)
               {
-                e.printStackTrace();
+                log.info("status changed: {}", status);
               }
-          }
-//        cameraApi.startRecMode();
+
+            public void onShootModeChanged (final @Nonnull String shootMode)
+              {
+                log.info("shoot mode changed: {}", shootMode);
+              }
+          });
+
+        observer.start();
+        Thread.sleep(10000);
+        cameraApi.startRecMode();
+        Thread.sleep(30000);
+
 //        cameraApi.actTakePicture();
       }
   }
