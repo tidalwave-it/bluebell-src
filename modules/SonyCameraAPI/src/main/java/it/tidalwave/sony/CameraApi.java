@@ -52,12 +52,21 @@ public interface CameraApi
             super(message, cause);
             this.response = response;
           }
+
+        @Nonnull
+        public StatusCode getStatusCode()
+          {
+            return response.getStatusCode();
+          }
       }
 
     public static interface Response
       {
         @Nonnull
         public JSONObject getJsonObject();
+
+        @Nonnull
+        public StatusCode getStatusCode();
       }
 
     public static interface RecModeResponse extends Response

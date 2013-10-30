@@ -39,6 +39,7 @@ import it.tidalwave.bluebell.net.HttpClient;
 import it.tidalwave.sony.CameraDevice.ApiService;
 import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraApi;
+import it.tidalwave.sony.StatusCode;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
@@ -81,8 +82,28 @@ public class DefaultCameraApi implements CameraApi
           {
             this.jsonObject = jsonObject;
           }
+
+        @Nonnull
+        public StatusCode getStatusCode()
+          {
+            try
+              {
+                final JSONArray resultsObj = jsonObject.getJSONArray("result");
+                final int code = resultsObj.getInt(0);
+                return StatusCode.values()[code];
+              }
+            catch (JSONException e)
+              {
+                throw new RuntimeException("malformed JSON", e);
+              }
+          }
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     class DefaultRecModeResponse extends GenericResponse implements RecModeResponse
       {
         public DefaultRecModeResponse (final @Nonnull JSONObject jsonObject)
@@ -91,11 +112,9 @@ public class DefaultCameraApi implements CameraApi
             super(jsonObject);
             try
               {
-                final JSONArray resultsObj = jsonObject.getJSONArray("result");
-                final int code = resultsObj.getInt(0);
-
-                if (code == 1)
+                if (getStatusCode() != StatusCode.OK)
                   {
+                    final JSONArray resultsObj = jsonObject.getJSONArray("result");
                     throw new CameraApiException(this, resultsObj.getString(1), null);
                   }
               }
