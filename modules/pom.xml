@@ -162,6 +162,7 @@
     </dependencies>
 
     <modules>
+        <module>CameraView</module>
         <module>SonyCameraAPI</module>
         <module>blueBell</module>
         <module>blueBell-it</module>

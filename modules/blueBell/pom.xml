@@ -41,13 +41,23 @@
     <version>1.0-ALPHA-1-SNAPSHOT</version>
     <packaging>apk</packaging>
     <name>blueBell - Application</name>
-    
-    <properties>        
+
+    <properties>
         <buildNumber></buildNumber> <!-- FIXME -->
         <buildNumberSep></buildNumberSep>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>it.tidalwave.bluebell</groupId>
+            <artifactId>camera-view</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>it.tidalwave.bluebell</groupId>
             <artifactId>sony-camera-api</artifactId>

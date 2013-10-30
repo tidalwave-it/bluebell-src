@@ -36,13 +36,13 @@
         <version>2.12</version>
         <relativePath />
     </parent>
-    
+
     <groupId>it.tidalwave.bluebell</groupId>
     <artifactId>bluebell</artifactId>
     <version>1.0-ALPHA-1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>blueBell (master)</name>
-    
+
     <properties>
         <tft.javac.source>1.5</tft.javac.source>
         <tft.javac.target>1.5</tft.javac.target>
@@ -57,6 +57,11 @@
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.bluebell</groupId>
+                <artifactId>camera-view</artifactId>
+                <version>1.0-ALPHA-1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>it.tidalwave.bluebell</groupId>
                 <artifactId>blueBell</artifactId>
                 <version>1.0-ALPHA-1-SNAPSHOT</version>
             </dependency>
@@ -66,7 +71,7 @@
                 <version>1.0-ALPHA-1-SNAPSHOT</version>
                 <type>apk</type>
             </dependency>
-            <dependency>                
+            <dependency>
                 <groupId>it.tidalwave.bluebell</groupId>
                 <artifactId>bluebell-it</artifactId>
                 <version>1.0-ALPHA-1-SNAPSHOT</version>
@@ -74,7 +79,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    
+
     <build>
         <pluginManagement>
             <plugins>
@@ -229,7 +234,7 @@
             </properties>
         </profile>
     </profiles>
-    
+
     <modules>
         <module>modules</module>
     </modules>
