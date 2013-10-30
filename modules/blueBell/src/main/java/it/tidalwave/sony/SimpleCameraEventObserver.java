@@ -143,7 +143,7 @@ public class SimpleCameraEventObserver
                       {
                         final EventResponse response = cameraApi.getEvent(longPolling);
                         final StatusCode errorCode = response.getStatusCode();
-                        log.debug("getEvent errorCode {}", errorCode);
+                        log.info("getEvent errorCode {}", errorCode);
 
                         switch (errorCode)
                           {
@@ -164,7 +164,6 @@ public class SimpleCameraEventObserver
                                 try
                                   {
                                     Thread.sleep(5000);
-
                                   }
                                 catch (InterruptedException e)
                                   {
@@ -246,7 +245,7 @@ public class SimpleCameraEventObserver
      */
     public void setEventChangeListener(ChangeListener listener)
       {
-        listener = listener;
+        this.listener = listener;
       }
 
     /**
