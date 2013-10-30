@@ -27,6 +27,7 @@
  */
 package it.tidalwave.sony;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /***********************************************************************************************************************
@@ -54,7 +55,7 @@ public interface CameraObserver
          * @param apis a list of available APIs
          *
          **************************************************************************************************************/
-        public void onApiListModified(List<String> apis);
+        public void onApiListModified (@Nonnull List<String> apis);
 
         /***************************************************************************************************************
          *
@@ -63,7 +64,7 @@ public interface CameraObserver
          * @param status camera status (ex."IDLE")
          *
          **************************************************************************************************************/
-        public void onCameraStatusChanged(String status);
+        public void onCameraStatusChanged (@Nonnull String status);
 
         /***************************************************************************************************************
          *
@@ -72,7 +73,7 @@ public interface CameraObserver
          * @param shootMode shoot mode (ex."still")
          *
          **************************************************************************************************************/
-        public void onShootModeChanged(String shootMode);
+        public void onShootModeChanged (@Nonnull String shootMode);
       }
 
     /*******************************************************************************************************************
@@ -89,6 +90,7 @@ public interface CameraObserver
      * @return camera status
      *
      ******************************************************************************************************************/
+    @Nonnull
     public String getCameraStatus();
 
     /*******************************************************************************************************************
@@ -98,6 +100,7 @@ public interface CameraObserver
      * @return shoot mode
      *
      ******************************************************************************************************************/
+    @Nonnull
     public String getShootMode();
 
     /*******************************************************************************************************************
@@ -116,7 +119,7 @@ public interface CameraObserver
      * @param listener
      *
      ******************************************************************************************************************/
-    public void setEventChangeListener(ChangeListener listener);
+    public void setEventChangeListener (@Nonnull ChangeListener listener);
 
     /*******************************************************************************************************************
      *
