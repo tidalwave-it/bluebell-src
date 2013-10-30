@@ -29,7 +29,7 @@ package it.tidalwave.sony.impl;
 
 import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraApi;
-import it.tidalwave.sony.SimpleSsdpClient;
+import it.tidalwave.sony.SsdpDiscoverer;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,19 +45,19 @@ import org.testng.annotations.Test;
 @Slf4j
 public class DefaultSimpleSsdpClientTest
   {
-    private DefaultSimpleSsdpClient fixture;
+    private DefaultSsdpDiscoverer fixture;
 
     @BeforeMethod
     public void setupFixture()
       {
-        fixture = new DefaultSimpleSsdpClient();
+        fixture = new DefaultSsdpDiscoverer();
       }
 
     @Test
     public void test()
       throws InterruptedException
       {
-        fixture.search(new SimpleSsdpClient.Callback()
+        fixture.search(new SsdpDiscoverer.Callback()
           {
             public void onDeviceFound (final @Nonnull CameraDevice device)
               {

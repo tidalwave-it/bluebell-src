@@ -4,7 +4,7 @@
 
 package it.tidalwave.bluebell.mobile;
 
-import it.tidalwave.sony.SimpleSsdpClient;
+import it.tidalwave.sony.SsdpDiscoverer;
 import it.tidalwave.sony.CameraDevice;
 import android.app.Activity;
 import android.content.Context;
@@ -25,7 +25,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import it.tidalwave.sony.CameraDevice.ApiService;
-import it.tidalwave.sony.impl.DefaultSimpleSsdpClient;
+import it.tidalwave.sony.impl.DefaultSsdpDiscoverer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CameraRemoteSampleApp extends Activity {
 
     private Handler mHandler;
-    private SimpleSsdpClient mSsdpClient;
+    private SsdpDiscoverer mSsdpClient;
     private DeviceListAdapter mListAdapter;
     private boolean mActivityActive;
 
@@ -50,7 +50,7 @@ public class CameraRemoteSampleApp extends Activity {
         setProgressBarIndeterminateVisibility(false);
 
         mHandler = new Handler();
-        mSsdpClient = new DefaultSimpleSsdpClient();
+        mSsdpClient = new DefaultSsdpDiscoverer();
         mListAdapter = new DeviceListAdapter(this);
 
         log.debug("onCreate() completed.");
@@ -117,7 +117,7 @@ public class CameraRemoteSampleApp extends Activity {
     private void searchDevices() {
         mListAdapter.clearDevices();
         setProgressBarIndeterminateVisibility(true);
-        mSsdpClient.search(new SimpleSsdpClient.Callback() {
+        mSsdpClient.search(new SsdpDiscoverer.Callback() {
 
             @Override
             public void onDeviceFound(final CameraDevice device) {

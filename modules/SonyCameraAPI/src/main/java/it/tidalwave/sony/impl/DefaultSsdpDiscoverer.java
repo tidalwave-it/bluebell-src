@@ -37,7 +37,7 @@ import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import it.tidalwave.sony.CameraDevice;
-import it.tidalwave.sony.SimpleSsdpClient;
+import it.tidalwave.sony.SsdpDiscoverer;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -50,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class DefaultSimpleSsdpClient implements SimpleSsdpClient
+public class DefaultSsdpDiscoverer implements SsdpDiscoverer
   {
     private final static int SSDP_RECEIVE_TIMEOUT = 10000; // msec
     
