@@ -55,7 +55,7 @@ public interface CameraObserver
          * @param apis a list of available APIs
          *
          **************************************************************************************************************/
-        public void onApiListModified (@Nonnull List<String> apis);
+        public void onApisChanged (@Nonnull List<String> apis);
 
         /***************************************************************************************************************
          *
@@ -64,7 +64,7 @@ public interface CameraObserver
          * @param status camera status (ex."IDLE")
          *
          **************************************************************************************************************/
-        public void onCameraStatusChanged (@Nonnull String status);
+        public void onStatusChanged (@Nonnull String status);
 
         /***************************************************************************************************************
          *
@@ -81,7 +81,7 @@ public interface CameraObserver
      * Clears a listener object.
      *
      ******************************************************************************************************************/
-    public void clearEventChangeListener();
+    public void unsetListener();
 
     /*******************************************************************************************************************
      *
@@ -91,7 +91,7 @@ public interface CameraObserver
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String getCameraStatus();
+    public String getStatus();
 
     /*******************************************************************************************************************
      *
@@ -110,7 +110,7 @@ public interface CameraObserver
      * @return true when monitoring is started.
      *
      ******************************************************************************************************************/
-    public boolean isStarted();
+    public boolean isRunning();
 
     /*******************************************************************************************************************
      *
@@ -119,7 +119,7 @@ public interface CameraObserver
      * @param listener
      *
      ******************************************************************************************************************/
-    public void setEventChangeListener (@Nonnull ChangeListener listener);
+    public void setListener (@Nonnull ChangeListener listener);
 
     /*******************************************************************************************************************
      *

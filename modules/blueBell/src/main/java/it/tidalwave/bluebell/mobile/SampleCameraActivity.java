@@ -102,15 +102,15 @@ public class SampleCameraActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                if ("MovieRecording".equals(cameraObserver.getCameraStatus())) {
+                if ("MovieRecording".equals(cameraObserver.getStatus())) {
                     stopMovieRec();
-                } else if ("IDLE".equals(cameraObserver.getCameraStatus())) {
+                } else if ("IDLE".equals(cameraObserver.getStatus())) {
                     startMovieRec();
                 }
             }
         });
 
-        cameraObserver.setEventChangeListener(new CameraObserver.ChangeListener()
+        cameraObserver.setListener(new CameraObserver.ChangeListener()
           {
             @Override
             public void onShootModeChanged (final @Nonnull String shootMode)
@@ -127,7 +127,7 @@ public class SampleCameraActivity extends Activity {
               }
 
             @Override
-            public void onCameraStatusChanged (final @Nonnull String status)
+            public void onStatusChanged (final @Nonnull String status)
               {
                 Log.d(TAG, "onCameraStatusChanged() called: " + status);
                 mHandler.post(new Runnable()
@@ -141,7 +141,7 @@ public class SampleCameraActivity extends Activity {
               }
 
             @Override
-            public void onApiListModified (final @Nonnull List<String> apis)
+            public void onApisChanged (final @Nonnull List<String> apis)
               {
                 Log.d(TAG, "onApiListModified() called");
                 synchronized (mAvailableApiSet)
@@ -279,7 +279,7 @@ public class SampleCameraActivity extends Activity {
 
     // Refresh UI appearance along current "cameraStatus" and "shootMode".
     private void refreshUi() {
-        String cameraStatus = cameraObserver.getCameraStatus();
+        String cameraStatus = cameraObserver.getStatus();
         String shootMode = cameraObserver.getShootMode();
 
         // CameraStatus TextView
