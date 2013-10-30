@@ -328,19 +328,4 @@ public class SimpleCameraEventObserver
               }
           });
       }
-
-//    // Finds and extracts an error code from reply JSON data.
-//    private static int findErrorCode (JSONObject replyJson)
-//      throws JSONException
-//      {
-//        int code = 0; // 0 means no error.
-//
-//        if (replyJson.has("error"))
-//          {
-//            JSONArray errorObj = replyJson.getJSONArray("error");
-//            code = errorObj.getInt(0);
-//          }
-//
-//        return code;
-//      }
   }
