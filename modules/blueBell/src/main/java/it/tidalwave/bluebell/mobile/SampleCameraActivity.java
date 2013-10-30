@@ -5,7 +5,7 @@
 package it.tidalwave.bluebell.mobile;
 
 import it.tidalwave.sony.impl.DefaultCameraApi;
-import it.tidalwave.sony.SimpleCameraEventObserver;
+import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraDevice;
 import android.app.Activity;
@@ -24,6 +24,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import it.tidalwave.sony.DefaultCameraObserver;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,7 +57,7 @@ public class SampleCameraActivity extends Activity {
     private CameraDevice mTargetServer;
     private CameraApi mRemoteApi;
     private SimpleLiveviewSurfaceView mLiveviewSurface;
-    private SimpleCameraEventObserver mEventObserver;
+    private CameraObserver mEventObserver;
     private final Set<String> mAvailableApiSet = new HashSet<String>();
     private boolean mRadioInitialChecked;
 
@@ -70,7 +71,7 @@ public class SampleCameraActivity extends Activity {
         SampleApplication app = (SampleApplication) getApplication();
         mTargetServer = app.getTargetServerDevice();
         mRemoteApi = new DefaultCameraApi(mTargetServer);
-        mEventObserver = new SimpleCameraEventObserver(mHandler, mRemoteApi);
+        mEventObserver = new DefaultCameraObserver(mHandler, mRemoteApi);
 
         mImagePictureWipe = (ImageView) findViewById(R.id.image_picture_wipe);
         mRadiosShootMode = (RadioGroup) findViewById(R.id.radio_group_shoot_mode);
@@ -106,7 +107,7 @@ public class SampleCameraActivity extends Activity {
             }
         });
         mEventObserver
-                .setEventChangeListener(new SimpleCameraEventObserver.ChangeListener() {
+                .setEventChangeListener(new CameraObserver.ChangeListener() {
 
                     @Override
                     public void onShootModeChanged(String shootMode) {

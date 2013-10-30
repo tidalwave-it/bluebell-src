@@ -43,36 +43,8 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class SimpleCameraEventObserver
+public class DefaultCameraObserver implements CameraObserver
   {
-    /**
-     * A listener interface to receive these changes. These methods will be
-     * called by UI thread.
-     */
-    public interface ChangeListener
-      {
-        /**
-         * Called when the list of available APIs is modified.
-         *
-         * @param apis a list of available APIs
-         */
-        void onApiListModified(List<String> apis);
-
-        /**
-         * Called when the value of "Camera Status" is changed.
-         *
-         * @param status camera status (ex."IDLE")
-         */
-        void onCameraStatusChanged(String status);
-
-        /**
-         * Called when the value of "Shoot Mode" is changed.
-         *
-         * @param shootMode shoot mode (ex."still")
-         */
-        void onShootModeChanged(String shootMode);
-      }
-
     private Handler mHandler;
 
     private CameraApi cameraApi;
@@ -85,16 +57,12 @@ public class SimpleCameraEventObserver
 
     private String shootMode;
 
-    // :
-    // : add attributes for Event data as necessary.
-
-    /**
-     * Constructor.
+    /*******************************************************************************************************************
      *
-     * @param handler handler to notify the changes by UI thread.
-     * @param apiClient API client
-     */
-    public SimpleCameraEventObserver (Handler handler, CameraApi apiClient)
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    public DefaultCameraObserver (Handler handler, CameraApi apiClient)
       {
         if (handler == null)
           {
@@ -110,12 +78,12 @@ public class SimpleCameraEventObserver
         cameraApi = apiClient;
       }
 
-    /**
-     * Starts monitoring by continuously calling getEvent API.
+    /*******************************************************************************************************************
      *
-     * @return true if it successfully started, false if a monitoring is already
-     *         started.
-     */
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
     public boolean start()
       {
         if (running)
@@ -182,9 +150,9 @@ public class SimpleCameraEventObserver
                         String cameraStatus = response.getCameraStatus();
                         log.debug("getEvent cameraStatus: {}", cameraStatus);
 
-                        if (cameraStatus != null && !cameraStatus.equals(SimpleCameraEventObserver.this.cameraStatus))
+                        if (cameraStatus != null && !cameraStatus.equals(DefaultCameraObserver.this.cameraStatus))
                           {
-                            SimpleCameraEventObserver.this.cameraStatus = cameraStatus;
+                            DefaultCameraObserver.this.cameraStatus = cameraStatus;
                             fireCameraStatusChangeListener(cameraStatus);
                           }
 
@@ -192,9 +160,9 @@ public class SimpleCameraEventObserver
                         String shootMode = response.getShootMode();
                         log.debug("getEvent shootMode: {}", shootMode);
 
-                        if (shootMode != null && !shootMode.equals(SimpleCameraEventObserver.this.shootMode))
+                        if (shootMode != null && !shootMode.equals(DefaultCameraObserver.this.shootMode))
                           {
-                            SimpleCameraEventObserver.this.shootMode = shootMode;
+                            DefaultCameraObserver.this.shootMode = shootMode;
                             fireShootModeChangeListener(shootMode);
                           }
                       }
@@ -220,62 +188,77 @@ public class SimpleCameraEventObserver
         return true;
       }
 
-    /**
-     * Requests to stop the monitoring.
-     */
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
     public void stop()
       {
         running = false;
       }
 
-    /**
-     * Checks to see whether a monitoring is already started.
+    /*******************************************************************************************************************
      *
-     * @return true when monitoring is started.
-     */
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
     public boolean isStarted()
       {
         return running;
       }
 
-    /**
-     * Sets a listener object.
+    /*******************************************************************************************************************
      *
-     * @param listener
-     */
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
     public void setEventChangeListener(ChangeListener listener)
       {
         this.listener = listener;
       }
 
-    /**
-     * Clears a listener object.
-     */
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
     public void clearEventChangeListener()
       {
         listener = null;
       }
 
-    /**
-     * Returns the current Camera Status value.
+    /*******************************************************************************************************************
      *
-     * @return camera status
-     */
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
     public String getCameraStatus()
       {
         return cameraStatus;
       }
 
-    /**
-     * Returns the current Shoot Mode value.
+    /*******************************************************************************************************************
      *
-     * @return shoot mode
-     */
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
     public String getShootMode()
       {
         return shootMode;
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     // Notifies the listener of available APIs change.
     private void fireApiListModifiedListener(final List<String> availableApis)
       {
@@ -292,6 +275,11 @@ public class SimpleCameraEventObserver
           });
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     // Notifies the listener of Camera Status change.
     private void fireCameraStatusChangeListener(final String status)
       {
@@ -308,6 +296,11 @@ public class SimpleCameraEventObserver
           });
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     // Notifies the listener of Shoot Mode change.
     private void fireShootModeChangeListener(final String shootMode)
       {
