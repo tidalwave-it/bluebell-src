@@ -4,6 +4,9 @@
 
 package it.tidalwave.bluebell.mobile;
 
+import it.tidalwave.bluebell.cameraview.impl.android.AndroidCameraViewControl;
+import it.tidalwave.bluebell.cameraview.CameraView;
+import it.tidalwave.bluebell.cameraview.DefaultCameraViewControl;
 import java.io.IOException;
 import org.json.JSONArray;
 import org.json.JSONException;

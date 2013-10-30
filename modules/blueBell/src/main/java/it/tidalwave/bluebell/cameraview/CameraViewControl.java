@@ -25,7 +25,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.bluebell.mobile;
+package it.tidalwave.bluebell.cameraview;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.sony.CameraDevice;
