@@ -27,28 +27,51 @@
  */
 package it.tidalwave.sony;
 
+import javax.annotation.Nonnull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
+@AllArgsConstructor
 public enum StatusCode
   {
-    OK, // 0
-    ANY, // 1
-    TIMEOUT, // 2
-    ILLEGAL_ARGUMENT, // 3
-    ILLEGAL_DATA_FORMAT, // 4
-    ILLEGAL_REQUEST, // 5
-    ILLEGAL_RESPONSE, // 6
-    ILLEGAL_STATE, // 7
-    ILLEGAL_TYPE, // 8
-    INDEX_OUT_OF_BOUNDS, // 9
-    NO_SUCH_ELEMENT, // 10
-    NO_SUCH_FIELD, // 11
-    NO_SUCH_METHOD, // 12
-    NULL_POINTER, // 13
-    UNSUPPORTED_VERSION, // 14
-    UNSUPPORTED_OPERATION // 15
+    OK(0),
+    ANY(1),
+    TIMEOUT(2),
+    ILLEGAL_ARGUMENT(3),
+    ILLEGAL_DATA_FORMAT(4),
+    ILLEGAL_REQUEST(5),
+    ILLEGAL_RESPONSE(6),
+    ILLEGAL_STATE(7),
+    ILLEGAL_TYPE(8),
+    INDEX_OUT_OF_BOUNDS(9),
+    NO_SUCH_ELEMENT(10),
+    NO_SUCH_FIELD(11),
+    NO_SUCH_METHOD(12),
+    NULL_POINTER(13),
+    UNSUPPORTED_VERSION(14),
+    UNSUPPORTED_OPERATION(15),
+    ALREADY_POLLING(40402);
+
+    @Getter
+    private final int code;
+
+    @Nonnull
+    public static StatusCode findStatusCode (final int code)
+      {
+        for (final StatusCode statusCode : values())
+          {
+            if (statusCode.getCode() == code)
+              {
+                return statusCode;
+              }
+          }
+
+        throw new RuntimeException("Unexpected status code: " + code);
+      }
   }

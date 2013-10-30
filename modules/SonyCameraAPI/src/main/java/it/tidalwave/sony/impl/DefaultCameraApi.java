@@ -88,7 +88,7 @@ public class DefaultCameraApi implements CameraApi
               {
                 final JSONArray resultsObj = jsonObject.getJSONArray("result");
                 final int code = resultsObj.getInt(0);
-                return StatusCode.values()[code];
+                return StatusCode.findStatusCode(code);
               }
             catch (JSONException e)
               {

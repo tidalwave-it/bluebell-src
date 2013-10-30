@@ -147,28 +147,30 @@ public class SimpleCameraEventObserver
                     boolean longPolling = fisrtCall ? false : true;
 
                     try {
+                        final CameraApi.Response response = mRemoteApi.getEvent(longPolling);
                         // Call getEvent API.
-                        JSONObject replyJson = mRemoteApi.getEvent(longPolling).getJsonObject();
+//                        JSONObject replyJson = response.getJsonObject();
 
                         // Check error code at first.
-                        int errorCode = findErrorCode(replyJson);
+                        final StatusCode errorCode = response.getStatusCode();
+//                        int errorCode = findErrorCode(replyJson);
                         Log.d(TAG, "getEvent errorCode: " + errorCode);
 
                         switch (errorCode)
                           {
-                            case 0: // no error
+                            case OK: // no error
                                 // Pass through.
                                 break;
 
-                            case 1: // "Any" error
-                            case 12: // "No such method" error
+                            case ANY: // "Any" error
+                            case NO_SUCH_METHOD: // "No such method" error
                                 break MONITORLOOP; // end monitoring.
 
-                            case 2: // "Timeout" error
+                            case TIMEOUT: // "Timeout" error
                                 // Re-call immediately.
                                 continue MONITORLOOP;
 
-                            case 40402: // "Already polling" error
+                            case ALREADY_POLLING: // "Already polling" error
                                 // Retry after 5 sec.
                                 try
                                   {
@@ -188,6 +190,7 @@ public class SimpleCameraEventObserver
                                 break MONITORLOOP; // end monitoring.
                           }
 
+                        JSONObject replyJson = response.getJsonObject();
                         fireApiListModifiedListener(findAvailableApiList(replyJson));
 
                         // CameraStatus
@@ -336,20 +339,20 @@ public class SimpleCameraEventObserver
           });
       }
 
-    // Finds and extracts an error code from reply JSON data.
-    private static int findErrorCode (JSONObject replyJson)
-      throws JSONException
-      {
-        int code = 0; // 0 means no error.
-
-        if (replyJson.has("error"))
-          {
-            JSONArray errorObj = replyJson.getJSONArray("error");
-            code = errorObj.getInt(0);
-          }
-
-        return code;
-      }
+//    // Finds and extracts an error code from reply JSON data.
+//    private static int findErrorCode (JSONObject replyJson)
+//      throws JSONException
+//      {
+//        int code = 0; // 0 means no error.
+//
+//        if (replyJson.has("error"))
+//          {
+//            JSONArray errorObj = replyJson.getJSONArray("error");
+//            code = errorObj.getInt(0);
+//          }
+//
+//        return code;
+//      }
 
     // Finds and extracts a list of available APIs from reply JSON data.
     // As for getEvent v1.0, results[0] => "availableApiList"
