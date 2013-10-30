@@ -207,7 +207,7 @@ import lombok.extern.slf4j.Slf4j;
           {
             try
               {
-                String cameraStatus = null;
+                String cameraStatus = "";
                 int indexOfCameraStatus = 1;
                 JSONArray resultsObj = jsonObject.getJSONArray("result");
 
@@ -239,7 +239,7 @@ import lombok.extern.slf4j.Slf4j;
           {
             try
               {
-                String shootMode = null;
+                String shootMode = "";
                 int indexOfShootMode = 21;
                 JSONArray resultsObj = jsonObject.getJSONArray("result");
 

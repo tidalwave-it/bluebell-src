@@ -27,12 +27,16 @@
  */
 package it.tidalwave.sony.impl;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.io.IOException;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraApi.EventResponse;
 import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.sony.StatusCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -44,33 +48,22 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
+@RequiredArgsConstructor @Slf4j
 /* package */ class DefaultCameraObserver implements CameraObserver
   {
-    private CameraApi cameraApi;
+    @Nonnull
+    private final CameraApi cameraApi;
 
+    @CheckForNull
     private ChangeListener listener;
 
     private boolean running = false;
 
-    private String cameraStatus;
+    @Getter
+    private String cameraStatus = "";
 
-    private String shootMode;
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    public DefaultCameraObserver (CameraApi apiClient)
-      {
-        if (apiClient == null)
-          {
-            throw new IllegalArgumentException("apiClient is null.");
-          }
-
-        cameraApi = apiClient;
-      }
+    @Getter
+    private String shootMode = "";
 
     /*******************************************************************************************************************
      *
@@ -94,35 +87,29 @@ import lombok.extern.slf4j.Slf4j;
             public void run()
               {
                 log.debug("start() exec.");
-                // Call getEvent API continuously.
-                boolean fisrtCall = true;
+                boolean firstCall = true;
+
                 MONITORLOOP: while (running)
                   {
-                    // At first, call as non-Long Polling.
-                    boolean longPolling = fisrtCall ? false : true;
-
                     try
                       {
-                        final EventResponse response = cameraApi.getEvent(longPolling);
+                        final EventResponse response = cameraApi.getEvent(!firstCall);
                         final StatusCode errorCode = response.getStatusCode();
                         log.info("getEvent errorCode {}", errorCode);
 
                         switch (errorCode)
                           {
-                            case OK: // no error
-                                // Pass through.
+                            case OK:
                                 break;
 
-                            case ANY: // "Any" error
-                            case NO_SUCH_METHOD: // "No such method" error
-                                break MONITORLOOP; // end monitoring.
+                            case ANY:
+                            case NO_SUCH_METHOD:
+                                break MONITORLOOP;
 
-                            case TIMEOUT: // "Timeout" error
-                                // Re-call immediately.
+                            case TIMEOUT:
                                 continue MONITORLOOP;
 
-                            case ALREADY_POLLING: // "Already polling" error
-                                // Retry after 5 sec.
+                            case ALREADY_POLLING:
                                 try
                                   {
                                     Thread.sleep(5000);
@@ -135,28 +122,26 @@ import lombok.extern.slf4j.Slf4j;
 
                             default:
                                 log.warn("SimpleCameraEventObserver: Unexpected error: {}", errorCode);
-                                break MONITORLOOP; // end monitoring.
+                                break MONITORLOOP;
                           }
 
                         fireApiListModifiedListener(response.getAvailableApiList());
 
-                        // CameraStatus
-                        String cameraStatus = response.getCameraStatus();
-                        log.debug("getEvent cameraStatus: {}", cameraStatus);
+                        final String newCameraStatus = response.getCameraStatus();
+                        log.debug("getEvent cameraStatus: {}", newCameraStatus);
 
-                        if (cameraStatus != null && !cameraStatus.equals(DefaultCameraObserver.this.cameraStatus))
+                        if (!cameraStatus.equals(newCameraStatus))
                           {
-                            DefaultCameraObserver.this.cameraStatus = cameraStatus;
+                            cameraStatus = newCameraStatus;
                             fireCameraStatusChangeListener(cameraStatus);
                           }
 
-                        // ShootMode
-                        String shootMode = response.getShootMode();
-                        log.debug("getEvent shootMode: {}", shootMode);
+                        final String newShootMode = response.getShootMode();
+                        log.debug("getEvent shootMode: {}", newShootMode);
 
-                        if (shootMode != null && !shootMode.equals(DefaultCameraObserver.this.shootMode))
+                        if (!shootMode.equals(newShootMode))
                           {
-                            DefaultCameraObserver.this.shootMode = shootMode;
+                            shootMode = newShootMode;
                             fireShootModeChangeListener(shootMode);
                           }
                       }
@@ -172,8 +157,8 @@ import lombok.extern.slf4j.Slf4j;
                         break MONITORLOOP;
                       }
 
-                    fisrtCall = false;
-                  } // MONITORLOOP end.
+                    firstCall = false;
+                  }
 
                 running = false;
               }
@@ -210,7 +195,7 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Override
-    public void setEventChangeListener(ChangeListener listener)
+    public void setEventChangeListener (final @Nonnull ChangeListener listener)
       {
         this.listener = listener;
       }
@@ -228,33 +213,11 @@ import lombok.extern.slf4j.Slf4j;
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public String getCameraStatus()
-      {
-        return cameraStatus;
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public String getShootMode()
-      {
-        return shootMode;
-      }
-
-    /*******************************************************************************************************************
-     *
+     * Notifies the listener of available APIs change.
      *
      *
      ******************************************************************************************************************/
-    // Notifies the listener of available APIs change.
-    private void fireApiListModifiedListener(final List<String> availableApis)
+    private void fireApiListModifiedListener (final @Nonnull List<String> availableApis)
       {
         if (listener != null)
           {
@@ -264,11 +227,10 @@ import lombok.extern.slf4j.Slf4j;
 
     /*******************************************************************************************************************
      *
-     *
+     * Notifies the listener of Camera Status change.
      *
      ******************************************************************************************************************/
-    // Notifies the listener of Camera Status change.
-    private void fireCameraStatusChangeListener(final String status)
+    private void fireCameraStatusChangeListener (final @Nonnull String status)
       {
         if (listener != null)
           {
@@ -278,11 +240,10 @@ import lombok.extern.slf4j.Slf4j;
 
     /*******************************************************************************************************************
      *
-     *
+     * Notifies the listener of Shoot Mode change.
      *
      ******************************************************************************************************************/
-    // Notifies the listener of Shoot Mode change.
-    private void fireShootModeChangeListener(final String shootMode)
+    private void fireShootModeChangeListener (final @Nonnull String shootMode)
       {
         if (listener != null)
           {
