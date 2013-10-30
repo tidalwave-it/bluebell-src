@@ -36,15 +36,17 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import javax.annotation.Nonnull;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * An Activity class of Sample Camera screen.
  */
-public class SampleCameraActivity extends Activity {
-
-    private static final String TAG = SampleCameraActivity.class
-            .getSimpleName();
+@Slf4j
+public class SampleCameraActivity extends Activity
+  {
+//    private static final String TAG = SampleCameraActivity.class.getSimpleName();
 
     private Handler mHandler;
     private ImageView mImagePictureWipe;
@@ -54,24 +56,26 @@ public class SampleCameraActivity extends Activity {
     private TextView mTextCameraStatus;
 
     private CameraDevice cameraDevice;
-    
+
     private CameraApi cameraApi;
 
     private CameraObserver cameraObserver;
 
     private SimpleLiveviewSurfaceView mLiveviewSurface;
 
-    private final Set<String> mAvailableApiSet = new HashSet<String>();
+    private final Set<String> availableApis = new TreeSet<String>();
+
     private boolean mRadioInitialChecked;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate (Bundle savedInstanceState)
+      {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_sample_camera);
 
         mHandler = new Handler();
-        SampleApplication app = (SampleApplication) getApplication();
+        final SampleApplication app = (SampleApplication)getApplication();
         cameraDevice = app.getTargetServerDevice();
         cameraApi = cameraDevice.getApi();
         cameraObserver = cameraDevice.getObserver();
@@ -84,38 +88,45 @@ public class SampleCameraActivity extends Activity {
         mLiveviewSurface = (SimpleLiveviewSurfaceView) findViewById(R.id.surfaceview_liveview);
         mLiveviewSurface.bindRemoteApi(cameraApi);
 
-        Log.d(TAG, "onCreate() completed.");
-    }
+        log.info("onCreate() completed.");
+      }
 
     @Override
-    protected void onResume() {
+    protected void onResume()
+      {
         super.onResume();
 
-        mButtonTakePicture.setOnClickListener(new View.OnClickListener() {
-
+        mButtonTakePicture.setOnClickListener(new View.OnClickListener()
+          {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+              {
                 takeAndFetchPicture();
-            }
-        });
-        mButtonRecStartStop.setOnClickListener(new View.OnClickListener() {
+              }
+          });
 
+        mButtonRecStartStop.setOnClickListener(new View.OnClickListener()
+          {
             @Override
-            public void onClick(View v) {
-                if ("MovieRecording".equals(cameraObserver.getStatus())) {
+            public void onClick(View v)
+              {
+                if ("MovieRecording".equals(cameraObserver.getStatus()))
+                  {
                     stopMovieRec();
-                } else if ("IDLE".equals(cameraObserver.getStatus())) {
+                  }
+                else if ("IDLE".equals(cameraObserver.getStatus()))
+                  {
                     startMovieRec();
-                }
-            }
-        });
+                  }
+              }
+          });
 
         cameraObserver.setListener(new CameraObserver.ChangeListener()
           {
             @Override
             public void onShootModeChanged (final @Nonnull String shootMode)
               {
-                Log.d(TAG, "onShootModeChanged() called: " + shootMode);
+                log.info("onShootModeChanged() called: {}", shootMode);
                 mHandler.post(new Runnable()
                   {
                     @Override
@@ -129,7 +140,7 @@ public class SampleCameraActivity extends Activity {
             @Override
             public void onStatusChanged (final @Nonnull String status)
               {
-                Log.d(TAG, "onCameraStatusChanged() called: " + status);
+                log.info("onCameraStatusChanged() called: {}", status);
                 mHandler.post(new Runnable()
                   {
                     @Override
@@ -143,108 +154,122 @@ public class SampleCameraActivity extends Activity {
             @Override
             public void onApisChanged (final @Nonnull List<String> apis)
               {
-                Log.d(TAG, "onApiListModified() called");
-                synchronized (mAvailableApiSet)
+                log.info("onApiListModified() called");
+                synchronized (availableApis)
                   {
-                    mAvailableApiSet.clear();
+                    availableApis.clear();
 
                     for (final String api : apis)
                       {
-                        mAvailableApiSet.add(api);
+                        availableApis.add(api);
                       }
                   }
               }
           });
 
-        mImagePictureWipe.setOnClickListener(new View.OnClickListener() {
-
+        mImagePictureWipe.setOnClickListener(new View.OnClickListener()
+          {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+              {
                 mImagePictureWipe.setVisibility(View.INVISIBLE);
-            }
-        });
+              }
+          });
+
         openConnection();
 
-        Log.d(TAG, "onResume() completed.");
-    }
+        log.info("onResume() completed.");
+      }
 
     @Override
-    protected void onPause() {
+    protected void onPause()
+      {
         super.onPause();
         closeConnection();
 
-        Log.d(TAG, "onPause() completed.");
-    }
+        log.info("onPause() completed.");
+      }
 
     // Open connection to the camera device to start monitoring Camera events
     // and showing liveview.
-    private void openConnection() {
+    private void openConnection()
+      {
         setProgressBarIndeterminateVisibility(true);
-        new Thread() {
-
+        new Thread()
+          {
             @Override
-            public void run() {
-                Log.d(TAG, "openConnection(): exec.");
-                try {
-                    JSONObject replyJson = null;
+            public void run()
+              {
+                log.info("openConnection(): exec.");
 
-                    // getAvailableApiList
-                    replyJson = cameraApi.getAvailableApiList().getJsonObject();
+                try
+                  {
+                    JSONObject replyJson = cameraApi.getAvailableApiList().getJsonObject();
                     loadAvailableApiList(replyJson);
 
                     // check version of the server device
-                    if (isApiAvailable("getApplicationInfo")) {
-                        Log.d(TAG, "openConnection(): getApplicationInfo()");
+                    if (isApiAvailable("getApplicationInfo"))
+                      {
+                        log.info("openConnection(): getApplicationInfo()");
                         replyJson = cameraApi.getApplicationInfo().getJsonObject();
-                        if (!isSupportedServerVersion(replyJson)) {
+
+                        if (!isSupportedServerVersion(replyJson))
+                          {
                             toast(R.string.msg_error_non_supported_device);
                             SampleCameraActivity.this.finish();
                             return;
-                        }
-                    } else {
+                          }
+                      }
+                    else
+                      {
                         // never happens;
                         return;
-                    }
+                      }
 
                     // startRecMode if necessary.
-                    if (isApiAvailable("startRecMode")) {
-                        Log.d(TAG, "openConnection(): startRecMode()");
+                    if (isApiAvailable("startRecMode"))
+                      {
+                        log.info("openConnection(): startRecMode()");
                         cameraApi.startRecMode().getJsonObject();
 
                         // Call again.
                         replyJson = cameraApi.getAvailableApiList().getJsonObject();
                         loadAvailableApiList(replyJson);
-                    }
+                      }
 
                     // getEvent start
-                    if (isApiAvailable("getEvent")) {
-                        Log.d(TAG, "openConnection(): EventObserver.start()");
+                    if (isApiAvailable("getEvent"))
+                      {
+                        log.info("openConnection(): EventObserver.start()");
                         cameraObserver.start();
-                    }
+                      }
 
                     // Liveview start
-                    if (isApiAvailable("startLiveview")) {
-                        Log.d(TAG, "openConnection(): LiveviewSurface.start()");
+                    if (isApiAvailable("startLiveview"))
+                      {
+                        log.info("openConnection(): LiveviewSurface.start()");
                         mLiveviewSurface.start();
-                    }
+                      }
 
                     // prepare UIs
-                    if (isApiAvailable("getAvailableShootMode")) {
-                        Log.d(TAG,
-                                "openConnection(): prepareShootModeRadioButtons()");
+                    if (isApiAvailable("getAvailableShootMode"))
+                      {
+                        log.info("openConnection(): prepareShootModeRadioButtons()");
                         prepareShootModeRadioButtons();
                         // Note: hide progress bar on title after this calling.
-                    }
+                      }
 
-                    Log.d(TAG, "openConnection(): completed.");
-                } catch (IOException e) {
-                    Log.w(TAG, "openConnection: IOException: " + e.getMessage());
+                    log.info("openConnection(): completed.");
+                  }
+                catch (IOException e)
+                  {
+                    log.warn("openConnection: IOException: ", e);
                     setProgressIndicator(false);
                     toast(R.string.msg_error_connection);
-                }
-            }
-        }.start();
-    }
+                  }
+              }
+          }.start();
+      }
 
     // Close connection to stop monitoring Camera events and showing liveview.
     private void closeConnection() {
@@ -252,101 +277,130 @@ public class SampleCameraActivity extends Activity {
 
             @Override
             public void run() {
-                Log.d(TAG, "closeConnection(): exec.");
+                log.info("closeConnection(): exec.");
                 try {
                     // Liveview stop
-                    Log.d(TAG, "closeConnection(): LiveviewSurface.stop()");
+                    log.info("closeConnection(): LiveviewSurface.stop()");
                     mLiveviewSurface.stop();
 
                     // getEvent stop
-                    Log.d(TAG, "closeConnection(): EventObserver.stop()");
+                    log.info("closeConnection(): EventObserver.stop()");
                     cameraObserver.stop();
 
                     // stopRecMode if necessary.
                     if (isApiAvailable("stopRecMode")) {
-                        Log.d(TAG, "closeConnection(): stopRecMode()");
+                        log.info("closeConnection(): stopRecMode()");
                         cameraApi.stopRecMode();
                     }
 
-                    Log.d(TAG, "closeConnection(): completed.");
+                    log.info("closeConnection(): completed.");
                 } catch (IOException e) {
-                    Log.w(TAG,
-                            "closeConnection: IOException: " + e.getMessage());
+                    log.warn("closeConnection: IOException: ", e);
                 }
             }
         }.start();
     }
 
     // Refresh UI appearance along current "cameraStatus" and "shootMode".
-    private void refreshUi() {
-        String cameraStatus = cameraObserver.getStatus();
-        String shootMode = cameraObserver.getShootMode();
+    private void refreshUi()
+      {
+        final String cameraStatus = cameraObserver.getStatus();
+        final String shootMode = cameraObserver.getShootMode();
 
         // CameraStatus TextView
         mTextCameraStatus.setText(cameraStatus);
 
         // Recording Start/Stop Button
-        if ("MovieRecording".equals(cameraStatus)) {
+        if ("MovieRecording".equals(cameraStatus))
+          {
             mButtonRecStartStop.setEnabled(true);
             mButtonRecStartStop.setText(R.string.button_rec_stop);
-        } else if ("IDLE".equals(cameraStatus) && "movie".equals(shootMode)) {
+          }
+        else if ("IDLE".equals(cameraStatus) && "movie".equals(shootMode))
+          {
             mButtonRecStartStop.setEnabled(true);
             mButtonRecStartStop.setText(R.string.button_rec_start);
-        } else {
+          }
+        else
+          {
             mButtonRecStartStop.setEnabled(false);
-        }
+          }
 
         // Take picture Button
-        if ("still".equals(shootMode) && "IDLE".equals(cameraStatus)) {
+        if ("still".equals(shootMode) && "IDLE".equals(cameraStatus))
+          {
             mButtonTakePicture.setEnabled(true);
-        } else {
+          }
+        else
+          {
             mButtonTakePicture.setEnabled(false);
-        }
+          }
 
         // Picture wipe Image
-        if (!"still".equals(shootMode)) {
+        if (!"still".equals(shootMode))
+          {
             mImagePictureWipe.setVisibility(View.INVISIBLE);
-        }
+          }
 
         // Shoot Mode Buttons
-        if ("IDLE".equals(cameraStatus)) {
-            for (int i = 0; i < mRadiosShootMode.getChildCount(); i++) {
+        if ("IDLE".equals(cameraStatus))
+          {
+            for (int i = 0; i < mRadiosShootMode.getChildCount(); i++)
+              {
                 mRadiosShootMode.getChildAt(i).setEnabled(true);
-            }
+              }
+
             View radioButton = mRadiosShootMode.findViewWithTag(shootMode);
-            if (radioButton != null) {
+            if (radioButton != null)
+              {
                 mRadiosShootMode.check(radioButton.getId());
-            } else {
+              }
+            else
+              {
                 mRadiosShootMode.clearCheck();
-            }
-        } else {
-            for (int i = 0; i < mRadiosShootMode.getChildCount(); i++) {
+              }
+
+          }
+        else
+          {
+            for (int i = 0; i < mRadiosShootMode.getChildCount(); i++)
+              {
                 mRadiosShootMode.getChildAt(i).setEnabled(false);
-            }
-        }
-    }
+              }
+          }
+      }
 
     // Retrieve a list of APIs that are available at present.
-    private void loadAvailableApiList(JSONObject replyJson) {
-        synchronized (mAvailableApiSet) {
-            mAvailableApiSet.clear();
-            try {
-                JSONArray resultArrayJson = replyJson.getJSONArray("result");
-                JSONArray apiListJson = resultArrayJson.getJSONArray(0);
-                for (int i = 0; i < apiListJson.length(); i++) {
-                    mAvailableApiSet.add(apiListJson.getString(i));
-                }
-            } catch (JSONException e) {
-                Log.w(TAG, "loadAvailableApiList: JSON format error.");
-            }
-        }
-    }
+    private void loadAvailableApiList (final JSONObject replyJson)
+      {
+        synchronized (availableApis)
+          {
+            availableApis.clear();
+
+            try
+              {
+                final JSONArray resultArrayJson = replyJson.getJSONArray("result");
+                final JSONArray apiListJson = resultArrayJson.getJSONArray(0);
+
+                for (int i = 0; i < apiListJson.length(); i++)
+                  {
+                    availableApis.add(apiListJson.getString(i));
+                  }
+
+                log.info(">>>> available APIs: {}", availableApis);
+              }
+            catch (JSONException e)
+              {
+                log.warn("loadAvailableApiList: JSON format error.");
+              }
+          }
+      }
 
     // Check if the indicated API is available at present.
     private boolean isApiAvailable(String apiName) {
         boolean isAvailable = false;
-        synchronized (mAvailableApiSet) {
-            isAvailable = mAvailableApiSet.contains(apiName);
+        synchronized (availableApis) {
+            isAvailable = availableApis.contains(apiName);
         }
         return isAvailable;
     }
@@ -362,121 +416,148 @@ public class SampleCameraActivity extends Activity {
                 return true;
             }
         } catch (JSONException e) {
-            Log.w(TAG, "isSupportedServerVersion: JSON format error.");
+            log.warn("isSupportedServerVersion: JSON format error.");
         } catch (NumberFormatException e) {
-            Log.w(TAG, "isSupportedServerVersion: Number format error.");
+            log.warn("isSupportedServerVersion: Number format error.");
         }
         return false;
     }
 
     // Prepare for RadioButton to select "shootMode" by user.
-    private void prepareShootModeRadioButtons() {
-        new Thread() {
-
+    private void prepareShootModeRadioButtons()
+      {
+        new Thread()
+          {
             @Override
-            public void run() {
-                Log.d(TAG, "prepareShootModeRadioButtons(): exec.");
-                JSONObject replyJson = null;
-                try {
-                    replyJson = cameraApi.getAvailableShootMode().getJsonObject();
+            public void run()
+              {
+                log.info("prepareShootModeRadioButtons(): exec.");
 
-                    JSONArray resultsObj = replyJson.getJSONArray("result");
+                try
+                  {
+                    final JSONObject replyJson = cameraApi.getAvailableShootMode().getJsonObject();
+                    final JSONArray resultsObj = replyJson.getJSONArray("result");
                     final String currentMode = resultsObj.getString(0);
-                    JSONArray availableModesJson = resultsObj.getJSONArray(1);
+                    final JSONArray availableModesJson = resultsObj.getJSONArray(1);
                     final ArrayList<String> availableModes = new ArrayList<String>();
 
-                    for (int i = 0; i < availableModesJson.length(); i++) {
-                        String mode = availableModesJson.getString(i);
-                        if (!"still".equals(mode) && !"movie".equals(mode)) {
-                            continue;
-                        }
-                        availableModes.add(mode);
-                    }
-                    mHandler.post(new Runnable() {
+                    for (int i = 0; i < availableModesJson.length(); i++)
+                      {
+                        final String mode = availableModesJson.getString(i);
 
+                        if (!"still".equals(mode) && !"movie".equals(mode))
+                          {
+                            continue;
+                          }
+
+                        availableModes.add(mode);
+                      }
+
+                    mHandler.post(new Runnable()
+                      {
                         @Override
-                        public void run() {
-                            prepareShootModeRadioButtonsUi(
-                                    availableModes.toArray(new String[0]),
-                                    currentMode);
+                        public void run()
+                          {
+                            prepareShootModeRadioButtonsUi(availableModes.toArray(new String[0]), currentMode);
                             // Hide progress indeterminate on title bar.
                             setProgressBarIndeterminateVisibility(false);
                         }
-                    });
-                } catch (IOException e) {
-                    Log.w(TAG, "prepareShootModeRadioButtons: IOException: "
-                            + e.getMessage());
-                } catch (JSONException e) {
-                    Log.w(TAG,
-                            "prepareShootModeRadioButtons: JSON format error.");
-                }
-            };
-        }.start();
-    }
+                      });
+                  }
+                catch (IOException e)
+                  {
+                    log.warn("prepareShootModeRadioButtons: IOException: ", e);
+                  }
+                catch (JSONException e)
+                  {
+                    log.warn("prepareShootModeRadioButtons: JSON format error.");
+                  }
+              };
+          }.start();
+      }
 
     // Prepare for Radio Button UI of Shoot Mode.
-    private void prepareShootModeRadioButtonsUi(String[] availableShootModes,
-            String currentMode) {
+    private void prepareShootModeRadioButtonsUi (String[] availableShootModes, String currentMode)
+      {
         mRadiosShootMode.clearCheck();
         mRadiosShootMode.removeAllViews();
 
-        for (int i = 0; i < availableShootModes.length; i++) {
-            String mode = availableShootModes[i];
-            RadioButton radioBtn = new RadioButton(SampleCameraActivity.this);
-            int viewId = 123456 + i; // workaround
+        for (int i = 0; i < availableShootModes.length; i++)
+          {
+            final String mode = availableShootModes[i];
+            final RadioButton radioBtn = new RadioButton(SampleCameraActivity.this);
+            final int viewId = 123456 + i; // workaround
             radioBtn.setId(viewId);
             radioBtn.setText(mode);
             radioBtn.setTag(mode);
-            radioBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
+            radioBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+              {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView,
-                        boolean isChecked) {
-                    if (isChecked) {
-                        if (mRadioInitialChecked) {
+                public void onCheckedChanged (CompoundButton buttonView,  boolean isChecked)
+                  {
+                    if (isChecked)
+                      {
+                        if (mRadioInitialChecked)
+                          {
                             // ignore because this callback is invoked by
                             // initializing.
                             mRadioInitialChecked = false;
-                        } else {
-                            String mode = buttonView.getText().toString();
+                          }
+                        else
+                          {
+                            final String mode = buttonView.getText().toString();
                             setShootMode(mode);
-                        }
-                    }
-                }
-            });
+                          }
+                      }
+                  }
+              });
+
             mRadiosShootMode.addView(radioBtn);
-            if (mode.equals(currentMode)) {
+
+            if (mode.equals(currentMode))
+              {
                 // Set the flag true to suppress unnecessary API calling.
                 mRadioInitialChecked = true;
                 mRadiosShootMode.check(viewId);
-            }
-        }
-    }
+              }
+          }
+      }
 
     // Call setShootMode
-    private void setShootMode(final String mode) {
-        new Thread() {
-
+    private void setShootMode (final String mode)
+      {
+        new Thread()
+          {
             @Override
-            public void run() {
-                try {
-                    JSONObject replyJson = cameraApi.setShootMode(mode).getJsonObject();
-                    JSONArray resultsObj = replyJson.getJSONArray("result");
-                    int resultCode = resultsObj.getInt(0);
-                    if (resultCode == 0) {
+            public void run()
+              {
+                try
+                  {
+                    final JSONObject replyJson = cameraApi.setShootMode(mode).getJsonObject();
+                    final JSONArray resultsObj = replyJson.getJSONArray("result");
+                    final int resultCode = resultsObj.getInt(0);
+
+                    if (resultCode == 0)
+                      {
                         // Success, but no refresh UI at the point.
-                    } else {
-                        Log.w(TAG, "setShootMode: error: " + resultCode);
+                      }
+                    else
+                      {
+                        log.warn("setShootMode: error: {}", resultCode);
                         toast(R.string.msg_error_api_calling);
-                    }
-                } catch (IOException e) {
-                    Log.w(TAG, "setShootMode: IOException: " + e.getMessage());
-                } catch (JSONException e) {
-                    Log.w(TAG, "setShootMode: JSON format error.");
-                }
-            }
-        }.start();
-    }
+                      }
+                  }
+                catch (IOException e)
+                  {
+                    log.warn("setShootMode: IOException: ", e);
+                  }
+                catch (JSONException e)
+                  {
+                    log.warn("setShootMode: JSON format error.");
+                  }
+              }
+          }.start();
+      }
 
     // Take a picture and retrieve the image data.
     private void takeAndFetchPicture() {
@@ -498,8 +579,7 @@ public class SampleCameraActivity extends Activity {
                         postImageUrl = imageUrlsObj.getString(0);
                     }
                     if (postImageUrl == null) {
-                        Log.w(TAG,
-                                "takeAndFetchPicture: post image URL is null.");
+                        log.warn("takeAndFetchPicture: post image URL is null.");
                         toast(R.string.msg_error_take_picture);
                         return;
                     }
@@ -523,10 +603,10 @@ public class SampleCameraActivity extends Activity {
                     });
 
                 } catch (IOException e) {
-                    Log.w(TAG, "IOException while closing slicer: " + e.getMessage());
+                    log.warn("IOException while closing slicer: ", e);
                     toast(R.string.msg_error_take_picture);
                 } catch (JSONException e) {
-                    Log.w(TAG, "JSONException while closing slicer");
+                    log.warn("JSONException while closing slicer");
                     toast(R.string.msg_error_take_picture);
                 } finally {
                     setProgressIndicator(false);
@@ -542,20 +622,20 @@ public class SampleCameraActivity extends Activity {
             @Override
             public void run() {
                 try {
-                    Log.d(TAG, "startMovieRec: exec.");
+                    log.info("startMovieRec: exec.");
                     JSONObject replyJson = cameraApi.startMovieRec().getJsonObject();
                     JSONArray resultsObj = replyJson.getJSONArray("result");
                     int resultCode = resultsObj.getInt(0);
                     if (resultCode == 0) {
                         toast(R.string.msg_rec_start);
                     } else {
-                        Log.w(TAG, "startMovieRec: error: " + resultCode);
+                        log.warn("startMovieRec: error: {}", resultCode);
                         toast(R.string.msg_error_api_calling);
                     }
                 } catch (IOException e) {
-                    Log.w(TAG, "startMovieRec: IOException: " + e.getMessage());
+                    log.warn("startMovieRec: IOException: ", e);
                 } catch (JSONException e) {
-                    Log.w(TAG, "startMovieRec: JSON format error.");
+                    log.warn("startMovieRec: JSON format error.");
                 }
             }
         }.start();
@@ -568,20 +648,20 @@ public class SampleCameraActivity extends Activity {
             @Override
             public void run() {
                 try {
-                    Log.d(TAG, "stopMovieRec: exec.");
+                    log.info("stopMovieRec: exec.");
                     JSONObject replyJson = cameraApi.stopMovieRec().getJsonObject();
                     JSONArray resultsObj = replyJson.getJSONArray("result");
                     String thumbnailUrl = resultsObj.getString(0);
                     if (thumbnailUrl != null) {
                         toast(R.string.msg_rec_stop);
                     } else {
-                        Log.w(TAG, "stopMovieRec: error");
+                        log.warn("stopMovieRec: error");
                         toast(R.string.msg_error_api_calling);
                     }
                 } catch (IOException e) {
-                    Log.w(TAG, "stopMovieRec: IOException: " + e.getMessage());
+                    log.warn("stopMovieRec: IOException: ", e);
                 } catch (JSONException e) {
-                    Log.w(TAG, "stopMovieRec: JSON format error.");
+                    log.warn("stopMovieRec: JSON format error.");
                 }
             }
         }.start();
