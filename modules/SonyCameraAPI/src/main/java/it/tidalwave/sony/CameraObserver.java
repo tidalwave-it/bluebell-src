@@ -28,7 +28,7 @@
 package it.tidalwave.sony;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.Set;
 
 /***********************************************************************************************************************
  *
@@ -55,7 +55,7 @@ public interface CameraObserver
          * @param apis a list of available APIs
          *
          **************************************************************************************************************/
-        public void onApisChanged (@Nonnull List<String> apis);
+        public void onApisChanged (@Nonnull Set<String> apis);
 
         /***************************************************************************************************************
          *

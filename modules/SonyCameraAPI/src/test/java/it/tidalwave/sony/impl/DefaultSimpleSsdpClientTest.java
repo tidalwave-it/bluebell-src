@@ -28,13 +28,13 @@
 package it.tidalwave.sony.impl;
 
 import javax.annotation.Nonnull;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.sony.SsdpDiscoverer;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -95,7 +95,7 @@ public class DefaultSimpleSsdpClientTest
         final CameraObserver observer = device.getObserver();
         observer.setListener(new CameraObserver.ChangeListener()
           {
-            public void onApisChanged (final @Nonnull List<String> apis)
+            public void onApisChanged (final @Nonnull Set<String> apis)
               {
                 log.info("APIs changed: {}", apis);
               }

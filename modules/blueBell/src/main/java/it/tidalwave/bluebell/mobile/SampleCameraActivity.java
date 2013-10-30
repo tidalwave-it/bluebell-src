@@ -6,7 +6,7 @@ package it.tidalwave.bluebell.mobile;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 import java.io.BufferedInputStream;
@@ -34,7 +34,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -149,10 +148,10 @@ public class SampleCameraActivity extends Activity
               }
 
             @Override
-            public void onApisChanged (final @Nonnull List<String> apis)
+            public void onApisChanged (final @Nonnull Set<String> apis)
               {
                 log.info("onApisChanged({})", apis);
-                setAvailableApis(new TreeSet<String>(apis)); // FIXME
+                setAvailableApis(apis);
               }
           });
 
@@ -443,6 +442,7 @@ public class SampleCameraActivity extends Activity
             radioBtn.setId(viewId);
             radioBtn.setText(mode);
             radioBtn.setTag(mode);
+            radioBtn.setTextColor(0x00FFFFFF);
             radioBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
               {
                 @Override

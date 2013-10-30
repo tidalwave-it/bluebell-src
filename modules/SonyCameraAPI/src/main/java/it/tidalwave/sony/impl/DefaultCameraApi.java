@@ -30,6 +30,8 @@ package it.tidalwave.sony.impl;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.io.IOException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,9 +42,6 @@ import it.tidalwave.sony.CameraDevice.ApiService;
 import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.StatusCode;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.TreeSet;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -168,11 +167,11 @@ import lombok.extern.slf4j.Slf4j;
     // Finds and extracts a list of available APIs from reply JSON data.
     // As for getEvent v1.0, results[0] => "availableApiList"
         @Override @Nonnull
-        public List<String> getAvailableApiList()
+        public Set<String> getApis()
           {
             try
               {
-                final List<String> availableApis = new ArrayList<String>();
+                final Set<String> availableApis = new TreeSet<String>();
                 int indexOfAvailableApiList = 0;
                 final JSONArray resultsObj = jsonObject.getJSONArray("result");
 

@@ -29,7 +29,7 @@ package it.tidalwave.sony.impl;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.Set;
 import java.io.IOException;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraApi.EventResponse;
@@ -127,7 +127,7 @@ import lombok.extern.slf4j.Slf4j;
                                 break MONITORLOOP;
                           }
 
-                        fireApisChanged(response.getAvailableApiList());
+                        fireApisChanged(response.getApis());
 
                         final String newStatus = response.getCameraStatus();
                         log.debug("getEvent status: {}", newStatus);
@@ -205,7 +205,7 @@ import lombok.extern.slf4j.Slf4j;
      *
      *
      ******************************************************************************************************************/
-    private void fireApisChanged (final @Nonnull List<String> availableApis)
+    private void fireApisChanged (final @Nonnull Set<String> availableApis)
       {
         if (listener != null)
           {
