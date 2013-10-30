@@ -24,7 +24,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import it.tidalwave.sony.DefaultCameraObserver;
+import it.tidalwave.sony.impl.DefaultCameraObserver;
 
 import org.json.JSONArray;
 import org.json.JSONException;
