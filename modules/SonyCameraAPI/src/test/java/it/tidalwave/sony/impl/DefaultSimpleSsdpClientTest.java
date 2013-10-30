@@ -28,7 +28,7 @@
 package it.tidalwave.sony.impl;
 
 import it.tidalwave.sony.CameraDevice;
-import it.tidalwave.sony.SimpleRemoteApi;
+import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.SimpleSsdpClient;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -62,7 +62,7 @@ public class DefaultSimpleSsdpClientTest
             public void onDeviceFound (final @Nonnull CameraDevice device)
               {
                 log.info("onDeviceFound({})", device);
-                final SimpleRemoteApi remoteApi = new DefaultSimpleRemoteApi(device);
+                final CameraApi remoteApi = new DefaultCameraApi(device);
 
                 try
                   {

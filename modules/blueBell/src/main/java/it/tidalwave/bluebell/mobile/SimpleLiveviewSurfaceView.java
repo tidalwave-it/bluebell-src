@@ -5,7 +5,7 @@
 package it.tidalwave.bluebell.mobile;
 
 //import android.annotation.TargetApi;
-import it.tidalwave.sony.SimpleRemoteApi;
+import it.tidalwave.sony.CameraApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -39,7 +39,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements
     private static final String TAG = SimpleLiveviewSurfaceView.class
             .getSimpleName();
 
-    private SimpleRemoteApi mRemoteApi;
+    private CameraApi mRemoteApi;
     private boolean mWhileFetching;
     private final BlockingQueue<byte[]> mJpegQueue = new ArrayBlockingQueue<byte[]>(2);
     private final boolean mInMutableAvailable = false;
@@ -111,7 +111,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements
      * 
      * @param remoteApi
      */
-    public void bindRemoteApi(SimpleRemoteApi remoteApi) {
+    public void bindRemoteApi(CameraApi remoteApi) {
         mRemoteApi = remoteApi;
     }
 

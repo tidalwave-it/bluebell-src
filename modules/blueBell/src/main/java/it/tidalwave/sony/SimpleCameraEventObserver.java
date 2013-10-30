@@ -35,7 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import android.os.Handler;
 import android.util.Log;
-import it.tidalwave.sony.SimpleRemoteApi;
+import it.tidalwave.sony.CameraApi;
 
 /***********************************************************************************************************************
  *
@@ -80,7 +80,7 @@ public class SimpleCameraEventObserver
 
     private Handler mHandler;
     
-    private SimpleRemoteApi mRemoteApi;
+    private CameraApi mRemoteApi;
     
     private ChangeListener mListener;
     
@@ -101,7 +101,7 @@ public class SimpleCameraEventObserver
      * @param handler handler to notify the changes by UI thread.
      * @param apiClient API client
      */
-    public SimpleCameraEventObserver (Handler handler, SimpleRemoteApi apiClient)
+    public SimpleCameraEventObserver (Handler handler, CameraApi apiClient)
       {
         if (handler == null) 
           {

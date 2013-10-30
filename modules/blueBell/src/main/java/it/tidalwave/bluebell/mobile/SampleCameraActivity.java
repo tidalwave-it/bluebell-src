@@ -4,9 +4,9 @@
 
 package it.tidalwave.bluebell.mobile;
 
-import it.tidalwave.sony.impl.DefaultSimpleRemoteApi;
+import it.tidalwave.sony.impl.DefaultCameraApi;
 import it.tidalwave.sony.SimpleCameraEventObserver;
-import it.tidalwave.sony.SimpleRemoteApi;
+import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraDevice;
 import android.app.Activity;
 import android.graphics.BitmapFactory;
@@ -54,7 +54,7 @@ public class SampleCameraActivity extends Activity {
     private TextView mTextCameraStatus;
 
     private CameraDevice mTargetServer;
-    private SimpleRemoteApi mRemoteApi;
+    private CameraApi mRemoteApi;
     private SimpleLiveviewSurfaceView mLiveviewSurface;
     private SimpleCameraEventObserver mEventObserver;
     private final Set<String> mAvailableApiSet = new HashSet<String>();
@@ -69,7 +69,7 @@ public class SampleCameraActivity extends Activity {
         mHandler = new Handler();
         SampleApplication app = (SampleApplication) getApplication();
         mTargetServer = app.getTargetServerDevice();
-        mRemoteApi = new DefaultSimpleRemoteApi(mTargetServer);
+        mRemoteApi = new DefaultCameraApi(mTargetServer);
         mEventObserver = new SimpleCameraEventObserver(mHandler, mRemoteApi);
 
         mImagePictureWipe = (ImageView) findViewById(R.id.image_picture_wipe);

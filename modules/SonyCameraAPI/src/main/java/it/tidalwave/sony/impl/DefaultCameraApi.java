@@ -38,7 +38,7 @@ import it.tidalwave.bluebell.net.impl.DefaultHttpClient;
 import it.tidalwave.bluebell.net.HttpClient;
 import it.tidalwave.sony.CameraDevice.ApiService;
 import it.tidalwave.sony.CameraDevice;
-import it.tidalwave.sony.SimpleRemoteApi;
+import it.tidalwave.sony.CameraApi;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -50,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class DefaultSimpleRemoteApi implements SimpleRemoteApi
+public class DefaultCameraApi implements CameraApi
   {
     private static final String CAMERA_SERVICE = "camera";
 
@@ -154,7 +154,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
      * @param target server device of Remote API
      *
      ******************************************************************************************************************/
-    public DefaultSimpleRemoteApi (final @Nonnull CameraDevice target)
+    public DefaultCameraApi (final @Nonnull CameraDevice target)
       {
         mTargetServer = target;
         mRequestId = 1;
