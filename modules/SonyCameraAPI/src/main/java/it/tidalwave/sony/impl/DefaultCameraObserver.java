@@ -82,7 +82,7 @@ import lombok.extern.slf4j.Slf4j;
 
         running = true;
 
-        new Thread()
+        new Thread("CameraObserver")
           {
             @Override
             public void run()
@@ -94,8 +94,9 @@ import lombok.extern.slf4j.Slf4j;
                   {
                     try
                       {
-                        final EventResponse response = cameraApi.getEvent(!firstCall);
+                        final EventResponse response = cameraApi.getEvent(firstCall);
                         final StatusCode statusCode = response.getStatusCode();
+                        firstCall = false;
                         log.debug(">>>> statusCode {}", statusCode);
 
                         switch (statusCode)
@@ -156,8 +157,6 @@ import lombok.extern.slf4j.Slf4j;
                         log.warn("getEvent: JSON format error. ", e);
                         break MONITORLOOP;
                       }
-
-                    firstCall = false;
                   }
 
                 running = false;

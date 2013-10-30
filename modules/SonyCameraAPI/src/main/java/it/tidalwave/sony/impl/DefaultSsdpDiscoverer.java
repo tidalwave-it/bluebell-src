@@ -42,9 +42,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * A SSDP client class for this sample application. This implementation keeps simple so that many developers understand 
+ * A SSDP client class for this sample application. This implementation keeps simple so that many developers understand
  * quickly.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -53,38 +53,38 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultSsdpDiscoverer implements SsdpDiscoverer
   {
     private final static int SSDP_RECEIVE_TIMEOUT = 10000; // msec
-    
+
     private final static int PACKET_BUFFER_SIZE = 1024;
-    
+
     private final static int SSDP_PORT = 1900;
-    
+
     private final static int SSDP_MX = 1;
-    
+
     private final static String SSDP_ADDR = "239.255.255.250";
-    
+
     private final static String SSDP_ST = "urn:schemas-sony-com:service:ScalarWebAPI:1";
 
     private boolean searching = false;
 
     /*******************************************************************************************************************
-     * 
-     * {@inheritDoc} 
-     * 
+     *
+     * {@inheritDoc}
+     *
      ******************************************************************************************************************/
     @Override
-    public synchronized boolean search (final @Nonnull Callback handler)  
+    public synchronized boolean search (final @Nonnull Callback handler)
       {
-        if (searching) 
+        if (searching)
           {
             log.warn("search() already searching.");
             return false;
           }
-        
-        if (handler == null) 
+
+        if (handler == null)
           {
             throw new NullPointerException("handler is null.");
           }
-        
+
         log.info("search() Start.");
 
         final String ssdpRequest = "M-SEARCH * HTTP/1.1\r\n"
@@ -94,17 +94,17 @@ public class DefaultSsdpDiscoverer implements SsdpDiscoverer
                 + String.format("ST: %s\r\n", SSDP_ST) + "\r\n";
         final byte[] sendData = ssdpRequest.getBytes();
 
-        new Thread() 
+        new Thread("Discoverer")
           {
             @Override
-            public void run() 
+            public void run()
               {
                 // Send Datagram packets
                 DatagramSocket socket = null;
                 DatagramPacket receivePacket = null;
                 DatagramPacket packet = null;
-                
-                try 
+
+                try
                   {
                     socket = new DatagramSocket();
                     final byte[] array = new byte[PACKET_BUFFER_SIZE];
@@ -119,22 +119,22 @@ public class DefaultSsdpDiscoverer implements SsdpDiscoverer
                     Thread.sleep(100);
                     socket.send(packet);
                   }
-                catch (InterruptedException e) 
+                catch (InterruptedException e)
                   {
                     // do nothing.
                   }
-                catch (SocketException e) 
+                catch (SocketException e)
                   {
                     log.error("search() DatagramSocket error:", e);
                     handler.onErrorFinished();
                   }
-                catch (IOException e) 
+                catch (IOException e)
                   {
                     log.error("search() IOException:", e);
                     handler.onErrorFinished();
                   }
 
-                if (socket == null || receivePacket == null) 
+                if (socket == null || receivePacket == null)
                   {
                     return;
                   }
@@ -143,10 +143,10 @@ public class DefaultSsdpDiscoverer implements SsdpDiscoverer
                 searching = true;
                 long startTime = System.currentTimeMillis();
                 List<String> foundDevices = new ArrayList<String>();
-                
-                while (searching) 
+
+                while (searching)
                   {
-                    try 
+                    try
                       {
                         log.info(">>>> receiving packets...");
                         socket.setSoTimeout(SSDP_RECEIVE_TIMEOUT);
@@ -163,38 +163,38 @@ public class DefaultSsdpDiscoverer implements SsdpDiscoverer
                             foundDevices.add(ddUsn);
 
                             final CameraDevice device = DefaultCameraDevice.fetch(ddLocation);
-                            
-                            if (device != null) 
+
+                            if (device != null)
                               {
                                 handler.onDeviceFound(device);
                               }
                           }
                       }
-                    catch (InterruptedIOException e) 
+                    catch (InterruptedIOException e)
                       {
                         log.debug("search() Timeout.");
                         break;
-                      } 
-                    catch (IOException e) 
+                      }
+                    catch (IOException e)
                       {
                         log.debug("search() IOException.");
                         handler.onErrorFinished();
                         return;
                       }
-                    
-                    if (SSDP_RECEIVE_TIMEOUT < System.currentTimeMillis() - startTime) 
+
+                    if (SSDP_RECEIVE_TIMEOUT < System.currentTimeMillis() - startTime)
                       {
                         break;
                       }
                   }
-                
+
                 searching = false;
-                
-                if (socket != null && !socket.isClosed()) 
+
+                if (socket != null && !socket.isClosed())
                   {
                     socket.close();
                   }
-                
+
                 handler.onFinished();
               };
           }.start();
@@ -203,20 +203,20 @@ public class DefaultSsdpDiscoverer implements SsdpDiscoverer
       }
 
     /*******************************************************************************************************************
-     * 
-     * {@inheritDoc} 
-     * 
+     *
+     * {@inheritDoc}
+     *
      ******************************************************************************************************************/
     @Override
-    public boolean isSearching() 
+    public boolean isSearching()
       {
         return searching;
       }
 
     /*******************************************************************************************************************
-     * 
-     * {@inheritDoc} 
-     * 
+     *
+     * {@inheritDoc}
+     *
      ******************************************************************************************************************/
     @Override
     public void cancelSearching()
@@ -225,32 +225,32 @@ public class DefaultSsdpDiscoverer implements SsdpDiscoverer
       }
 
     /*******************************************************************************************************************
-     * 
+     *
      * Find a value string from message line. Example: "ST: XXXXX-YYYYY-ZZZZZ" -> "XXXXX-YYYYY-ZZZZZ"
-     * 
+     *
      ******************************************************************************************************************/
     private static String findParameterValue (final @Nonnull String ssdpMessage, final @Nonnull String paramName)
       {
         String name = paramName;
-        
-        if (!name.endsWith(":")) 
+
+        if (!name.endsWith(":"))
           {
             name = name + ":";
           }
-        
+
         int start = ssdpMessage.indexOf(name) + name.length();
         int end = ssdpMessage.indexOf("\r\n", start);
-        
-        if (start != -1 && end != -1) 
+
+        if (start != -1 && end != -1)
           {
             String val = ssdpMessage.substring(start, end);
-            
-            if (val != null) 
+
+            if (val != null)
               {
                 return val.trim();
               }
           }
-        
+
         return null;
       }
   }
