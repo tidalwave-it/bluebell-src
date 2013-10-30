@@ -54,7 +54,7 @@ public interface SimpleSsdpClient
          * @param device API server device that is found by searching
          * 
          **************************************************************************************************************/
-        public void onDeviceFound (@Nonnull ServerDevice device);
+        public void onDeviceFound (@Nonnull CameraDevice device);
 
         /***************************************************************************************************************
          * 

@@ -4,7 +4,7 @@
 
 package it.tidalwave.bluebell.mobile;
 
-import it.tidalwave.sony.ServerDevice;
+import it.tidalwave.sony.CameraDevice;
 import android.app.Application;
 
 /**
@@ -12,14 +12,14 @@ import android.app.Application;
  */
 public class SampleApplication extends Application {
 
-    private ServerDevice mTargetDevice;
+    private CameraDevice mTargetDevice;
 
     /**
      * Sets a target server object to transmit to SampleCameraActivity.
      * 
      * @param device
      */
-    public void setTargetServerDevice(ServerDevice device) {
+    public void setTargetServerDevice(CameraDevice device) {
         mTargetDevice = device;
     }
 
@@ -28,7 +28,7 @@ public class SampleApplication extends Application {
      * 
      * @param device
      */
-    public ServerDevice getTargetServerDevice() {
+    public CameraDevice getTargetServerDevice() {
         return mTargetDevice;
     }
 

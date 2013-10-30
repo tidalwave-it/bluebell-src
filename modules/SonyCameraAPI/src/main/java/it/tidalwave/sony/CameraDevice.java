@@ -31,7 +31,7 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-import it.tidalwave.sony.ServerDevice.ApiService;
+import it.tidalwave.sony.CameraDevice.ApiService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,7 +45,7 @@ import lombok.ToString;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ServerDevice // FIXME: rename to CameraDevice
+public interface CameraDevice
   {
     /*******************************************************************************************************************
      *

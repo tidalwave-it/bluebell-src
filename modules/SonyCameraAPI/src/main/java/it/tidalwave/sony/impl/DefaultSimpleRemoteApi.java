@@ -36,8 +36,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import it.tidalwave.bluebell.net.impl.DefaultHttpClient;
 import it.tidalwave.bluebell.net.HttpClient;
-import it.tidalwave.sony.ServerDevice.ApiService;
-import it.tidalwave.sony.ServerDevice;
+import it.tidalwave.sony.CameraDevice.ApiService;
+import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.SimpleRemoteApi;
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,7 +55,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
     private static final String CAMERA_SERVICE = "camera";
 
     // API server device you want to send requests.
-    private final ServerDevice mTargetServer;
+    private final CameraDevice mTargetServer;
 
     // Request ID of API calling. This will be counted up by each API calling.
     private int mRequestId;
@@ -154,7 +154,7 @@ public class DefaultSimpleRemoteApi implements SimpleRemoteApi
      * @param target server device of Remote API
      *
      ******************************************************************************************************************/
-    public DefaultSimpleRemoteApi (final @Nonnull ServerDevice target)
+    public DefaultSimpleRemoteApi (final @Nonnull CameraDevice target)
       {
         mTargetServer = target;
         mRequestId = 1;

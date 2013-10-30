@@ -36,7 +36,7 @@ import java.util.List;
 import java.io.IOException;
 import it.tidalwave.bluebell.net.impl.DefaultHttpClient;
 import it.tidalwave.bluebell.net.impl.XmlElement;
-import it.tidalwave.sony.ServerDevice;
+import it.tidalwave.sony.CameraDevice;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j @ToString
-public class DefaultServerDevice implements ServerDevice
+public class DefaultCameraDevice implements CameraDevice
   {
 //    private final SimpleHttpClient httpClient = new DefaultSimpleHttpClient();
 
@@ -141,7 +141,7 @@ public class DefaultServerDevice implements ServerDevice
      *
      ******************************************************************************************************************/
     @CheckForNull
-    public static DefaultServerDevice fetch (@Nonnull String ddUrl)
+    public static DefaultCameraDevice fetch (@Nonnull String ddUrl)
       {
         if (ddUrl == null)
           {
@@ -167,11 +167,11 @@ public class DefaultServerDevice implements ServerDevice
 
           System.err.println("XMLELEMENT " + rootElement);
         // "root"
-        DefaultServerDevice device = null;
+        DefaultCameraDevice device = null;
 
         if ("root".equals(rootElement.getTagName()))
           {
-            device = new DefaultServerDevice();
+            device = new DefaultCameraDevice();
             device.ddUrl = ddUrl;
 
             // "device"

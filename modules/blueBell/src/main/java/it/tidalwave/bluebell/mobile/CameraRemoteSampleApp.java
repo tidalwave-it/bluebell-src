@@ -5,7 +5,7 @@
 package it.tidalwave.bluebell.mobile;
 
 import it.tidalwave.sony.SimpleSsdpClient;
-import it.tidalwave.sony.ServerDevice;
+import it.tidalwave.sony.CameraDevice;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +24,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import it.tidalwave.sony.ServerDevice.ApiService;
+import it.tidalwave.sony.CameraDevice.ApiService;
 import it.tidalwave.sony.impl.DefaultSimpleSsdpClient;
 
 import java.util.ArrayList;
@@ -68,7 +68,7 @@ public class CameraRemoteSampleApp extends Activity {
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
                 ListView listView = (ListView) parent;
-                ServerDevice device = (ServerDevice) listView.getAdapter()
+                CameraDevice device = (CameraDevice) listView.getAdapter()
                         .getItem(position);
                 launchSampleActivity(device);
             }
@@ -120,7 +120,7 @@ public class CameraRemoteSampleApp extends Activity {
         mSsdpClient.search(new SimpleSsdpClient.Callback() {
 
             @Override
-            public void onDeviceFound(final ServerDevice device) {
+            public void onDeviceFound(final CameraDevice device) {
                 // Called by non-UI thread.
                 log.info(">>>> Search device found: {}", device.getFriendlyName());
                 mHandler.post(new Runnable() {
@@ -168,7 +168,7 @@ public class CameraRemoteSampleApp extends Activity {
     }
 
     // Launch a SampleCameraActivity.
-    private void launchSampleActivity(ServerDevice device) {
+    private void launchSampleActivity(CameraDevice device) {
         // Note that it's a irresponsible rule for the sample application.
         if (device.hasApiService("camera")) {
             // Go to CameraSampleActivity.
@@ -189,15 +189,15 @@ public class CameraRemoteSampleApp extends Activity {
     // Adapter class for DeviceList
     private static class DeviceListAdapter extends BaseAdapter {
 
-        private List<ServerDevice> mDeviceList;
+        private List<CameraDevice> mDeviceList;
         private LayoutInflater mInflater;
 
         public DeviceListAdapter(Context context) {
-            mDeviceList = new ArrayList<ServerDevice>();
+            mDeviceList = new ArrayList<CameraDevice>();
             mInflater = LayoutInflater.from(context);
         }
 
-        public void addDevice(ServerDevice device) {
+        public void addDevice(CameraDevice device) {
             mDeviceList.add(device);
             notifyDataSetChanged();
         }
@@ -232,7 +232,7 @@ public class CameraRemoteSampleApp extends Activity {
                 textView = (TextView)mInflater.inflate(R.layout.device_list_item, null);
               }
             
-            ServerDevice device = (ServerDevice) getItem(position);
+            CameraDevice device = (CameraDevice) getItem(position);
             log.info(">>>> found {}, services: {}", device.getFriendlyName(), device.getApiServices());
             ApiService apiService = device.getApiService("camera");
             String endpointUrl = "?";

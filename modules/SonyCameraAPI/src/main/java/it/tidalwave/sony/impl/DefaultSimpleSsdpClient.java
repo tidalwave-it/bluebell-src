@@ -36,7 +36,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
-import it.tidalwave.sony.ServerDevice;
+import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.SimpleSsdpClient;
 import lombok.extern.slf4j.Slf4j;
 
@@ -162,7 +162,7 @@ public class DefaultSimpleSsdpClient implements SimpleSsdpClient
                             final String ddLocation = findParameterValue(ssdpReplyMessage, "LOCATION");
                             foundDevices.add(ddUsn);
 
-                            final ServerDevice device = DefaultServerDevice.fetch(ddLocation);
+                            final CameraDevice device = DefaultCameraDevice.fetch(ddLocation);
                             
                             if (device != null) 
                               {

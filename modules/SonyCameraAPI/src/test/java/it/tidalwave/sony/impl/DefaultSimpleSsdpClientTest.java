@@ -27,7 +27,7 @@
  */
 package it.tidalwave.sony.impl;
 
-import it.tidalwave.sony.ServerDevice;
+import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.SimpleRemoteApi;
 import it.tidalwave.sony.SimpleSsdpClient;
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class DefaultSimpleSsdpClientTest
       {
         fixture.search(new SimpleSsdpClient.Callback()
           {
-            public void onDeviceFound (final @Nonnull ServerDevice device)
+            public void onDeviceFound (final @Nonnull CameraDevice device)
               {
                 log.info("onDeviceFound({})", device);
                 final SimpleRemoteApi remoteApi = new DefaultSimpleRemoteApi(device);
