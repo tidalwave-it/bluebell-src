@@ -183,9 +183,9 @@ public class SimpleCameraEventObserver
                         String cameraStatus = response.getCameraStatus();
                         log.debug("getEvent cameraStatus: {}", cameraStatus);
 
-                        if (cameraStatus != null && !cameraStatus.equals(cameraStatus))
+                        if (cameraStatus != null && !cameraStatus.equals(SimpleCameraEventObserver.this.cameraStatus))
                           {
-                            cameraStatus = cameraStatus;
+                            SimpleCameraEventObserver.this.cameraStatus = cameraStatus;
                             fireCameraStatusChangeListener(cameraStatus);
                           }
 
@@ -193,9 +193,9 @@ public class SimpleCameraEventObserver
                         String shootMode = response.getShootMode();
                         log.debug("getEvent shootMode: {}", shootMode);
 
-                        if (shootMode != null && !shootMode.equals(shootMode))
+                        if (shootMode != null && !shootMode.equals(SimpleCameraEventObserver.this.shootMode))
                           {
-                            shootMode = shootMode;
+                            SimpleCameraEventObserver.this.shootMode = shootMode;
                             fireShootModeChangeListener(shootMode);
                           }
                       }
