@@ -38,10 +38,13 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
-/**
+
+/***********************************************************************************************************************
  *
- * @author fritz
- */
+ * @author  Fabrizio Giudici
+ * @version $Id$
+ *
+ **********************************************************************************************************************/
 @Slf4j
 public class DefaultSimpleSsdpClientTest
   {
