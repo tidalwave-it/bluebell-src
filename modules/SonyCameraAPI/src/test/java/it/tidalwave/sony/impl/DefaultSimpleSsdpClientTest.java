@@ -123,7 +123,7 @@ public class DefaultSimpleSsdpClientTest
 
         for (int i = 0; i < 100; i++)
           {
-            log.info("payload: {}", slicer.nextPayload());
+            log.info("payload: {}", slicer.readNextPayload());
           }
 //        Thread.sleep(30000);
 

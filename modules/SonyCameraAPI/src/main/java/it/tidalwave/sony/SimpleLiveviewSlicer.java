@@ -52,6 +52,8 @@ public class SimpleLiveviewSlicer
      */
     public static class Payload
       {
+        public final static Payload EMPTY = new Payload(new byte[0], new byte[0]);
+
         @Nonnull
         public final byte[] jpegData;
 
@@ -65,6 +67,11 @@ public class SimpleLiveviewSlicer
           {
             this.jpegData = jpegData;
             this.paddingData = paddingData;
+          }
+
+        public boolean isEmpty()
+          {
+            return jpegData.length == 0;
           }
 
         @Override @Nonnull
@@ -139,11 +146,9 @@ public class SimpleLiveviewSlicer
      * @return Payload data of sliced Packet
      * @throws IOException generic errors or exception.
      */
-    public Payload nextPayload()
+    public Payload readNextPayload()
        throws IOException
       {
-        log.info("nextPayload() - {}", is);
-
         if (is != null)
           {
             // Common Header
@@ -182,19 +187,18 @@ public class SimpleLiveviewSlicer
                 throw new IOException("Unexpected data format. (Start code)");
               }
 
-            int jpegSize = bytesToInt(payloadHeader, 4, 3);
-            int paddingSize = bytesToInt(payloadHeader, 7, 1);
+            final int jpegSize = bytesToInt(payloadHeader, 4, 3);
+            final int paddingSize = bytesToInt(payloadHeader, 7, 1);
 
-            // Payload Data
-            byte[] jpegData = readBytes(is, jpegSize);
-            byte[] paddingData = readBytes(is, paddingSize);
+            final byte[] jpegData = readBytes(is, jpegSize);
+            final byte[] paddingData = readBytes(is, paddingSize);
             final Payload payload = new Payload(jpegData, paddingData);
             log.info(">>>> {}", payload);
-            
+
             return payload;
           }
 
-        return null;
+        return Payload.EMPTY;
       }
 
     // Converts byte array to int.

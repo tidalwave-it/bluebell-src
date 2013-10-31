@@ -29,9 +29,9 @@ package it.tidalwave.bluebell.liveview;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.net.URL;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.SimpleLiveviewSlicer;
+import it.tidalwave.sony.SimpleLiveviewSlicer.Payload;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,7 +50,7 @@ public class DefaultLiveViewControl implements LiveViewControl
     @Nonnull
     private final LiveView view;
 
-    private SimpleLiveviewSlicer slicer;
+    private final SimpleLiveviewSlicer slicer = new SimpleLiveviewSlicer();
 
     private volatile boolean running;
 
@@ -69,51 +69,50 @@ public class DefaultLiveViewControl implements LiveViewControl
 
                 try
                   {
-                    final URL liveViewUrl = cameraApi.startLiveview().getUrl();
-                    slicer = new SimpleLiveviewSlicer();
-                    slicer.open(liveViewUrl);
+                    slicer.open(cameraApi.startLiveview().getUrl());
                     running = true;
 
                     while (running)
                       {
-                        final SimpleLiveviewSlicer.Payload payload = slicer.nextPayload();
+                        final Payload payload = slicer.readNextPayload();
 
-                        if (payload == null)
-                          { // never occurs
-                            log.warn("Liveview Payload is null.");
-                            continue;
+                        if (!payload.isEmpty())
+                          {
+                            view.postPayload(payload);
                           }
-
-                        view.postPayload(payload);
                       }
                   }
                 catch (IOException e)
                   {
-                    log.warn("IOException while fetching: ", e);
+                    log.warn("While reading liveView", e);
                   }
                 catch (RuntimeException e)
                   {
-                    log.warn("JSONException while fetching", e);
+                    log.warn("While reading liveView", e);
                   }
                 finally
                   {
+                    running = false;
+
                     try
                       {
-                        if (slicer != null)
-                          {
-                            slicer.close();
-                            slicer = null;
-                          }
+                        slicer.close();
+                      }
+                    catch (IOException e)
+                      {
+                        log.warn("While closing slicer", e);
+                      }
 
+                    try
+                      {
                         cameraApi.stopLiveview();
                       }
                     catch (IOException e)
                       {
-                        log.warn("IOException while closing slicer: ", e);
+                        log.warn("While stopping liveView", e);
                       }
 
                     view.stop();
-                    running = false;
                   }
               }
           }.start();
