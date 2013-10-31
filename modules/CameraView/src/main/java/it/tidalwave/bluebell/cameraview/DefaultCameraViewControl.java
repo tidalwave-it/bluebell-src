@@ -29,6 +29,7 @@ package it.tidalwave.bluebell.cameraview;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -406,16 +407,8 @@ public class DefaultCameraViewControl implements CameraViewControl
           {
             final AvailableShootModeResponse response = cameraApi.getAvailableShootMode();
             final String currentMode = response.getCurrentMode();
-            final List<String> availableModes = new ArrayList<String>();
-
-            for (final String mode : response.getModes())
-              {
-                if (SHOOT_MODE_STILL.equals(mode) || SHOOT_MODE_MOVIE.equals(mode))
-                  {
-                    availableModes.add(mode);
-                  }
-              }
-
+            final List<String> availableModes = new ArrayList<String>(response.getModes());
+            availableModes.retainAll(Arrays.asList(SHOOT_MODE_MOVIE, SHOOT_MODE_STILL));
             view.setShootModeControl(availableModes, currentMode);
           }
         catch (IOException e)
