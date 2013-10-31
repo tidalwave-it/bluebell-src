@@ -443,6 +443,43 @@ import lombok.extern.slf4j.Slf4j;
      *
      *
      ******************************************************************************************************************/
+    class DefaultStopMovieRecResponse extends ErrorCheckingResponse implements StopMovieRecResponse
+      {
+        @Getter @Nonnull
+        private final URL thumbnailUrl;
+
+        public DefaultStopMovieRecResponse (final @Nonnull JSONObject jsonObject)
+          throws CameraApiException
+          {
+            super(jsonObject);
+            try
+              {
+                final JSONArray resultsObj = jsonObject.getJSONArray("result");
+                final String thumbnailUrlAsString = resultsObj.getString(0);
+
+                if (thumbnailUrlAsString == null)
+                  {
+                    throw new CameraApiException(this, "stopMovieRec: thumbnail URL is null.", null);
+                  }
+
+                thumbnailUrl = new URL(thumbnailUrlAsString);
+              }
+            catch (MalformedURLException e)
+              {
+                throw new RuntimeException("malformed URL", e);
+              }
+            catch (JSONException e)
+              {
+                throw new RuntimeException("malformed JSON", e);
+              }
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     class Call
       {
         private final JSONObject request = new JSONObject();
@@ -695,7 +732,7 @@ import lombok.extern.slf4j.Slf4j;
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("startMovieRec");
-        return new GenericResponse(call.post());
+        return new ErrorCheckingResponse(call.post());
       }
 
     /*******************************************************************************************************************
@@ -704,11 +741,11 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Response stopMovieRec()
+    public StopMovieRecResponse stopMovieRec()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("stopMovieRec");
-        return new GenericResponse(call.post());
+        return new DefaultStopMovieRecResponse(call.post());
       }
 
     /*******************************************************************************************************************
@@ -721,7 +758,7 @@ import lombok.extern.slf4j.Slf4j;
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("getEvent")
-                                                  .withParam(longPolling);
+                                                    .withParam(longPolling);
         final int longPollingTimeout = longPolling ? 20000 : 8000; // msec
         return new DefaultEventResponse(call.post(longPollingTimeout));
       }

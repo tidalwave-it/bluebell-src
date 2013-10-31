@@ -319,27 +319,13 @@ public class DefaultCameraViewControl implements CameraViewControl
                 try
                   {
                     log.info("startMovieRec: exec.");
-                    final JSONObject replyJson = cameraApi.startMovieRec().getJsonObject();
-                    final JSONArray resultsObj = replyJson.getJSONArray("result");
-                    final int resultCode = resultsObj.getInt(0);
-
-                    if (resultCode == 0)
-                      {
-                        view.notifyRecStart();
-                      }
-                    else
-                      {
-                        log.warn("startMovieRec: error: {}", resultCode);
-                        view.notifyErrorWhileRecordingMovie();
-                      }
+                    cameraApi.startMovieRec();
+                    view.notifyRecStart();
                   }
                 catch (IOException e)
                   {
                     log.warn("startMovieRec: IOException: ", e);
-                  }
-                catch (JSONException e)
-                  {
-                    log.warn("startMovieRec: JSON format error.");
+                    view.notifyErrorWhileRecordingMovie();
                   }
               }
           }.start();
@@ -361,27 +347,13 @@ public class DefaultCameraViewControl implements CameraViewControl
                 try
                   {
                     log.info("stopMovieRec: exec.");
-                    final JSONObject replyJson = cameraApi.stopMovieRec().getJsonObject();
-                    final JSONArray resultsObj = replyJson.getJSONArray("result");
-                    final String thumbnailUrl = resultsObj.getString(0);
-
-                    if (thumbnailUrl != null)
-                      {
-                        view.notifyRecStop();
-                      }
-                    else
-                      {
-                        log.warn("stopMovieRec: error");
-                        view.notifyErrorWhileRecordingMovie();
-                      }
+                    cameraApi.stopMovieRec().getThumbnailUrl();
+                    view.notifyRecStop();
                   }
                 catch (IOException e)
                   {
                     log.warn("stopMovieRec: IOException: ", e);
-                  }
-                catch (JSONException e)
-                  {
-                    log.warn("stopMovieRec: JSON format error.");
+                    view.notifyErrorWhileRecordingMovie();
                   }
               }
           }.start();
@@ -396,7 +368,7 @@ public class DefaultCameraViewControl implements CameraViewControl
     protected Object loadPicture (final @Nonnull URL url)
       throws IOException
       {
-        return null;
+        return null; // to be overridden
       }
 
     /*******************************************************************************************************************
