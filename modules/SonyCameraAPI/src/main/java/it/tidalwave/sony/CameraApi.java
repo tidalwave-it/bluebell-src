@@ -171,7 +171,6 @@ public interface CameraApi
     public ApplicationInfoResponse getApplicationInfo()
       throws IOException;
 
-    // Camera Service APIs
     /*******************************************************************************************************************
      *
      * Calls getAvailableApiList API to the target server. Request JSON data is
