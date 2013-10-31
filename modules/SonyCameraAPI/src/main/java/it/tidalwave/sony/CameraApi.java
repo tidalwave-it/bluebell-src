@@ -120,6 +120,15 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
+     *
+     ******************************************************************************************************************/
+    public static interface ApplicationInfoResponse extends Response
+      {
+        public int getVersion();
+      }
+
+    /*******************************************************************************************************************
+     *
      * Calls actTakePicture API to the target server. Request JSON data is such
      * like as below.
      *
@@ -159,7 +168,7 @@ public interface CameraApi
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Response getApplicationInfo()
+    public ApplicationInfoResponse getApplicationInfo()
       throws IOException;
 
     // Camera Service APIs

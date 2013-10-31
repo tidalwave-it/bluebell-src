@@ -311,6 +311,43 @@ import lombok.extern.slf4j.Slf4j;
      *
      *
      ******************************************************************************************************************/
+    class DefaultApplicationInfoResponse extends ErrorCheckingResponse implements ApplicationInfoResponse
+      {
+        public DefaultApplicationInfoResponse (final @Nonnull JSONObject jsonObject)
+          throws CameraApiException
+          {
+            super(jsonObject);
+          }
+
+        @Override
+        public int getVersion()
+          {
+            try
+              {
+                final JSONArray resultArrayJson = jsonObject.getJSONArray("result");
+                final String version = resultArrayJson.getString(1);
+                final String[] separated = version.split("\\.");
+                final int major = Integer.valueOf(separated[0]);
+                return major;
+              }
+            catch (JSONException e)
+                {
+                log.warn("isSupportedServerVersion: JSON format error.");
+              }
+            catch (NumberFormatException e)
+              {
+                log.warn("isSupportedServerVersion: Number format error.");
+              }
+
+            return 0;
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     class Call
       {
         private final JSONObject request = new JSONObject();
@@ -428,11 +465,11 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Response getApplicationInfo()
+    public ApplicationInfoResponse getApplicationInfo()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("getApplicationInfo");
-        return new GenericResponse(call.post());
+        return new DefaultApplicationInfoResponse(call.post());
       }
 
     /*******************************************************************************************************************

@@ -128,21 +128,19 @@ public class DefaultCameraViewControl implements CameraViewControl
                   {
                     setAvailableApis(cameraApi.getAvailableApiList().getApis());
 
-                    // check version of the server device
                     if (isApiAvailable("getApplicationInfo"))
                       {
                         log.info("openConnection(): getApplicationInfo()");
-                        final JSONObject replyJson = cameraApi.getApplicationInfo().getJsonObject();
 
-                        if (!isSupportedServerVersion(replyJson))
+                        if (cameraApi.getApplicationInfo().getVersion() < 2)
                           {
                             view.notifyDeviceNotSupportedAndQuit();
                             return;
                           }
                       }
-                    else
+                    else // never happens
                       {
-                        // never happens;
+                        view.notifyDeviceNotSupportedAndQuit();
                         return;
                       }
 
@@ -540,36 +538,5 @@ public class DefaultCameraViewControl implements CameraViewControl
     private boolean isApiAvailable(String apiName)
       {
         return availableApis.contains(apiName);
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Check if the version of the server is supported in this application.
-     *
-     ******************************************************************************************************************/
-    private boolean isSupportedServerVersion (final @Nonnull JSONObject replyJson)
-      {
-        try
-          {
-            final JSONArray resultArrayJson = replyJson.getJSONArray("result");
-            final String version = resultArrayJson.getString(1);
-            final String[] separated = version.split("\\.");
-            final int major = Integer.valueOf(separated[0]);
-
-            if (major >= 2)
-              {
-                return true;
-              }
-          }
-        catch (JSONException e)
-            {
-            log.warn("isSupportedServerVersion: JSON format error.");
-          }
-        catch (NumberFormatException e)
-          {
-            log.warn("isSupportedServerVersion: Number format error.");
-          }
-
-        return false;
       }
   }
