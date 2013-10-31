@@ -33,11 +33,9 @@ import java.util.concurrent.BlockingQueue;
 /**
  * A SurfaceView based class to draw liveview frames serially.
  */
-public class SimpleLiveviewSurfaceView extends SurfaceView implements
-        SurfaceHolder.Callback {
-
-    private static final String TAG = SimpleLiveviewSurfaceView.class
-            .getSimpleName();
+public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHolder.Callback
+  {
+    private static final String TAG = SimpleLiveviewSurfaceView.class.getSimpleName();
 
     private CameraApi mRemoteApi;
     private boolean mWhileFetching;
@@ -54,12 +52,13 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements
      *
      * @param context
      */
-    public SimpleLiveviewSurfaceView(Context context) {
+    public SimpleLiveviewSurfaceView (Context context)
+      {
         super(context);
         getHolder().addCallback(this);
         mFramePaint = new Paint();
         mFramePaint.setDither(true);
-    }
+      }
 
     /**
      * Contractor
@@ -67,12 +66,13 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements
      * @param context
      * @param attrs
      */
-    public SimpleLiveviewSurfaceView(Context context, AttributeSet attrs) {
+    public SimpleLiveviewSurfaceView (Context context, AttributeSet attrs)
+      {
         super(context, attrs);
         getHolder().addCallback(this);
         mFramePaint = new Paint();
         mFramePaint.setDither(true);
-    }
+      }
 
     /**
      * Contractor
@@ -81,29 +81,31 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements
      * @param attrs
      * @param defStyle
      */
-    public SimpleLiveviewSurfaceView(Context context, AttributeSet attrs,
-            int defStyle) {
+    public SimpleLiveviewSurfaceView (Context context, AttributeSet attrs, int defStyle)
+      {
         super(context, attrs, defStyle);
         getHolder().addCallback(this);
         mFramePaint = new Paint();
         mFramePaint.setDither(true);
-    }
+      }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width,
-            int height) {
+    public void surfaceChanged (SurfaceHolder holder, int format, int width, int height)
+      {
         // do nothing.
-    }
+      }
 
     @Override
-    public void surfaceCreated(SurfaceHolder holder) {
+    public void surfaceCreated (SurfaceHolder holder)
+      {
         // do nothing.
-    }
+      }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
+    public void surfaceDestroyed (SurfaceHolder holder)
+      {
         mWhileFetching = false;
-    }
+      }
 
     /**
      * Bind a Remote API object to communicate with Camera device. Need to call
@@ -111,9 +113,10 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements
      *
      * @param remoteApi
      */
-    public void bindRemoteApi(CameraApi remoteApi) {
+    public void bindRemoteApi (CameraApi remoteApi)
+      {
         mRemoteApi = remoteApi;
-    }
+      }
 
     /**
      * Start retrieving and drawing liveview frame data by new threads.
@@ -122,145 +125,189 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements
      * @exception IllegalStateException when Remote API object is not set.
      * @see SimpleLiveviewSurfaceView#bindRemoteApi(SimpleRemoteApi)
      */
-    public boolean start() {
-        if (mRemoteApi == null) {
+    public boolean start()
+      {
+        if (mRemoteApi == null)
+          {
             throw new IllegalStateException("RemoteApi is not set.");
-        }
-        if (mWhileFetching) {
+          }
+
+        if (mWhileFetching)
+          {
             Log.w(TAG, "start() already starting.");
             return false;
-        }
+          }
 
         mWhileFetching = true;
 
         // A thread for retrieving liveview data from server.
-        new Thread() {
+        new Thread()
+          {
             @Override
-            public void run() {
+            public void run()
+              {
                 Log.d(TAG, "Starting retrieving liveview data from server.");
                 SimpleLiveviewSlicer slicer = null;
 
-                try {
-                    // Prepare for connecting.
-                    JSONObject replyJson = null;
+                try
+                  {
+                    JSONObject replyJson = mRemoteApi.startLiveview().getResponseJson();
 
-                    replyJson = mRemoteApi.startLiveview().getResponseJson();
-                    if (!isErrorReply(replyJson)) {
+                    if (!isErrorReply(replyJson))
+                      {
                         JSONArray resultsObj = replyJson.getJSONArray("result");
                         String liveviewUrl = null;
-                        if (1 <= resultsObj.length()) {
-                            // Obtain liveview URL from the result.
+
+                        if (1 <= resultsObj.length())
+                          {
                             liveviewUrl = resultsObj.getString(0);
-                        }
-                        if (liveviewUrl != null) {
+                          }
+
+                        if (liveviewUrl != null)
+                          {
                             // Create Slicer to open the stream and parse it.
                             slicer = new SimpleLiveviewSlicer();
                             slicer.open(liveviewUrl);
-                        }
-                    }
+                          }
+                      }
 
-                    if (slicer == null) {
+                    if (slicer == null)
+                      {
                         mWhileFetching = false;
                         return;
-                    }
+                      }
 
-                    while (mWhileFetching) {
+                    while (mWhileFetching)
+                      {
                         final Payload payload = slicer.nextPayload();
-                        if (payload == null) { // never occurs
+
+                        if (payload == null)
+                          { // never occurs
                             Log.e(TAG, "Liveview Payload is null.");
                             continue;
-                        }
+                          }
 
-                        if (mJpegQueue.size() == 2) {
+                        if (mJpegQueue.size() == 2)
+                          {
                             mJpegQueue.remove();
-                        }
-                        mJpegQueue.add(payload.jpegData);
-                    }
-                } catch (IOException e) {
-                    Log.w(TAG, "IOException while fetching: " + e.getMessage());
-                } catch (JSONException e) {
-                    Log.w(TAG, "JSONException while fetching");
-                } finally {
-                    // Finalize
-                    try {
-                        if (slicer != null) {
-                            slicer.close();
-                        }
-                        mRemoteApi.stopLiveview();
-                    } catch (IOException e) {
-                        Log.w(TAG, "IOException while closing slicer: " + e.getMessage());
-                    }
+                          }
 
-                    if (mDrawerThread != null) {
+                        mJpegQueue.add(payload.jpegData);
+                      }
+                  }
+                catch (IOException e)
+                  {
+                    Log.w(TAG, "IOException while fetching: " + e.getMessage());
+                  }
+                catch (JSONException e)
+                  {
+                    Log.w(TAG, "JSONException while fetching");
+                  }
+                finally
+                  {
+                    try
+                      {
+                        if (slicer != null)
+                          {
+                            slicer.close();
+                          }
+
+                        mRemoteApi.stopLiveview();
+                      }
+                    catch (IOException e)
+                      {
+                        Log.w(TAG, "IOException while closing slicer: " + e.getMessage());
+                      }
+
+                    if (mDrawerThread != null)
+                      {
                         mDrawerThread.interrupt();
-                    }
+                      }
 
                     mJpegQueue.clear();
                     mWhileFetching = false;
-                }
-            }
-        }.start();
+                  }
+              }
+          }.start();
 
         // A thread for drawing liveview frame fetched by above thread.
-        mDrawerThread = new Thread() {
+        mDrawerThread = new Thread()
+          {
             @Override
-            public void run() {
+            public void run()
+              {
                 Log.d(TAG, "Starting drawing liveview frame.");
                 Bitmap frameBitmap = null;
 
                 BitmapFactory.Options factoryOptions = new BitmapFactory.Options();
                 factoryOptions.inSampleSize = 1;
-                if (mInMutableAvailable) {
-//                    initInBitmap(factoryOptions);
-                }
 
-                while (mWhileFetching) {
-                    try {
+                if (mInMutableAvailable)
+                  {
+//                    initInBitmap(factoryOptions);
+                  }
+
+                while (mWhileFetching)
+                  {
+                    try
+                      {
                         byte[] jpegData = mJpegQueue.take();
                         frameBitmap = BitmapFactory.decodeByteArray(
                                 jpegData, 0,
                                 jpegData.length, factoryOptions);
-                    } catch (IllegalArgumentException e) {
-                        if (mInMutableAvailable) {
+                      }
+                    catch (IllegalArgumentException e)
+                      {
+                        if (mInMutableAvailable)
+                          {
 //                            clearInBitmap(factoryOptions);
-                        }
+                          }
                         continue;
-                    } catch (InterruptedException e) {
+                      }
+                    catch (InterruptedException e)
+                      {
                         Log.i(TAG, "Drawer thread is Interrupted.");
                         break;
-                    }
+                      }
 
-                    if (mInMutableAvailable) {
+                    if (mInMutableAvailable)
+                      {
 //                        setInBitmap(factoryOptions, frameBitmap);
-                    }
-                    drawFrame(frameBitmap);
-                }
+                      }
 
-                if (frameBitmap != null) {
+                    drawFrame(frameBitmap);
+                  }
+
+                if (frameBitmap != null)
+                  {
                     frameBitmap.recycle();
-                }
+                  }
+
                 mWhileFetching = false;
-            }
-        };
+              }
+          };
+
         mDrawerThread.start();
         return true;
-    }
+      }
 
     /**
      * Request to stop retrieving and drawing liveview data.
      */
-    public void stop() {
+    public void stop()
+      {
         mWhileFetching = false;
-    }
+      }
 
     /**
      * Check to see whether start() is already called.
      *
      * @return true if start() is already called, false otherwise.
      */
-    public boolean isStarted() {
+    public boolean isStarted()
+      {
         return mWhileFetching;
-    }
+      }
 
 //    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 //    private void initInBitmap(BitmapFactory.Options options) {
@@ -282,46 +329,53 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements
 //    }
 
     // Draw frame bitmap onto a canvas.
-    private void drawFrame(Bitmap frame) {
-        if (frame.getWidth() != mPreviousWidth
-                || frame.getHeight() != mPreviousHeight) {
+    private void drawFrame(Bitmap frame)
+      {
+        if (frame.getWidth() != mPreviousWidth || frame.getHeight() != mPreviousHeight)
+          {
             onDetectedFrameSizeChanged(frame.getWidth(), frame.getHeight());
             return;
-        }
+          }
+
         Canvas canvas = getHolder().lockCanvas();
-        if (canvas == null) {
+
+        if (canvas == null)
+          {
             return;
-        }
+          }
+
         int w = frame.getWidth();
         int h = frame.getHeight();
         Rect src = new Rect(0, 0, w, h);
 
-        float by = Math
-                .min((float) getWidth() / w, (float) getHeight() / h);
+        float by = Math.min((float) getWidth() / w, (float) getHeight() / h);
         int offsetX = (getWidth() - (int) (w * by)) / 2;
         int offsetY = (getHeight() - (int) (h * by)) / 2;
-        Rect dst = new Rect(offsetX, offsetY, getWidth() - offsetX,
-                getHeight() - offsetY);
+        Rect dst = new Rect(offsetX, offsetY, getWidth() - offsetX, getHeight() - offsetY);
         canvas.drawBitmap(frame, src, dst, mFramePaint);
         getHolder().unlockCanvasAndPost(canvas);
-    }
+      }
 
     // Called when the width or height of liveview frame image is changed.
-    private void onDetectedFrameSizeChanged(int width, int height) {
+    private void onDetectedFrameSizeChanged(int width, int height)
+      {
         Log.d(TAG, "Change of aspect ratio detected");
         mPreviousWidth = width;
         mPreviousHeight = height;
         drawBlackFrame();
         drawBlackFrame();
         drawBlackFrame(); // delete triple buffers
-    }
+     }
 
     // Draw black screen.
-    private void drawBlackFrame() {
+    private void drawBlackFrame()
+      {
         Canvas canvas = getHolder().lockCanvas();
-        if (canvas == null) {
+
+        if (canvas == null)
+          {
             return;
-        }
+          }
 
         Paint paint = new Paint();
         paint.setColor(Color.BLACK);
@@ -329,11 +383,12 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements
 
         canvas.drawRect(new Rect(0, 0, getWidth(), getHeight()), paint);
         getHolder().unlockCanvasAndPost(canvas);
-    }
+      }
 
     // Parse JSON and returns a error code.
-    private static boolean isErrorReply(JSONObject replyJson) {
+    private static boolean isErrorReply(JSONObject replyJson)
+      {
         boolean hasError = (replyJson != null && replyJson.has("error"));
         return hasError;
-    }
-}
+      }
+  }
