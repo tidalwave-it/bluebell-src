@@ -544,24 +544,32 @@ public class DefaultCameraViewControl implements CameraViewControl
 
     /*******************************************************************************************************************
      *
-     *
+     * Check if the version of the server is supported in this application.
      *
      ******************************************************************************************************************/
-    // Check if the version of the server is supported in this application.
-    private boolean isSupportedServerVersion(JSONObject replyJson) {
-        try {
-            JSONArray resultArrayJson = replyJson.getJSONArray("result");
-            String version = resultArrayJson.getString(1);
-            String[] separated = version.split("\\.");
-            int major = Integer.valueOf(separated[0]);
-            if (2 <= major) {
+    private boolean isSupportedServerVersion (final @Nonnull JSONObject replyJson)
+      {
+        try
+          {
+            final JSONArray resultArrayJson = replyJson.getJSONArray("result");
+            final String version = resultArrayJson.getString(1);
+            final String[] separated = version.split("\\.");
+            final int major = Integer.valueOf(separated[0]);
+
+            if (major >= 2)
+              {
                 return true;
-            }
-        } catch (JSONException e) {
+              }
+          }
+        catch (JSONException e)
+            {
             log.warn("isSupportedServerVersion: JSON format error.");
-        } catch (NumberFormatException e) {
+          }
+        catch (NumberFormatException e)
+          {
             log.warn("isSupportedServerVersion: Number format error.");
-        }
+          }
+
         return false;
-    }
+      }
   }
