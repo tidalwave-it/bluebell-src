@@ -331,7 +331,7 @@ import lombok.extern.slf4j.Slf4j;
                 return major;
               }
             catch (JSONException e)
-                {
+              {
                 log.warn("isSupportedServerVersion: JSON format error.");
               }
             catch (NumberFormatException e)
@@ -340,6 +340,56 @@ import lombok.extern.slf4j.Slf4j;
               }
 
             return 0;
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    class DefaultAvailableShootModeResponse extends ErrorCheckingResponse implements AvailableShootModeResponse
+      {
+        public DefaultAvailableShootModeResponse (final @Nonnull JSONObject jsonObject)
+          throws CameraApiException
+          {
+            super(jsonObject);
+          }
+
+        @Override @Nonnull
+        public String getCurrentMode()
+          {
+            try
+              {
+                final JSONArray resultsObj = jsonObject.getJSONArray("result");
+                return resultsObj.getString(0);
+              }
+            catch (JSONException e)
+              {
+                throw new RuntimeException("malformed JSON", e);
+              }
+          }
+
+        @Override @Nonnull
+        public Set<String> getModes()
+          {
+            try
+              {
+                final JSONArray resultsObj = jsonObject.getJSONArray("result");
+                final JSONArray availableModesJson = resultsObj.getJSONArray(1);
+                final Set<String> availableModes = new TreeSet<String>();
+
+                for (int i = 0; i < availableModesJson.length(); i++)
+                  {
+                    availableModes.add(availableModesJson.getString(i));
+                  }
+
+                return availableModes;
+              }
+            catch (JSONException e)
+              {
+                throw new RuntimeException("malformed JSON", e);
+              }
           }
       }
 
@@ -495,7 +545,7 @@ import lombok.extern.slf4j.Slf4j;
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("setShootMode")
-                                                  .withParam(shootMode);
+                                                    .withParam(shootMode);
         return new GenericResponse(call.post());
       }
 
@@ -505,11 +555,11 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Response getAvailableShootMode()
+    public AvailableShootModeResponse getAvailableShootMode()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("getAvailableShootMode");
-        return new GenericResponse(call.post());
+        return new DefaultAvailableShootModeResponse(call.post());
       }
 
     /*******************************************************************************************************************

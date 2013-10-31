@@ -44,6 +44,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.sony.CameraApi.*;
+import java.util.List;
 
 /***********************************************************************************************************************
  *
@@ -496,16 +497,12 @@ public class DefaultCameraViewControl implements CameraViewControl
 
                 try
                   {
-                    final JSONObject replyJson = cameraApi.getAvailableShootMode().getJsonObject();
-                    final JSONArray resultsObj = replyJson.getJSONArray("result");
-                    final String currentMode = resultsObj.getString(0);
-                    final JSONArray availableModesJson = resultsObj.getJSONArray(1);
-                    final ArrayList<String> availableModes = new ArrayList<String>();
+                    final AvailableShootModeResponse response = cameraApi.getAvailableShootMode();
+                    final String currentMode = response.getCurrentMode();
+                    final List<String> availableModes = new ArrayList<String>();
 
-                    for (int i = 0; i < availableModesJson.length(); i++)
+                    for (final String mode : response.getModes())
                       {
-                        final String mode = availableModesJson.getString(i);
-
                         if (!SHOOT_MODE_STILL.equals(mode) && !SHOOT_MODE_MOVIE.equals(mode))
                           {
                             continue;
@@ -519,10 +516,6 @@ public class DefaultCameraViewControl implements CameraViewControl
                 catch (IOException e)
                   {
                     log.warn("prepareShootModeRadioButtons: IOException: ", e);
-                  }
-                catch (JSONException e)
-                  {
-                    log.warn("prepareShootModeRadioButtons: JSON format error.");
                   }
               };
           }.start();
