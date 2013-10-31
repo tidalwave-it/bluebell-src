@@ -466,7 +466,7 @@ public class SampleCameraActivity extends Activity implements CameraView
           });
 
         setProgressBarIndeterminateVisibility(true);
-        control.initialize();
+        control.start();
         log.info("onResume() completed.");
       }
 

@@ -89,7 +89,7 @@ public class DefaultCameraViewControl implements CameraViewControl
     // Open connection to the camera device to start monitoring Camera events
     // and showing liveview.
     @Override
-    public void initialize() // FIXME: rename to start
+    public void start() 
       {
         cameraObserver.setListener(new CameraObserver.ChangeListener()
           {
