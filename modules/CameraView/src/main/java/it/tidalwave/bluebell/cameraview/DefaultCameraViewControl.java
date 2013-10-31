@@ -43,6 +43,7 @@ import it.tidalwave.sony.CameraObserver;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.sony.CameraApi.*;
 
 /***********************************************************************************************************************
  *
@@ -435,11 +436,12 @@ public class DefaultCameraViewControl implements CameraViewControl
 
         view.renderCameraStatus(cameraStatus);
 
-        if ("MovieRecording".equals(cameraStatus))
+        if (CAMERA_STATUS_MOVIE_RECORDING.equals(cameraStatus))
           {
             view.renderRecStartStopButtonAsStop();
           }
-        else if ("IDLE".equals(cameraStatus) && "movie".equals(shootMode))
+        else if (CAMERA_STATUS_IDLE.equals(cameraStatus)
+              && SHOOT_MODE_MOVIE.equals(shootMode))
           {
             view.renderRecStartStopButtonAsStart();
           }
@@ -448,14 +450,14 @@ public class DefaultCameraViewControl implements CameraViewControl
             view.disableRecStartStopButton();
           }
 
-        view.enableTakePhotoButton("still".equals(shootMode) && "IDLE".equals(cameraStatus));
+        view.enableTakePhotoButton(SHOOT_MODE_STILL.equals(shootMode) && CAMERA_STATUS_IDLE.equals(cameraStatus));
 
-        if (!"still".equals(shootMode))
+        if (!SHOOT_MODE_STILL.equals(shootMode))
           {
             view.hidePhotoBox();
           }
 
-        if ("IDLE".equals(cameraStatus))
+        if (CAMERA_STATUS_IDLE.equals(cameraStatus))
           {
             view.enableShootModeSelector(shootMode);
           }
@@ -507,7 +509,7 @@ public class DefaultCameraViewControl implements CameraViewControl
                       {
                         final String mode = availableModesJson.getString(i);
 
-                        if (!"still".equals(mode) && !"movie".equals(mode))
+                        if (!SHOOT_MODE_STILL.equals(mode) && !SHOOT_MODE_MOVIE.equals(mode))
                           {
                             continue;
                           }

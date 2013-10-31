@@ -41,6 +41,12 @@ import lombok.Getter;
  **********************************************************************************************************************/
 public interface CameraApi
   {
+    public static final String SHOOT_MODE_STILL = "still";
+    public static final String SHOOT_MODE_MOVIE = "movie";
+
+    public static final String CAMERA_STATUS_IDLE = "IDLE";
+    public static final String CAMERA_STATUS_MOVIE_RECORDING = "MovieRecording";
+
     /*******************************************************************************************************************
      *
      *
