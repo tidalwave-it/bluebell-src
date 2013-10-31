@@ -4,11 +4,13 @@
 
 package it.tidalwave.bluebell.mobile;
 
-import it.tidalwave.bluebell.cameraview.impl.android.AndroidCameraViewControl;
-import it.tidalwave.bluebell.cameraview.CameraView;
-import it.tidalwave.bluebell.cameraview.DefaultCameraViewControl;
+import javax.annotation.Nonnull;
+import java.util.List;
 import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.sony.CameraApi;
+import it.tidalwave.bluebell.cameraview.CameraView;
+import it.tidalwave.bluebell.cameraview.DefaultCameraViewControl;
+import it.tidalwave.bluebell.cameraview.impl.android.AndroidCameraViewControl;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -22,8 +24,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.util.List;
-import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
