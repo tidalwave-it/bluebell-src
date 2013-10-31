@@ -144,7 +144,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements
                     // Prepare for connecting.
                     JSONObject replyJson = null;
 
-                    replyJson = mRemoteApi.startLiveview().getJsonObject();
+                    replyJson = mRemoteApi.startLiveview().getResponseJson();
                     if (!isErrorReply(replyJson)) {
                         JSONArray resultsObj = replyJson.getJSONArray("result");
                         String liveviewUrl = null;
