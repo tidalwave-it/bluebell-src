@@ -187,7 +187,6 @@ public class DefaultCameraViewControl implements CameraViewControl
       {
         new Thread()
           {
-            public static final String API_STOP_REC_MODE = "stopRecMode";
             @Override
             public void run()
               {

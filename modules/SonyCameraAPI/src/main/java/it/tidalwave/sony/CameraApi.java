@@ -45,6 +45,7 @@ public interface CameraApi
   {
     public static final String API_GET_APPLICATION_INFO = "getApplicationInfo";
     public static final String API_START_REC_MODE = "startRecMode";
+    public static final String API_STOP_REC_MODE = "stopRecMode";
     public static final String API_EVENT = "getEvent";
     public static final String API_START_LIVEVIEW = "startLiveview";
     public static final String API_AVAILABLE_SHOOT_MODE = "getAvailableShootMode";
