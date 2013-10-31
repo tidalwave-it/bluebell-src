@@ -52,7 +52,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
     private int mPreviousWidth = 0;
 
     private int mPreviousHeight = 0;
-    
+
     private final Paint mFramePaint;
 
     /**
@@ -260,9 +260,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
                     try
                       {
                         byte[] jpegData = mJpegQueue.take();
-                        frameBitmap = BitmapFactory.decodeByteArray(
-                                jpegData, 0,
-                                jpegData.length, factoryOptions);
+                        frameBitmap = BitmapFactory.decodeByteArray(jpegData, 0, jpegData.length, factoryOptions);
                       }
                     catch (IllegalArgumentException e)
                       {
