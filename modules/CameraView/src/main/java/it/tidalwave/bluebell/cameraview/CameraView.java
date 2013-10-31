@@ -111,5 +111,5 @@ public interface CameraView
      * Notifies that there has been an error while taking the photo.
      *
      ******************************************************************************************************************/
-    public void notifyErrorWhileTakingPicture();
+    public void notifyErrorWhileTakingPhoto();
   }

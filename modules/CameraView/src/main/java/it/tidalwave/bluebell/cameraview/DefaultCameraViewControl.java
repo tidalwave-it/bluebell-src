@@ -233,7 +233,7 @@ public class DefaultCameraViewControl implements CameraViewControl
       {
         if (!liveViewStarted)
           {
-            view.notifyErrorWhileTakingPicture();
+            view.notifyErrorWhileTakingPhoto();
             return;
           }
 
@@ -257,7 +257,7 @@ public class DefaultCameraViewControl implements CameraViewControl
                     if (postImageUrl == null)
                       {
                         log.warn("takeAndFetchPicture: post image URL is null.");
-                        view.notifyErrorWhileTakingPicture();
+                        view.notifyErrorWhileTakingPhoto();
                         return;
                       }
 
@@ -269,12 +269,12 @@ public class DefaultCameraViewControl implements CameraViewControl
                 catch (IOException e)
                   {
                     log.warn("IOException while closing slicer: ", e);
-                    view.notifyErrorWhileTakingPicture();
+                    view.notifyErrorWhileTakingPhoto();
                   }
                 catch (JSONException e)
                   {
                     log.warn("JSONException while closing slicer");
-                    view.notifyErrorWhileTakingPicture();
+                    view.notifyErrorWhileTakingPhoto();
                   }
                 finally
                   {

@@ -205,7 +205,7 @@ public class SampleCameraActivity extends Activity implements CameraView
      *
      ******************************************************************************************************************/
     @Override
-    public void notifyErrorWhileTakingPicture()
+    public void notifyErrorWhileTakingPhoto()
       {
         handler.post(new Runnable()
           {
