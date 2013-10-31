@@ -530,11 +530,10 @@ public class DefaultCameraViewControl implements CameraViewControl
 
     /*******************************************************************************************************************
      *
-     *
+     * Check whether a given API is currently available.
      *
      ******************************************************************************************************************/
-    // Check if the indicated API is available at present.
-    private boolean isApiAvailable(String apiName)
+    private boolean isApiAvailable (final @Nonnull String apiName)
       {
         return availableApis.contains(apiName);
       }
