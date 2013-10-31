@@ -480,6 +480,48 @@ import lombok.extern.slf4j.Slf4j;
      *
      *
      ******************************************************************************************************************/
+    class DefaultStartLiveViewUrlResponse extends ErrorCheckingResponse implements StartLiveViewUrlResponse
+      {
+        @Getter @Nonnull
+        private final URL url;
+
+        public DefaultStartLiveViewUrlResponse (final @Nonnull JSONObject jsonObject)
+          throws CameraApiException
+          {
+            super(jsonObject);
+            try
+              {
+                final JSONArray resultsObj = responseJson.getJSONArray("result");
+                String urlAsString = null;
+
+                if (resultsObj.length() >= 1)
+                  {
+                    urlAsString = resultsObj.getString(0);
+                  }
+
+                if (urlAsString == null)
+                  {
+                    throw new CameraApiException(this, "liveView URL is null", null);
+                  }
+
+                url = new URL(urlAsString);
+              }
+            catch (MalformedURLException e)
+              {
+                throw new RuntimeException("malformed URL", e);
+              }
+            catch (JSONException e)
+              {
+                throw new RuntimeException("malformed JSON", e);
+              }
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     class Call
       {
         private final JSONObject request = new JSONObject();
@@ -653,11 +695,11 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Response startLiveview()
+    public StartLiveViewUrlResponse startLiveview()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("startLiveview");
-        return new GenericResponse(call.post());
+        return new DefaultStartLiveViewUrlResponse(call.post());
       }
 
     /*******************************************************************************************************************

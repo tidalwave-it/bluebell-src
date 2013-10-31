@@ -35,6 +35,7 @@ import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.sony.SsdpDiscoverer;
+import java.net.URL;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -114,6 +115,8 @@ public class DefaultSimpleSsdpClientTest
         observer.start();
         Thread.sleep(10000);
         cameraApi.startRecMode();
+        final URL url = cameraApi.startLiveview().getUrl();
+        log.info("LiveView URL: {}", url);
         Thread.sleep(30000);
 
 //        cameraApi.actTakePicture();

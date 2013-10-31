@@ -172,6 +172,16 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
+     *
+     ******************************************************************************************************************/
+    public static interface StartLiveViewUrlResponse extends Response
+      {
+        @Nonnull
+        public URL getUrl();
+      }
+
+    /*******************************************************************************************************************
+     *
      * Calls actTakePicture API to the target server. Request JSON data is such
      * like as below.
      *
@@ -367,7 +377,7 @@ public interface CameraApi
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Response startLiveview()
+    public StartLiveViewUrlResponse startLiveview()
       throws IOException;
 
     /*******************************************************************************************************************
