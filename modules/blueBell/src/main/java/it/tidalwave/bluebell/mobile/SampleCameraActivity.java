@@ -66,7 +66,7 @@ public class SampleCameraActivity extends Activity implements CameraView
             public void run()
               {
                 Toast.makeText(SampleCameraActivity.this, R.string.msg_error_connection, Toast.LENGTH_SHORT).show();
-                setProgressBarIndeterminateVisibility(false);
+                setProgressBarIndeterminateVisibility(false); // FIXME: split
               }
           });
       }
@@ -85,7 +85,7 @@ public class SampleCameraActivity extends Activity implements CameraView
             public void run()
               {
                 Toast.makeText(SampleCameraActivity.this, R.string.msg_error_non_supported_device, Toast.LENGTH_SHORT).show();
-                SampleCameraActivity.this.finish();
+                SampleCameraActivity.this.finish(); // FIXME: split
               }
           });
       }
@@ -158,7 +158,7 @@ public class SampleCameraActivity extends Activity implements CameraView
             public void run()
               {
                 prepareShootModeRadioButtonsUi(availableModes.toArray(new String[0]), currentMode);
-                setProgressBarIndeterminateVisibility(false);
+                setProgressBarIndeterminateVisibility(false); // FIXME: split?
               }
           });
       }
