@@ -410,12 +410,10 @@ public class DefaultCameraViewControl implements CameraViewControl
 
             for (final String mode : response.getModes())
               {
-                if (!SHOOT_MODE_STILL.equals(mode) && !SHOOT_MODE_MOVIE.equals(mode))
+                if (SHOOT_MODE_STILL.equals(mode) || SHOOT_MODE_MOVIE.equals(mode))
                   {
-                    continue;
+                    availableModes.add(mode);
                   }
-
-                availableModes.add(mode);
               }
 
             view.setShootModeControl(availableModes, currentMode);
