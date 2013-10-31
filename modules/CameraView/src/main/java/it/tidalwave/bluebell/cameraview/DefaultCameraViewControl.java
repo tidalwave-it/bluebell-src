@@ -98,14 +98,14 @@ public class DefaultCameraViewControl implements CameraViewControl
             public void onShootModeChanged (final @Nonnull String shootMode)
               {
                 log.info("onShootModeChanged({})", shootMode);
-                view.refreshUi();
+                refreshUi();
               }
 
             @Override
             public void onStatusChanged (final @Nonnull String status)
               {
                 log.info("onStatusChanged({})", status);
-                view.refreshUi();
+                refreshUi();
               }
 
             @Override
@@ -294,6 +294,48 @@ public class DefaultCameraViewControl implements CameraViewControl
       throws IOException
       {
         return null;
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    private void refreshUi()
+      {
+        final String cameraStatus = cameraObserver.getStatus();
+        final String shootMode = cameraObserver.getShootMode();
+
+        view.renderCameraStatus(cameraStatus);
+
+        if ("MovieRecording".equals(cameraStatus))
+          {
+            view.renderRecStartStopButtonAsStop();
+          }
+        else if ("IDLE".equals(cameraStatus) && "movie".equals(shootMode))
+          {
+            view.renderRecStartStopButtonAsStart();
+          }
+        else
+          {
+            view.disableRecStartStopButton();
+          }
+
+        view.enableTakePhotoButton("still".equals(shootMode) && "IDLE".equals(cameraStatus));
+
+        if (!"still".equals(shootMode))
+          {
+            view.hidePhotoBox();
+          }
+
+        if ("IDLE".equals(cameraStatus))
+          {
+            view.enableShootModeSelector(shootMode);
+          }
+        else
+          {
+            view.disableShootModeSelector();
+          }
       }
 
     /*******************************************************************************************************************

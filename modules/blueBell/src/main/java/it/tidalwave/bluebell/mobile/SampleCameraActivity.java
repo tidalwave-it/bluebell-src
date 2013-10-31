@@ -38,19 +38,25 @@ public class SampleCameraActivity extends Activity implements CameraView
 // TODO: rename to AndroidCameraViewActivity and move to the it.tidalwave.bluebill.cameraview.impl.android package
   {
     private Handler handler;
-    private ImageView mImagePictureWipe;
-    private RadioGroup mRadiosShootMode;
-    private Button mButtonTakePicture;
-    private Button mButtonRecStartStop;
-    private TextView mTextCameraStatus;
 
-    private final DefaultCameraViewControl control = new AndroidCameraViewControl(this, this);
+    private ImageView ivPhotoBox;
+
+    private RadioGroup rbShootModeSelector;
+
+    private Button btTakePhoto;
+
+    private Button btRecStartStop;
+
+    private TextView tvCameraStatus;
 
     private SimpleLiveviewSurfaceView mLiveviewSurface;
+
+    private final DefaultCameraViewControl control = new AndroidCameraViewControl(this, this);
 
     private boolean mRadioInitialChecked;
 
     private CameraApi cameraApi;// FIXME: temporary
+
     private CameraObserver cameraObserver; // FIXME: temporary
 
     /*******************************************************************************************************************
@@ -133,24 +139,6 @@ public class SampleCameraActivity extends Activity implements CameraView
      *
      ******************************************************************************************************************/
     @Override
-    public void refreshUi()
-      {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                refreshUi2();
-              }
-          });
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
     public void setShootModeControl (final @Nonnull List<String> availableModes, final @Nonnull String currentMode)
       {
         handler.post(new Runnable()
@@ -223,6 +211,161 @@ public class SampleCameraActivity extends Activity implements CameraView
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    public void renderCameraStatus (final @Nonnull String cameraStatus)
+      {
+        handler.post(new Runnable()
+          {
+            @Override
+            public void run()
+              {
+                tvCameraStatus.setText(cameraStatus);
+              }
+          });
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    public void renderRecStartStopButtonAsStop()
+      {
+        handler.post(new Runnable()
+          {
+            @Override
+            public void run()
+              {
+                btRecStartStop.setEnabled(true);
+                btRecStartStop.setText(R.string.button_rec_stop);
+              }
+          });
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    public void renderRecStartStopButtonAsStart()
+      {
+        handler.post(new Runnable()
+          {
+            @Override
+            public void run()
+              {
+                btRecStartStop.setEnabled(true);
+                btRecStartStop.setText(R.string.button_rec_start);
+              }
+          });
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    public void disableRecStartStopButton()
+      {
+        handler.post(new Runnable()
+          {
+            @Override
+            public void run()
+              {
+                btRecStartStop.setEnabled(false);
+              }
+          });
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    public void enableTakePhotoButton (final boolean enabled)
+      {
+        handler.post(new Runnable()
+          {
+            @Override
+            public void run()
+              {
+                btTakePhoto.setEnabled(enabled);
+              }
+          });
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    public void hidePhotoBox()
+      {
+        handler.post(new Runnable()
+          {
+            @Override
+            public void run()
+              {
+                ivPhotoBox.setVisibility(View.INVISIBLE);
+              }
+          });
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    public void enableShootModeSelector (final @Nonnull String shootMode)
+      {
+        handler.post(new Runnable()
+          {
+            @Override
+            public void run()
+              {
+                for (int i = 0; i < rbShootModeSelector.getChildCount(); i++)
+                  {
+                    rbShootModeSelector.getChildAt(i).setEnabled(true);
+                  }
+
+                View radioButton = rbShootModeSelector.findViewWithTag(shootMode);
+
+                if (radioButton != null)
+                  {
+                    rbShootModeSelector.check(radioButton.getId());
+                  }
+                else
+                  {
+                    rbShootModeSelector.clearCheck();
+                  }
+              }
+          });
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    public void disableShootModeSelector()
+      {
+        handler.post(new Runnable()
+          {
+            @Override
+            public void run()
+              {
+                for (int i = 0; i < rbShootModeSelector.getChildCount(); i++)
+                  {
+                    rbShootModeSelector.getChildAt(i).setEnabled(false);
+                  }
+              }
+          });
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     public void showPhoto (final @Nonnull Object picture)
       {
@@ -231,8 +374,8 @@ public class SampleCameraActivity extends Activity implements CameraView
             @Override
             public void run()
               {
-                mImagePictureWipe.setVisibility(View.VISIBLE);
-                mImagePictureWipe.setImageDrawable((Drawable)picture);
+                ivPhotoBox.setVisibility(View.VISIBLE);
+                ivPhotoBox.setImageDrawable((Drawable)picture);
               }
           });
       }
@@ -256,11 +399,11 @@ public class SampleCameraActivity extends Activity implements CameraView
         cameraApi = control.getCameraApi();
         cameraObserver = control.getCameraObserver();
 
-        mImagePictureWipe = (ImageView) findViewById(R.id.image_picture_wipe);
-        mRadiosShootMode = (RadioGroup) findViewById(R.id.radio_group_shoot_mode);
-        mButtonTakePicture = (Button) findViewById(R.id.button_take_picture);
-        mButtonRecStartStop = (Button) findViewById(R.id.button_rec_start_stop);
-        mTextCameraStatus = (TextView) findViewById(R.id.text_camera_status);
+        ivPhotoBox = (ImageView) findViewById(R.id.image_picture_wipe);
+        rbShootModeSelector = (RadioGroup) findViewById(R.id.radio_group_shoot_mode);
+        btTakePhoto = (Button) findViewById(R.id.button_take_picture);
+        btRecStartStop = (Button) findViewById(R.id.button_rec_start_stop);
+        tvCameraStatus = (TextView) findViewById(R.id.text_camera_status);
         mLiveviewSurface = (SimpleLiveviewSurfaceView) findViewById(R.id.surfaceview_liveview);
         mLiveviewSurface.bindRemoteApi(cameraApi);
 
@@ -277,7 +420,7 @@ public class SampleCameraActivity extends Activity implements CameraView
       {
         super.onResume();
 
-        mButtonTakePicture.setOnClickListener(new View.OnClickListener()
+        btTakePhoto.setOnClickListener(new View.OnClickListener()
           {
             @Override
             public void onClick(View v)
@@ -286,7 +429,7 @@ public class SampleCameraActivity extends Activity implements CameraView
               }
           });
 
-        mButtonRecStartStop.setOnClickListener(new View.OnClickListener()
+        btRecStartStop.setOnClickListener(new View.OnClickListener()
           {
             @Override
             public void onClick(View v)
@@ -302,12 +445,12 @@ public class SampleCameraActivity extends Activity implements CameraView
               }
           });
 
-        mImagePictureWipe.setOnClickListener(new View.OnClickListener()
+        ivPhotoBox.setOnClickListener(new View.OnClickListener()
           {
             @Override
             public void onClick(View v)
               {
-                mImagePictureWipe.setVisibility(View.INVISIBLE);
+                ivPhotoBox.setVisibility(View.INVISIBLE);
               }
           });
 
@@ -334,78 +477,11 @@ public class SampleCameraActivity extends Activity implements CameraView
      *
      *
      ******************************************************************************************************************/
-    // Refresh UI appearance along current "cameraStatus" and "shootMode".
-    private void refreshUi2()
-      {
-        final String cameraStatus = cameraObserver.getStatus();
-        final String shootMode = cameraObserver.getShootMode();
-
-        // CameraStatus TextView
-        mTextCameraStatus.setText(cameraStatus);
-
-        // Recording Start/Stop Button
-        if ("MovieRecording".equals(cameraStatus))
-          {
-            mButtonRecStartStop.setEnabled(true);
-            mButtonRecStartStop.setText(R.string.button_rec_stop);
-          }
-        else if ("IDLE".equals(cameraStatus) && "movie".equals(shootMode))
-          {
-            mButtonRecStartStop.setEnabled(true);
-            mButtonRecStartStop.setText(R.string.button_rec_start);
-          }
-        else
-          {
-            mButtonRecStartStop.setEnabled(false);
-          }
-
-        mButtonTakePicture.setEnabled("still".equals(shootMode) && "IDLE".equals(cameraStatus));
-
-        // Picture wipe Image
-        if (!"still".equals(shootMode))
-          {
-            mImagePictureWipe.setVisibility(View.INVISIBLE);
-          }
-
-        // Shoot Mode Buttons
-        if ("IDLE".equals(cameraStatus))
-          {
-            for (int i = 0; i < mRadiosShootMode.getChildCount(); i++)
-              {
-                mRadiosShootMode.getChildAt(i).setEnabled(true);
-              }
-
-            View radioButton = mRadiosShootMode.findViewWithTag(shootMode);
-
-            if (radioButton != null)
-              {
-                mRadiosShootMode.check(radioButton.getId());
-              }
-            else
-              {
-                mRadiosShootMode.clearCheck();
-              }
-
-          }
-        else
-          {
-            for (int i = 0; i < mRadiosShootMode.getChildCount(); i++)
-              {
-                mRadiosShootMode.getChildAt(i).setEnabled(false);
-              }
-          }
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
     // Prepare for Radio Button UI of Shoot Mode.
     private void prepareShootModeRadioButtonsUi (String[] availableShootModes, String currentMode)
       {
-        mRadiosShootMode.clearCheck();
-        mRadiosShootMode.removeAllViews();
+        rbShootModeSelector.clearCheck();
+        rbShootModeSelector.removeAllViews();
 
         for (int i = 0; i < availableShootModes.length; i++)
           {
@@ -438,13 +514,13 @@ public class SampleCameraActivity extends Activity implements CameraView
                   }
               });
 
-            mRadiosShootMode.addView(radioBtn);
+            rbShootModeSelector.addView(radioBtn);
 
             if (mode.equals(currentMode))
               {
                 // Set the flag true to suppress unnecessary API calling.
                 mRadioInitialChecked = true;
-                mRadiosShootMode.check(viewId);
+                rbShootModeSelector.check(viewId);
               }
           }
       }
