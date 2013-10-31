@@ -29,6 +29,7 @@ import it.tidalwave.sony.impl.DefaultSsdpDiscoverer;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -168,23 +169,26 @@ public class CameraRemoteSampleApp extends Activity {
     }
 
     // Launch a SampleCameraActivity.
-    private void launchSampleActivity(CameraDevice device) {
-        // Note that it's a irresponsible rule for the sample application.
-        if (device.hasApiService("camera")) {
+    private void launchSampleActivity (final @Nonnull CameraDevice device)
+      {
+        if (device.hasApiService("camera"))
+          {
             // Go to CameraSampleActivity.
             Toast.makeText(CameraRemoteSampleApp.this,
                     device.getFriendlyName(), Toast.LENGTH_SHORT).show();
 
             // Set target ServerDevice instance to control in Activity.
             SampleApplication app = (SampleApplication) getApplication();
-            app.setTargetServerDevice(device);
+            app.setCameraDevice(device);
             Intent intent = new Intent(this, SampleCameraActivity.class);
             startActivity(intent);
-        } else {
+          }
+        else
+          {
             Toast.makeText(this, R.string.msg_error_non_supported_device,
                     Toast.LENGTH_SHORT).show();
-        }
-    }
+          }
+      }
 
     // Adapter class for DeviceList
     private static class DeviceListAdapter extends BaseAdapter {
@@ -223,21 +227,21 @@ public class CameraRemoteSampleApp extends Activity {
         }
 
         @Override
-        public View getView (final int position, final View convertView, final ViewGroup parent) 
+        public View getView (final int position, final View convertView, final ViewGroup parent)
           {
             TextView textView = (TextView) convertView;
-            
-            if (textView == null) 
+
+            if (textView == null)
               {
                 textView = (TextView)mInflater.inflate(R.layout.device_list_item, null);
               }
-            
+
             CameraDevice device = (CameraDevice) getItem(position);
             log.info(">>>> found {}, services: {}", device.getFriendlyName(), device.getApiServices());
             ApiService apiService = device.getApiService("camera");
             String endpointUrl = "?";
-            
-            if (apiService != null) 
+
+            if (apiService != null)
               {
                 endpointUrl = apiService.getEndpointUrl();
               }

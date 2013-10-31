@@ -250,7 +250,7 @@ public class SampleCameraActivity extends Activity implements CameraView
 
         handler = new Handler();
         final SampleApplication app = (SampleApplication)getApplication();
-        control.bind(app.getTargetServerDevice());
+        control.bind(app.getCameraDevice());
 
         cameraApi = control.getCameraApi();
         cameraObserver = control.getCameraObserver();
