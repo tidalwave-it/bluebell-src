@@ -1,10 +1,33 @@
 /*
- * Copyright 2013 Sony Corporation
+ * #%L
+ * *********************************************************************************************************************
+ *
+ * blueBell
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/bluebell-src
+ * %%
+ * Copyright (C) 2013 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations under the License.
+ *
+ * *********************************************************************************************************************
+ *
+ * $Id$
+ *
+ * *********************************************************************************************************************
+ * #L%
  */
+package it.tidalwave.bluebell.cameraview.impl.android;
 
-package it.tidalwave.bluebell.mobile;
-
-import it.tidalwave.bluebell.liveview.LiveView;
+import javax.annotation.Nonnull;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 //import android.annotation.TargetApi;
@@ -19,14 +42,19 @@ import android.graphics.Rect;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import it.tidalwave.sony.SimpleLiveviewSlicer;
-import javax.annotation.Nonnull;
+import it.tidalwave.bluebell.liveview.LiveView;
 import lombok.extern.slf4j.Slf4j;
 
-/**
+/***********************************************************************************************************************
+ *
  * A SurfaceView based class to draw liveview frames serially.
- */
+ *
+ * @author  Fabrizio Giudici
+ * @version $Id$
+ *
+ **********************************************************************************************************************/
 @Slf4j
-public class SimpleLiveviewSurfaceView extends SurfaceView implements LiveView, SurfaceHolder.Callback
+public class LiveviewSurfaceView extends SurfaceView implements LiveView, SurfaceHolder.Callback
   {
     private volatile boolean running;
 
@@ -49,7 +77,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements LiveView, 
      *
      * @param context
      */
-    public SimpleLiveviewSurfaceView (Context context)
+    public LiveviewSurfaceView (Context context)
       {
         super(context);
         getHolder().addCallback(this);
@@ -63,7 +91,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements LiveView, 
      * @param context
      * @param attrs
      */
-    public SimpleLiveviewSurfaceView (Context context, AttributeSet attrs)
+    public LiveviewSurfaceView (Context context, AttributeSet attrs)
       {
         super(context, attrs);
         getHolder().addCallback(this);
@@ -78,7 +106,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements LiveView, 
      * @param attrs
      * @param defStyle
      */
-    public SimpleLiveviewSurfaceView (Context context, AttributeSet attrs, int defStyle)
+    public LiveviewSurfaceView (Context context, AttributeSet attrs, int defStyle)
       {
         super(context, attrs, defStyle);
         getHolder().addCallback(this);

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <it.tidalwave.bluebell.mobile.SimpleLiveviewSurfaceView
+    <it.tidalwave.bluebell.cameraview.impl.android.LiveviewSurfaceView
         android:id="@+id/surfaceview_liveview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -2,8 +2,9 @@
  * Copyright 2013 Sony Corporation
  */
 
-package it.tidalwave.bluebell.mobile;
+package it.tidalwave.bluebell.mobile.android;
 
+import it.tidalwave.bluebell.cameraview.impl.android.CameraViewActivity;
 import it.tidalwave.sony.SsdpDiscoverer;
 import it.tidalwave.sony.CameraDevice;
 import android.app.Activity;
@@ -24,6 +25,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import it.tidalwave.bluebell.mobile.R;
 import it.tidalwave.sony.CameraDevice.ApiService;
 import it.tidalwave.sony.impl.DefaultSsdpDiscoverer;
 
@@ -36,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
  * An Activity class of Device Discovery screen.
  */
 @Slf4j
-public class CameraRemoteSampleApp extends Activity {
+public class CameraDiscoveryViewActivity extends Activity {
 
     private Handler mHandler;
     private SsdpDiscoverer mSsdpClient;
@@ -141,7 +143,7 @@ public class CameraRemoteSampleApp extends Activity {
                         setProgressBarIndeterminateVisibility(false);
                         findViewById(R.id.button_search).setEnabled(true);
                         if (mActivityActive) {
-                            Toast.makeText(CameraRemoteSampleApp.this,
+                            Toast.makeText(CameraDiscoveryViewActivity.this,
                                     R.string.msg_device_search_finish,
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -158,7 +160,7 @@ public class CameraRemoteSampleApp extends Activity {
                         setProgressBarIndeterminateVisibility(false);
                         findViewById(R.id.button_search).setEnabled(true);
                         if (mActivityActive) {
-                            Toast.makeText(CameraRemoteSampleApp.this,
+                            Toast.makeText(CameraDiscoveryViewActivity.this,
                                     R.string.msg_error_device_searching,
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -174,13 +176,13 @@ public class CameraRemoteSampleApp extends Activity {
         if (device.hasApiService("camera"))
           {
             // Go to CameraSampleActivity.
-            Toast.makeText(CameraRemoteSampleApp.this,
+            Toast.makeText(CameraDiscoveryViewActivity.this,
                     device.getFriendlyName(), Toast.LENGTH_SHORT).show();
 
             // Set target ServerDevice instance to control in Activity.
-            SampleApplication app = (SampleApplication) getApplication();
+            BlueBellApplication app = (BlueBellApplication) getApplication();
             app.setCameraDevice(device);
-            Intent intent = new Intent(this, SampleCameraActivity.class);
+            Intent intent = new Intent(this, CameraViewActivity.class);
             startActivity(intent);
           }
         else

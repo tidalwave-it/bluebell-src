@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="it.tidalwave.bluebell.mobile" 
-          android:versionCode="1" 
+  package="it.tidalwave.bluebell.mobile"
+          android:versionCode="1"
           android:versionName="1.0-ALPHA-1-SNAPSHOT">
 
     <uses-sdk
@@ -11,22 +11,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
-<!--  <application android:icon="@drawable/icon" android:label="@string/app_name">
-    <activity android:name=".HelloAndroidActivity">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-    </activity>
-  </application>-->
-
     <application
-        android:name="it.tidalwave.bluebell.mobile.SampleApplication"
+        android:name="it.tidalwave.bluebell.mobile.android.BlueBellApplication"
         android:allowBackup="true"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Light">
         <activity
-            android:name="it.tidalwave.bluebell.mobile.CameraRemoteSampleApp"
+            android:name="it.tidalwave.bluebell.mobile.android.CameraDiscoveryViewActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
             <intent-filter>
@@ -35,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="it.tidalwave.bluebell.mobile.SampleCameraActivity"
+            android:name="it.tidalwave.bluebell.cameraview.impl.android.CameraViewActivity"
             android:label="@string/sample_camera"
             android:screenOrientation="landscape" />
     </application>
