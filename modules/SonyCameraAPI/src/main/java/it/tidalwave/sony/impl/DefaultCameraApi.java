@@ -582,7 +582,7 @@ import lombok.extern.slf4j.Slf4j;
             try
               {
                 request.put("params", params);
-                
+
                 log.debug("Request: {}", request);
                 final long baseTime = System.currentTimeMillis();
                 final String response = (timeout > 0) ? httpClient.post(url, request.toString(), timeout)
@@ -796,6 +796,11 @@ import lombok.extern.slf4j.Slf4j;
         return new DefaultEventResponse(call.post(longPollingTimeout));
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private Call createCall (final @Nonnull String service)
       throws IOException
@@ -803,7 +808,12 @@ import lombok.extern.slf4j.Slf4j;
         return new Call(service);
       }
 
-    // Retrieves Action List URL from Server information.
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
     private String findActionListUrl (final @Nonnull String service)
       {
         final List<ApiService> services = cameraDevice.getApiServices();
