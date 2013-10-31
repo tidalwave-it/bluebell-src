@@ -68,12 +68,11 @@ public class DefaultLiveViewControl implements LiveViewControl
             @Override
             public void run()
               {
-                log.info("**************** Starting liveView producer thread...");
+                log.info("Starting liveView producer thread...");
 
                 try
                   {
                     final URL liveViewUrl = cameraApi.startLiveview().getUrl();
-                    log.info(">>>> **************** liveViewUrl: {}", liveViewUrl);
                     slicer = new SimpleLiveviewSlicer();
                     slicer.open(liveViewUrl);
                     running = true;
@@ -127,12 +126,5 @@ public class DefaultLiveViewControl implements LiveViewControl
     public void stop()
       {
         running = false; // let the view be terminated by the thread
-      }
-
-    // Parse JSON and returns a error code.
-    private static boolean isErrorReply (JSONObject replyJson)
-      {
-        boolean hasError = (replyJson != null && replyJson.has("error"));
-        return hasError;
       }
   }
