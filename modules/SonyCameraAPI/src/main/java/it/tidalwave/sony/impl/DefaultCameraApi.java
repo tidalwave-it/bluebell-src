@@ -78,14 +78,14 @@ import lombok.extern.slf4j.Slf4j;
     class GenericResponse implements Response
       {
         @Nonnull @Getter
-        protected final JSONObject jsonObject;
+        protected final JSONObject responseJson;
 
         @Nonnull @Getter
         protected /*final*/ StatusCode statusCode;
 
         public GenericResponse (final @Nonnull JSONObject jsonObject)
           {
-            this.jsonObject = jsonObject;
+            this.responseJson = jsonObject;
             this.statusCode = StatusCode.OK;
           }
 
@@ -175,7 +175,7 @@ import lombok.extern.slf4j.Slf4j;
               {
                 final Set<String> availableApis = new TreeSet<String>();
                 int indexOfAvailableApiList = 0;
-                final JSONArray resultsObj = jsonObject.getJSONArray("result");
+                final JSONArray resultsObj = responseJson.getJSONArray("result");
 
                 if (!resultsObj.isNull(indexOfAvailableApiList))
                   {
@@ -212,7 +212,7 @@ import lombok.extern.slf4j.Slf4j;
               {
                 String cameraStatus = "";
                 int indexOfCameraStatus = 1;
-                JSONArray resultsObj = jsonObject.getJSONArray("result");
+                JSONArray resultsObj = responseJson.getJSONArray("result");
 
                 if (!resultsObj.isNull(indexOfCameraStatus))
                   {
@@ -244,7 +244,7 @@ import lombok.extern.slf4j.Slf4j;
               {
                 String shootMode = "";
                 int indexOfShootMode = 21;
-                JSONArray resultsObj = jsonObject.getJSONArray("result");
+                JSONArray resultsObj = responseJson.getJSONArray("result");
 
                 if (!resultsObj.isNull(indexOfShootMode))
                   {
@@ -291,7 +291,7 @@ import lombok.extern.slf4j.Slf4j;
             try
               {
                 final Set<String> availableApis = new TreeSet<String>();
-                final JSONArray resultArrayJson = jsonObject.getJSONArray("result");
+                final JSONArray resultArrayJson = responseJson.getJSONArray("result");
                 final JSONArray apiListJson = resultArrayJson.getJSONArray(0);
 
                 for (int i = 0; i < apiListJson.length(); i++)
@@ -326,7 +326,7 @@ import lombok.extern.slf4j.Slf4j;
           {
             try
               {
-                final JSONArray resultArrayJson = jsonObject.getJSONArray("result");
+                final JSONArray resultArrayJson = responseJson.getJSONArray("result");
                 final String version = resultArrayJson.getString(1);
                 final String[] separated = version.split("\\.");
                 final int major = Integer.valueOf(separated[0]);
@@ -363,7 +363,7 @@ import lombok.extern.slf4j.Slf4j;
           {
             try
               {
-                final JSONArray resultsObj = jsonObject.getJSONArray("result");
+                final JSONArray resultsObj = responseJson.getJSONArray("result");
                 return resultsObj.getString(0);
               }
             catch (JSONException e)
@@ -377,7 +377,7 @@ import lombok.extern.slf4j.Slf4j;
           {
             try
               {
-                final JSONArray resultsObj = jsonObject.getJSONArray("result");
+                final JSONArray resultsObj = responseJson.getJSONArray("result");
                 final JSONArray availableModesJson = resultsObj.getJSONArray(1);
                 final Set<String> availableModes = new TreeSet<String>();
 

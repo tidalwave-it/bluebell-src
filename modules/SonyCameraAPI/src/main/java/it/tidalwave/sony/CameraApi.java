@@ -85,9 +85,9 @@ public interface CameraApi
      ******************************************************************************************************************/
     public static interface Response
       {
-        @Nonnull
-        public JSONObject getJsonObject();
-
+//        @Nonnull
+//        public JSONObject getJsonObject();
+//
         @Nonnull
         public StatusCode getStatusCode();
       }
