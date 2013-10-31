@@ -463,12 +463,12 @@ public class SampleCameraActivity extends Activity implements CameraView
         cameraApi = control.getCameraApi();
         cameraObserver = control.getCameraObserver();
 
-        ivPhotoBox = (ImageView) findViewById(R.id.image_picture_wipe);
-        rbShootModeSelector = (RadioGroup) findViewById(R.id.radio_group_shoot_mode);
-        btTakePhoto = (Button) findViewById(R.id.button_take_picture);
-        btRecStartStop = (Button) findViewById(R.id.button_rec_start_stop);
-        tvCameraStatus = (TextView) findViewById(R.id.text_camera_status);
-        liveviewSurface = (SimpleLiveviewSurfaceView) findViewById(R.id.surfaceview_liveview);
+        ivPhotoBox = (ImageView)findViewById(R.id.image_picture_wipe);
+        rbShootModeSelector = (RadioGroup)findViewById(R.id.radio_group_shoot_mode);
+        btTakePhoto = (Button)findViewById(R.id.button_take_picture);
+        btRecStartStop = (Button)findViewById(R.id.button_rec_start_stop);
+        tvCameraStatus = (TextView)findViewById(R.id.text_camera_status);
+        liveviewSurface = (SimpleLiveviewSurfaceView)findViewById(R.id.surfaceview_liveview);
         liveviewSurface.bindRemoteApi(cameraApi);
 
         log.info("onCreate() completed.");
