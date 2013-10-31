@@ -498,14 +498,7 @@ public class SampleCameraActivity extends Activity implements CameraView
             @Override
             public void onClick(View v)
               {
-                if ("MovieRecording".equals(cameraObserver.getStatus()))
-                  {
-                    control.stopMovieRec();
-                  }
-                else if ("IDLE".equals(cameraObserver.getStatus()))
-                  {
-                    control.startMovieRec();
-                  }
+                control.startOrStopMovieRecording();
               }
           });
 

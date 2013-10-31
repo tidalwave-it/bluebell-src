@@ -286,33 +286,6 @@ public class DefaultCameraViewControl implements CameraViewControl
           }.start();
       }
 
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void startMovieRec()
-      {
-        new Thread()
-          {
-            @Override
-            public void run()
-              {
-                try
-                  {
-                    log.info("startMovieRec: exec.");
-                    cameraApi.startMovieRec();
-                    view.notifyRecStart();
-                  }
-                catch (IOException e)
-                  {
-                    log.warn("startMovieRec: IOException: ", e);
-                    view.notifyErrorWhileRecordingMovie();
-                  }
-              }
-          }.start();
-      }
 
     /*******************************************************************************************************************
      *
@@ -320,7 +293,7 @@ public class DefaultCameraViewControl implements CameraViewControl
      *
      ******************************************************************************************************************/
     @Override
-    public void stopMovieRec()
+    public void startOrStopMovieRecording()
       {
         new Thread()
           {
@@ -329,13 +302,24 @@ public class DefaultCameraViewControl implements CameraViewControl
               {
                 try
                   {
-                    log.info("stopMovieRec: exec.");
-                    cameraApi.stopMovieRec().getThumbnailUrl();
-                    view.notifyRecStop();
+                    final String cameraStatus = cameraObserver.getStatus();
+
+                    if (CAMERA_STATUS_IDLE.equals(cameraStatus))
+                      {
+                        log.info("startMovieRec: exec.");
+                        cameraApi.startMovieRec();
+                        view.notifyRecStart();
+                      }
+                    else if (CAMERA_STATUS_MOVIE_RECORDING.equals(cameraStatus))
+                      {
+                        log.info("stopMovieRec: exec.");
+                        cameraApi.stopMovieRec().getThumbnailUrl();
+                        view.notifyRecStop();
+                      }
                   }
                 catch (IOException e)
                   {
-                    log.warn("stopMovieRec: IOException: ", e);
+                    log.warn("startOrStopMovieRecording()", e);
                     view.notifyErrorWhileRecordingMovie();
                   }
               }
