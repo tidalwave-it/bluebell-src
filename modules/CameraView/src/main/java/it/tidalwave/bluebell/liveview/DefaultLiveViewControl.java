@@ -29,12 +29,9 @@ package it.tidalwave.bluebell.liveview;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.net.URL;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.SimpleLiveviewSlicer;
-import java.net.URL;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
