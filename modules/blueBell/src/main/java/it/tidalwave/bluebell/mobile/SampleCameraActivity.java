@@ -35,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class SampleCameraActivity extends Activity implements CameraView
+// TODO: rename to AndroidCameraViewActivity and move to the it.tidalwave.bluebill.cameraview.impl.android package
   {
     private Handler handler;
     private ImageView mImagePictureWipe;
