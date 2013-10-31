@@ -128,7 +128,7 @@ public class DefaultCameraViewControl implements CameraViewControl
                   {
                     setAvailableApis(cameraApi.getAvailableApiList().getApis());
 
-                    if (isApiAvailable("getApplicationInfo"))
+                    if (isApiAvailable(API_GET_APPLICATION_INFO))
                       {
                         log.info("openConnection(): getApplicationInfo()");
 
@@ -144,27 +144,27 @@ public class DefaultCameraViewControl implements CameraViewControl
                         return;
                       }
 
-                    if (isApiAvailable("startRecMode"))
+                    if (isApiAvailable(API_START_REC_MODE))
                       {
                         log.info("openConnection(): startRecMode()");
                         cameraApi.startRecMode();
                         setAvailableApis(cameraApi.getAvailableApiList().getApis());
                       }
 
-                    if (isApiAvailable("getEvent"))
+                    if (isApiAvailable(API_EVENT))
                       {
                         log.info("openConnection(): EventObserver.start()");
                         cameraObserver.start();
                       }
 
-                    if (isApiAvailable("startLiveview"))
+                    if (isApiAvailable(API_START_LIVEVIEW))
                       {
                         log.info("openConnection(): LiveviewSurface.start()");
                         view.startLiveView();
                         liveViewStarted = true;
                       }
 
-                    if (isApiAvailable("getAvailableShootMode"))
+                    if (isApiAvailable(API_AVAILABLE_SHOOT_MODE))
                       {
                         log.info("openConnection(): prepareShootModeRadioButtons()");
                         prepareShootModeRadioButtons();
@@ -191,6 +191,7 @@ public class DefaultCameraViewControl implements CameraViewControl
       {
         new Thread()
           {
+            public static final String API_STOP_REC_MODE = "stopRecMode";
             @Override
             public void run()
               {
@@ -198,17 +199,15 @@ public class DefaultCameraViewControl implements CameraViewControl
 
                 try
                   {
-                    // Liveview stop
                     log.info("closeConnection(): LiveviewSurface.stop()");
                     view.stopLiveView();
                     liveViewStarted = false;
 
-                    // getEvent stop
                     log.info("closeConnection(): EventObserver.stop()");
                     cameraObserver.stop();
 
                     // stopRecMode if necessary.
-                    if (isApiAvailable("stopRecMode"))
+                    if (isApiAvailable(API_STOP_REC_MODE))
                       {
                         log.info("closeConnection(): stopRecMode()");
                         cameraApi.stopRecMode();
