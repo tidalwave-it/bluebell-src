@@ -529,7 +529,8 @@ public class SampleCameraActivity extends Activity implements CameraView
      *
      ******************************************************************************************************************/
     // Prepare for Radio Button UI of Shoot Mode.
-    private void prepareShootModeRadioButtonsUi (String[] availableShootModes, String currentMode)
+    private void prepareShootModeRadioButtonsUi (final @Nonnull String[] availableShootModes,
+                                                 final @Nonnull String currentMode)
       {
         rbShootModeSelector.clearCheck();
         rbShootModeSelector.removeAllViews();
@@ -581,7 +582,6 @@ public class SampleCameraActivity extends Activity implements CameraView
      *
      *
      ******************************************************************************************************************/
-    // Call setShootMode
     private void setShootMode (final String mode)
       {
         new Thread()
