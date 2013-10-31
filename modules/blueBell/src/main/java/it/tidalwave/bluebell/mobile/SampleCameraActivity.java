@@ -7,10 +7,6 @@ package it.tidalwave.bluebell.mobile;
 import it.tidalwave.bluebell.cameraview.impl.android.AndroidCameraViewControl;
 import it.tidalwave.bluebell.cameraview.CameraView;
 import it.tidalwave.bluebell.cameraview.DefaultCameraViewControl;
-import java.io.IOException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.sony.CameraApi;
 import android.app.Activity;
@@ -436,6 +432,23 @@ public class SampleCameraActivity extends Activity implements CameraView
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    public void notifyGenericError()
+      {
+        handler.post(new Runnable()
+          {
+            @Override
+            public void run()
+              {
+                Toast.makeText(SampleCameraActivity.this, R.string.msg_error_api_calling, Toast.LENGTH_SHORT).show();
+              }
+          });
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     protected void onCreate (Bundle savedInstanceState)
       {
@@ -560,7 +573,7 @@ public class SampleCameraActivity extends Activity implements CameraView
                         else
                           {
                             final String mode = buttonView.getText().toString();
-                            setShootMode(mode);
+                            control.setShootMode(mode);
                           }
                       }
                   }
@@ -575,45 +588,5 @@ public class SampleCameraActivity extends Activity implements CameraView
                 rbShootModeSelector.check(viewId);
               }
           }
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    private void setShootMode (final String mode)
-      {
-        new Thread()
-          {
-            @Override
-            public void run()
-              {
-                try
-                  {
-                    final JSONObject replyJson = cameraApi.setShootMode(mode).getJsonObject();
-                    final JSONArray resultsObj = replyJson.getJSONArray("result");
-                    final int resultCode = resultsObj.getInt(0);
-
-                    if (resultCode == 0)
-                      {
-                        // Success, but no refresh UI at the point.
-                      }
-                    else
-                      {
-                        log.warn("setShootMode: error: {}", resultCode);
-                        Toast.makeText(SampleCameraActivity.this, R.string.msg_error_api_calling, Toast.LENGTH_SHORT).show();
-                      }
-                  }
-                catch (IOException e)
-                  {
-                    log.warn("setShootMode: IOException: ", e);
-                  }
-                catch (JSONException e)
-                  {
-                    log.warn("setShootMode: JSON format error.");
-                  }
-              }
-          }.start();
       }
   }

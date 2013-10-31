@@ -188,4 +188,6 @@ public interface CameraView
      *
      ******************************************************************************************************************/
     public void notifyErrorWhileRecordingMovie();
+
+    public void notifyGenericError();
   }

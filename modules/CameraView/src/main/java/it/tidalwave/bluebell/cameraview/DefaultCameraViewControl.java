@@ -292,6 +292,47 @@ public class DefaultCameraViewControl implements CameraViewControl
      *
      ******************************************************************************************************************/
     @Override
+    public void setShootMode (final @Nonnull String mode)
+      {
+        new Thread()
+          {
+            @Override
+            public void run()
+              {
+                try
+                  {
+                    final JSONObject replyJson = cameraApi.setShootMode(mode).getJsonObject();
+                    final JSONArray resultsObj = replyJson.getJSONArray("result");
+                    final int resultCode = resultsObj.getInt(0);
+
+                    if (resultCode == 0)
+                      {
+                        // Success, but no refresh UI at the point.
+                      }
+                    else
+                      {
+                        log.warn("setShootMode: error: {}", resultCode);
+                        view.notifyGenericError();
+                      }
+                  }
+                catch (IOException e)
+                  {
+                    log.warn("setShootMode: IOException: ", e);
+                  }
+                catch (JSONException e)
+                  {
+                    log.warn("setShootMode: JSON format error.");
+                  }
+              }
+          }.start();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
     public void startMovieRec()
       {
         new Thread()
