@@ -45,7 +45,7 @@ public class SampleCameraActivity extends Activity implements CameraView
 
     private TextView tvCameraStatus;
 
-    private SimpleLiveviewSurfaceView mLiveviewSurface;
+    private SimpleLiveviewSurfaceView liveviewSurface;
 
     private final DefaultCameraViewControl control = new AndroidCameraViewControl(this, this);
 
@@ -106,7 +106,7 @@ public class SampleCameraActivity extends Activity implements CameraView
             @Override
             public void run()
               {
-                mLiveviewSurface.start();
+                liveviewSurface.start();
               }
           });
       }
@@ -124,7 +124,7 @@ public class SampleCameraActivity extends Activity implements CameraView
             @Override
             public void run()
               {
-                mLiveviewSurface.stop();
+                liveviewSurface.stop();
               }
           });
       }
@@ -468,8 +468,8 @@ public class SampleCameraActivity extends Activity implements CameraView
         btTakePhoto = (Button) findViewById(R.id.button_take_picture);
         btRecStartStop = (Button) findViewById(R.id.button_rec_start_stop);
         tvCameraStatus = (TextView) findViewById(R.id.text_camera_status);
-        mLiveviewSurface = (SimpleLiveviewSurfaceView) findViewById(R.id.surfaceview_liveview);
-        mLiveviewSurface.bindRemoteApi(cameraApi);
+        liveviewSurface = (SimpleLiveviewSurfaceView) findViewById(R.id.surfaceview_liveview);
+        liveviewSurface.bindRemoteApi(cameraApi);
 
         log.info("onCreate() completed.");
       }
