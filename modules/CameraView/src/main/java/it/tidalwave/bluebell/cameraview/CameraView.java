@@ -113,7 +113,7 @@ public interface CameraView
      * Disable the rec start/stop button.
      *
      ******************************************************************************************************************/
-    public void disableRecStartStopButton();
+    public void disableRecStartStopButton(); // FIXME: move to Action enablement
 
     /*******************************************************************************************************************
      *
@@ -122,7 +122,7 @@ public interface CameraView
      * @param  enabled      the enablement status
      *
      ******************************************************************************************************************/
-    public void enableTakePhotoButton (boolean enabled);
+    public void enableTakePhotoButton (boolean enabled); // FIXME: move to Action enablement
 
     /*******************************************************************************************************************
      *
@@ -138,14 +138,14 @@ public interface CameraView
      * @param   shootMode   the current shoot mode
      *
      ******************************************************************************************************************/
-    public void enableShootModeSelector (@Nonnull String shootMode);
+    public void enableShootModeSelector (@Nonnull String shootMode); // FIXME: move to Action enablement
 
     /*******************************************************************************************************************
      *
      * Disables the shoot mode selector.
      *
      ******************************************************************************************************************/
-    public void disableShootModeSelector();
+    public void disableShootModeSelector(); // FIXME: move to Action enablement
 
     /*******************************************************************************************************************
      *
@@ -189,5 +189,10 @@ public interface CameraView
      ******************************************************************************************************************/
     public void notifyErrorWhileRecordingMovie();
 
+    /*******************************************************************************************************************
+     *
+     * Notifies that there has been a generic error.
+     *
+     ******************************************************************************************************************/
     public void notifyGenericError();
   }
