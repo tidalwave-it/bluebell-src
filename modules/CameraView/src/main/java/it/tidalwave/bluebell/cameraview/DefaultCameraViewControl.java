@@ -419,37 +419,30 @@ public class DefaultCameraViewControl implements CameraViewControl
     // Prepare for RadioButton to select "shootMode" by user.
     private void prepareShootModeRadioButtons()
       {
-        new Thread()
+        log.info("prepareShootModeRadioButtons()");
+
+        try
           {
-            @Override
-            public void run()
+            final AvailableShootModeResponse response = cameraApi.getAvailableShootMode();
+            final String currentMode = response.getCurrentMode();
+            final List<String> availableModes = new ArrayList<String>();
+
+            for (final String mode : response.getModes())
               {
-                log.info("prepareShootModeRadioButtons(): exec.");
-
-                try
+                if (!SHOOT_MODE_STILL.equals(mode) && !SHOOT_MODE_MOVIE.equals(mode))
                   {
-                    final AvailableShootModeResponse response = cameraApi.getAvailableShootMode();
-                    final String currentMode = response.getCurrentMode();
-                    final List<String> availableModes = new ArrayList<String>();
-
-                    for (final String mode : response.getModes())
-                      {
-                        if (!SHOOT_MODE_STILL.equals(mode) && !SHOOT_MODE_MOVIE.equals(mode))
-                          {
-                            continue;
-                          }
-
-                        availableModes.add(mode);
-                      }
-
-                    view.setShootModeControl(availableModes, currentMode);
+                    continue;
                   }
-                catch (IOException e)
-                  {
-                    log.warn("prepareShootModeRadioButtons: IOException: ", e);
-                  }
-              };
-          }.start();
+
+                availableModes.add(mode);
+              }
+
+            view.setShootModeControl(availableModes, currentMode);
+          }
+        catch (IOException e)
+          {
+            log.warn("prepareShootModeRadioButtons(): ", e);
+          }
       }
 
     /*******************************************************************************************************************
