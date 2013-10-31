@@ -438,8 +438,7 @@ public class DefaultCameraViewControl implements CameraViewControl
           {
             view.renderRecStartStopButtonAsStop();
           }
-        else if (CAMERA_STATUS_IDLE.equals(cameraStatus)
-              && SHOOT_MODE_MOVIE.equals(shootMode))
+        else if (CAMERA_STATUS_IDLE.equals(cameraStatus) && SHOOT_MODE_MOVIE.equals(shootMode))
           {
             view.renderRecStartStopButtonAsStart();
           }
