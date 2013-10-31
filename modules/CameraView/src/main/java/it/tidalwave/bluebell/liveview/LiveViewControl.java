@@ -38,4 +38,6 @@ public interface LiveViewControl
     public void start();
 
     public void stop();
+
+    public boolean isRunning();
   }

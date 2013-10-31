@@ -64,8 +64,6 @@ public class DefaultCameraViewControl implements CameraViewControl
 
     private LiveViewControl liveViewControl;
 
-    private boolean liveViewStarted; // FIXME: move as property of liveViewControl
-
     private final Set<String> availableApis = Collections.synchronizedSet(new TreeSet<String>());
 
     /*******************************************************************************************************************
@@ -161,7 +159,6 @@ public class DefaultCameraViewControl implements CameraViewControl
                       {
                         log.info("openConnection(): LiveviewSurface.start()");
                         liveViewControl.start();
-                        liveViewStarted = true;
                       }
 
                     if (isApiAvailable(API_AVAILABLE_SHOOT_MODE))
@@ -194,29 +191,21 @@ public class DefaultCameraViewControl implements CameraViewControl
             @Override
             public void run()
               {
-                log.info("closeConnection(): exec.");
+                log.info("stop()");
+                liveViewControl.stop();
+                cameraObserver.stop();
 
-                try
+                if (isApiAvailable(API_STOP_REC_MODE))
                   {
-                    log.info("closeConnection(): LiveviewSurface.stop()");
-                    liveViewControl.stop();
-                    liveViewStarted = false;
-
-                    log.info("closeConnection(): EventObserver.stop()");
-                    cameraObserver.stop();
-
-                    // stopRecMode if necessary.
-                    if (isApiAvailable(API_STOP_REC_MODE))
+                    try
                       {
-                        log.info("closeConnection(): stopRecMode()");
                         cameraApi.stopRecMode();
+                        log.debug(">>>> stop() completed");
                       }
-
-                    log.info("closeConnection(): completed.");
-                  }
-                catch (IOException e)
-                  {
-                    log.warn("closeConnection: IOException: ", e);
+                    catch (IOException e)
+                      {
+                        log.warn("While stopping", e);
+                      }
                   }
               }
           }.start();
@@ -235,7 +224,7 @@ public class DefaultCameraViewControl implements CameraViewControl
             @Override
             public void run()
               {
-                if (!liveViewStarted)
+                if (!liveViewControl.isRunning())
                   {
                     view.notifyErrorWhileTakingPhoto();
                     return;
@@ -244,8 +233,7 @@ public class DefaultCameraViewControl implements CameraViewControl
                 try
                   {
                     view.showProgressBar();
-                    final URL url = cameraApi.actTakePicture().getImageUrl();
-                    view.showPhoto(loadPicture(url));
+                    view.showPhoto(loadPicture(cameraApi.actTakePicture().getImageUrl()));
                   }
                 catch (IOException e)
                   {

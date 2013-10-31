@@ -32,6 +32,7 @@ import java.io.IOException;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.SimpleLiveviewSlicer;
 import it.tidalwave.sony.SimpleLiveviewSlicer.Payload;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,11 +53,13 @@ public class DefaultLiveViewControl implements LiveViewControl
 
     private final SimpleLiveviewSlicer slicer = new SimpleLiveviewSlicer();
 
+    @Getter
     private volatile boolean running;
 
     @Override
     public void start()
       {
+        log.info("start()");
         view.start();
 
         // A thread for retrieving liveview data from server.
@@ -82,11 +85,7 @@ public class DefaultLiveViewControl implements LiveViewControl
                           }
                       }
                   }
-                catch (IOException e)
-                  {
-                    log.warn("While reading liveView", e);
-                  }
-                catch (RuntimeException e)
+                catch (Exception e)
                   {
                     log.warn("While reading liveView", e);
                   }
@@ -121,6 +120,8 @@ public class DefaultLiveViewControl implements LiveViewControl
     @Override
     public void stop()
       {
+        log.info("stop()");
         running = false; // let the view be terminated by the thread
+        // FIXME: wait for the thread? interrupt?
       }
   }
