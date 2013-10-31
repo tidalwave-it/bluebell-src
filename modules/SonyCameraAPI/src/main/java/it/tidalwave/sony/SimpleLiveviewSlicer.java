@@ -188,8 +188,10 @@ public class SimpleLiveviewSlicer
             // Payload Data
             byte[] jpegData = readBytes(is, jpegSize);
             byte[] paddingData = readBytes(is, paddingSize);
-
-            return new Payload(jpegData, paddingData);
+            final Payload payload = new Payload(jpegData, paddingData);
+            log.info(">>>> {}", payload);
+            
+            return payload;
           }
 
         return null;

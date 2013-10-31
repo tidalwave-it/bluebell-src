@@ -45,7 +45,7 @@ public class SampleCameraActivity extends Activity implements CameraView
 
     private SimpleLiveviewSurfaceView liveviewSurface;
 
-    private final DefaultCameraViewControl control = new AndroidCameraViewControl(this, this);
+    private DefaultCameraViewControl control;
 
     private boolean mRadioInitialChecked;
 
@@ -83,42 +83,6 @@ public class SampleCameraActivity extends Activity implements CameraView
               {
                 Toast.makeText(SampleCameraActivity.this, R.string.msg_error_non_supported_device, Toast.LENGTH_SHORT).show();
                 SampleCameraActivity.this.finish(); // FIXME: split
-              }
-          });
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void startLiveView()
-      {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                liveviewSurface.start();
-              }
-          });
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void stopLiveView()
-      {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                liveviewSurface.stop();
               }
           });
       }
@@ -450,17 +414,16 @@ public class SampleCameraActivity extends Activity implements CameraView
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_sample_camera);
 
-        handler = new Handler();
-        final SampleApplication app = (SampleApplication)getApplication();
-        control.bind(app.getCameraDevice());
-
         ivPhotoBox = (ImageView)findViewById(R.id.image_picture_wipe);
         rbShootModeSelector = (RadioGroup)findViewById(R.id.radio_group_shoot_mode);
         btTakePhoto = (Button)findViewById(R.id.button_take_picture);
         btRecStartStop = (Button)findViewById(R.id.button_rec_start_stop);
         tvCameraStatus = (TextView)findViewById(R.id.text_camera_status);
         liveviewSurface = (SimpleLiveviewSurfaceView)findViewById(R.id.surfaceview_liveview);
-        liveviewSurface.bindRemoteApi(control.getCameraApi());
+
+        handler = new Handler();
+        final SampleApplication app = (SampleApplication)getApplication();
+        control = new AndroidCameraViewControl(this, liveviewSurface, app.getCameraDevice(), this);
 
         log.info("onCreate() completed.");
       }

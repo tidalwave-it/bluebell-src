@@ -39,8 +39,9 @@ import java.net.URL;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraObserver;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import it.tidalwave.bluebell.liveview.DefaultLiveViewControl;
+import it.tidalwave.bluebell.liveview.LiveView;
+import it.tidalwave.bluebell.liveview.LiveViewControl;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.sony.CameraApi.*;
 
@@ -50,34 +51,36 @@ import static it.tidalwave.sony.CameraApi.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Slf4j
+@Slf4j
 public class DefaultCameraViewControl implements CameraViewControl
   {
     @Nonnull
     private final CameraView view;
 
-    private CameraDevice cameraDevice;
-
-    @Getter // FIXME: temporary
-    private CameraApi cameraApi;
+    @Nonnull
+    private final CameraApi cameraApi;
 
     private CameraObserver cameraObserver;
 
-    private boolean liveViewStarted;
+    private LiveViewControl liveViewControl;
+
+    private boolean liveViewStarted; // FIXME: move as property of liveViewControl
 
     private final Set<String> availableApis = Collections.synchronizedSet(new TreeSet<String>());
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
+     *
      *
      ******************************************************************************************************************/
-    @Override
-    public void bind (final @Nonnull CameraDevice cameraDevice)
+    public DefaultCameraViewControl (final @Nonnull CameraView view,
+                                     final @Nonnull LiveView liveView,
+                                     final @Nonnull CameraDevice cameraDevice)
       {
-        this.cameraDevice = cameraDevice;
+        this.view = view;
         cameraApi = cameraDevice.getApi();
         cameraObserver = cameraDevice.getObserver();
+        liveViewControl = new DefaultLiveViewControl(cameraApi, liveView);
       }
 
     /*******************************************************************************************************************
@@ -88,7 +91,7 @@ public class DefaultCameraViewControl implements CameraViewControl
     // Open connection to the camera device to start monitoring Camera events
     // and showing liveview.
     @Override
-    public void initialize()
+    public void initialize() // FIXME: rename to start
       {
         cameraObserver.setListener(new CameraObserver.ChangeListener()
           {
@@ -157,7 +160,7 @@ public class DefaultCameraViewControl implements CameraViewControl
                     if (isApiAvailable(API_START_LIVEVIEW))
                       {
                         log.info("openConnection(): LiveviewSurface.start()");
-                        view.startLiveView();
+                        liveViewControl.start();
                         liveViewStarted = true;
                       }
 
@@ -196,7 +199,7 @@ public class DefaultCameraViewControl implements CameraViewControl
                 try
                   {
                     log.info("closeConnection(): LiveviewSurface.stop()");
-                    view.stopLiveView();
+                    liveViewControl.stop();
                     liveViewStarted = false;
 
                     log.info("closeConnection(): EventObserver.stop()");

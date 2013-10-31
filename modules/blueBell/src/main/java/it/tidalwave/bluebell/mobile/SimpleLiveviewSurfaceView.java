@@ -4,8 +4,11 @@
 
 package it.tidalwave.bluebell.mobile;
 
+import it.tidalwave.bluebell.liveview.LiveView;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 //import android.annotation.TargetApi;
-import it.tidalwave.sony.CameraApi;
+import android.util.AttributeSet;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,32 +16,19 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.os.Build;
-import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
 import it.tidalwave.sony.SimpleLiveviewSlicer;
-import it.tidalwave.sony.SimpleLiveviewSlicer.Payload;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * A SurfaceView based class to draw liveview frames serially.
  */
 @Slf4j
-public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHolder.Callback
+public class SimpleLiveviewSurfaceView extends SurfaceView implements LiveView, SurfaceHolder.Callback
   {
-    private CameraApi cameraApi;
-
-    private boolean mWhileFetching;
+    private volatile boolean running;
 
     private final BlockingQueue<byte[]> mJpegQueue = new ArrayBlockingQueue<byte[]>(2);
 
@@ -46,7 +36,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
 
 //    private final boolean mInMutableAvailable = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
 
-    private Thread mDrawerThread;
+    private Thread consumerThread;
 
     private int mPreviousWidth = 0;
 
@@ -97,6 +87,22 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
       }
 
     @Override
+    public void postPayload (final @Nonnull SimpleLiveviewSlicer.Payload payload)
+      {
+        log.info("postPayload({}) - {}", payload, running);
+
+        if (running)
+          {
+            if (mJpegQueue.size() == 2)
+              {
+                mJpegQueue.remove();
+              }
+
+            mJpegQueue.add(payload.jpegData);
+          }
+      }
+
+    @Override
     public void surfaceChanged (SurfaceHolder holder, int format, int width, int height)
       {
         // do nothing.
@@ -111,18 +117,8 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
     @Override
     public void surfaceDestroyed (SurfaceHolder holder)
       {
-        mWhileFetching = false;
-      }
-
-    /**
-     * Bind a Remote API object to communicate with Camera device. Need to call
-     * this method before calling start() method.
-     *
-     * @param cameraApi
-     */
-    public void bindRemoteApi (CameraApi cameraApi)
-      {
-        this.cameraApi = cameraApi;
+        running = false;
+//        FIXME: stop the controller?
       }
 
     /**
@@ -132,113 +128,19 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
      * @exception IllegalStateException when Remote API object is not set.
      * @see SimpleLiveviewSurfaceView#bindRemoteApi(SimpleRemoteApi)
      */
-    public boolean start()
+    @Override
+    public void start()
       {
-        if (cameraApi == null)
-          {
-            throw new IllegalStateException("RemoteApi is not set.");
-          }
-
-        if (mWhileFetching)
+        if (running)
           {
             log.warn("start() already starting.");
-            return false;
+            return;// false;
           }
 
-        mWhileFetching = true;
-
-        // A thread for retrieving liveview data from server.
-        new Thread()
-          {
-            @Override
-            public void run()
-              {
-                log.debug("Starting retrieving liveview data from server.");
-                SimpleLiveviewSlicer slicer = null;
-
-                try
-                  {
-                    JSONObject replyJson = cameraApi.startLiveview().getResponseJson();
-
-                    if (!isErrorReply(replyJson))
-                      {
-                        JSONArray resultsObj = replyJson.getJSONArray("result");
-                        String liveviewUrl = null;
-
-                        if (1 <= resultsObj.length())
-                          {
-                            liveviewUrl = resultsObj.getString(0);
-                          }
-
-                        if (liveviewUrl != null)
-                          {
-                            // Create Slicer to open the stream and parse it.
-                            slicer = new SimpleLiveviewSlicer();
-                            slicer.open(liveviewUrl);
-                          }
-                      }
-
-                    if (slicer == null)
-                      {
-                        mWhileFetching = false;
-                        return;
-                      }
-
-                    while (mWhileFetching)
-                      {
-                        final Payload payload = slicer.nextPayload();
-
-                        if (payload == null)
-                          { // never occurs
-                            log.warn("Liveview Payload is null.");
-                            continue;
-                          }
-
-                        if (mJpegQueue.size() == 2)
-                          {
-                            mJpegQueue.remove();
-                          }
-
-                        mJpegQueue.add(payload.jpegData);
-                      }
-                  }
-                catch (IOException e)
-                  {
-                    log.warn("IOException while fetching: " + e.getMessage());
-                  }
-                catch (JSONException e)
-                  {
-                    log.warn("JSONException while fetching");
-                  }
-                finally
-                  {
-                    try
-                      {
-                        if (slicer != null)
-                          {
-                            slicer.close();
-                          }
-
-                        cameraApi.stopLiveview();
-                      }
-                    catch (IOException e)
-                      {
-                        log.warn("IOException while closing slicer: " + e.getMessage());
-                      }
-
-                    if (mDrawerThread != null)
-                      {
-                        mDrawerThread.interrupt();
-                      }
-
-                    mJpegQueue.clear();
-                    mWhileFetching = false;
-                  }
-              }
-          }.start();
+        running = true;
 
         // A thread for drawing liveview frame fetched by above thread.
-        mDrawerThread = new Thread()
+        consumerThread = new Thread()
           {
             @Override
             public void run()
@@ -254,7 +156,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
 //                    initInBitmap(factoryOptions);
                   }
 
-                while (mWhileFetching)
+                while (running)
                   {
                     try
                       {
@@ -288,20 +190,27 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
                     frameBitmap.recycle();
                   }
 
-                mWhileFetching = false;
+                running = false;
               }
           };
 
-        mDrawerThread.start();
-        return true;
+        consumerThread.start();
+        return; // true;
       }
 
     /**
      * Request to stop retrieving and drawing liveview data.
      */
+    @Override
     public void stop()
       {
-        mWhileFetching = false;
+        if (consumerThread != null)
+          {
+            consumerThread.interrupt();
+          }
+
+        mJpegQueue.clear();
+        running = false;
       }
 
     /**
@@ -311,7 +220,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
      */
     public boolean isStarted()
       {
-        return mWhileFetching;
+        return running;
       }
 
 //    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -388,12 +297,5 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
 
         canvas.drawRect(new Rect(0, 0, getWidth(), getHeight()), paint);
         getHolder().unlockCanvasAndPost(canvas);
-      }
-
-    // Parse JSON and returns a error code.
-    private static boolean isErrorReply(JSONObject replyJson)
-      {
-        boolean hasError = (replyJson != null && replyJson.has("error"));
-        return hasError;
       }
   }

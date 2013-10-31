@@ -32,8 +32,10 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.bluebell.cameraview.CameraView;
 import it.tidalwave.bluebell.cameraview.DefaultCameraViewControl;
+import it.tidalwave.bluebell.liveview.LiveView;
 import android.app.Activity;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -56,9 +58,12 @@ public class AndroidCameraViewControl extends DefaultCameraViewControl
      *
      *
      ******************************************************************************************************************/
-    public AndroidCameraViewControl (final @Nonnull CameraView view, final @Nonnull Activity activity)
+    public AndroidCameraViewControl (final @Nonnull CameraView view,
+                                     final @Nonnull LiveView liveView,
+                                     final @Nonnull CameraDevice cameraDevice,
+                                     final @Nonnull Activity activity)
       {
-        super(view);
+        super(view, liveView, cameraDevice);
         this.activity = activity;
       }
 
