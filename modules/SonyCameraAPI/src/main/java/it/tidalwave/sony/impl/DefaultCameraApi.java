@@ -62,10 +62,10 @@ import lombok.extern.slf4j.Slf4j;
     private static final String CAMERA_SERVICE = "camera";
 
     // API server device you want to send requests.
-    private final CameraDevice mTargetServer;
+    private final CameraDevice cameraDevice;
 
     // Request ID of API calling. This will be counted up by each API calling.
-    private int mRequestId;
+    private int requestId;
 
     private final HttpClient httpClient = new DefaultHttpClient();
 
@@ -495,7 +495,7 @@ import lombok.extern.slf4j.Slf4j;
               {
                 url = findActionListUrl(service) + "/" + service;
                 request.put("version", "1.0");
-                request.put("id", mRequestId++);
+                request.put("id", requestId++);
               }
             catch (JSONException e)
               {
@@ -559,13 +559,13 @@ import lombok.extern.slf4j.Slf4j;
      *
      * Constructor.
      *
-     * @param target server device of Remote API
+     * @param cameraDevice server device of Remote API
      *
      ******************************************************************************************************************/
-    public DefaultCameraApi (final @Nonnull CameraDevice target)
+    public DefaultCameraApi (final @Nonnull CameraDevice cameraDevice)
       {
-        mTargetServer = target;
-        mRequestId = 1;
+        this.cameraDevice = cameraDevice;
+        requestId = 1;
       }
 
     /*******************************************************************************************************************
@@ -763,7 +763,7 @@ import lombok.extern.slf4j.Slf4j;
     // Retrieves Action List URL from Server information.
     private String findActionListUrl (final @Nonnull String service)
       {
-        final List<ApiService> services = mTargetServer.getApiServices();
+        final List<ApiService> services = cameraDevice.getApiServices();
 
         for (final ApiService apiService : services)
           {
