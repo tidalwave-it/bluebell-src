@@ -37,14 +37,22 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
   {
     private static final String TAG = SimpleLiveviewSurfaceView.class.getSimpleName();
 
-    private CameraApi mRemoteApi;
+    private CameraApi cameraApi;
+
     private boolean mWhileFetching;
+
     private final BlockingQueue<byte[]> mJpegQueue = new ArrayBlockingQueue<byte[]>(2);
+
     private final boolean mInMutableAvailable = false;
+
 //    private final boolean mInMutableAvailable = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+
     private Thread mDrawerThread;
+
     private int mPreviousWidth = 0;
+
     private int mPreviousHeight = 0;
+    
     private final Paint mFramePaint;
 
     /**
@@ -111,11 +119,11 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
      * Bind a Remote API object to communicate with Camera device. Need to call
      * this method before calling start() method.
      *
-     * @param remoteApi
+     * @param cameraApi
      */
-    public void bindRemoteApi (CameraApi remoteApi)
+    public void bindRemoteApi (CameraApi cameraApi)
       {
-        mRemoteApi = remoteApi;
+        this.cameraApi = cameraApi;
       }
 
     /**
@@ -127,7 +135,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
      */
     public boolean start()
       {
-        if (mRemoteApi == null)
+        if (cameraApi == null)
           {
             throw new IllegalStateException("RemoteApi is not set.");
           }
@@ -151,7 +159,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
 
                 try
                   {
-                    JSONObject replyJson = mRemoteApi.startLiveview().getResponseJson();
+                    JSONObject replyJson = cameraApi.startLiveview().getResponseJson();
 
                     if (!isErrorReply(replyJson))
                       {
@@ -212,7 +220,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
                             slicer.close();
                           }
 
-                        mRemoteApi.stopLiveview();
+                        cameraApi.stopLiveview();
                       }
                     catch (IOException e)
                       {
