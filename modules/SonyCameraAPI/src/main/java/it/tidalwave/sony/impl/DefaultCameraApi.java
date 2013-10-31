@@ -628,7 +628,7 @@ import lombok.extern.slf4j.Slf4j;
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("setShootMode")
                                                     .withParam(shootMode);
-        return new GenericResponse(call.post());
+        return new ErrorCheckingResponse(call.post());
       }
 
     /*******************************************************************************************************************

@@ -35,9 +35,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.io.IOException;
 import java.net.URL;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraObserver;
@@ -277,27 +274,13 @@ public class DefaultCameraViewControl implements CameraViewControl
               {
                 try
                   {
-                    final JSONObject replyJson = cameraApi.setShootMode(mode).getJsonObject();
-                    final JSONArray resultsObj = replyJson.getJSONArray("result");
-                    final int resultCode = resultsObj.getInt(0);
-
-                    if (resultCode == 0)
-                      {
-                        // Success, but no refresh UI at the point.
-                      }
-                    else
-                      {
-                        log.warn("setShootMode: error: {}", resultCode);
-                        view.notifyGenericError();
-                      }
+                    cameraApi.setShootMode(mode);
+                    // Don't refresh the UI now, the events will
                   }
                 catch (IOException e)
                   {
                     log.warn("setShootMode: IOException: ", e);
-                  }
-                catch (JSONException e)
-                  {
-                    log.warn("setShootMode: JSON format error.");
+                    view.notifyGenericError();
                   }
               }
           }.start();
