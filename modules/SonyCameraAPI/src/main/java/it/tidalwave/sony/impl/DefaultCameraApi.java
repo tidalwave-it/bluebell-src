@@ -582,11 +582,12 @@ import lombok.extern.slf4j.Slf4j;
             try
               {
                 request.put("params", params);
-                log.info("Request: {}", request);
+                
+                log.debug("Request: {}", request);
                 final long baseTime = System.currentTimeMillis();
                 final String response = (timeout > 0) ? httpClient.post(url, request.toString(), timeout)
                                                       : httpClient.post(url, request.toString());
-                log.info("Response in {} msec: {}", System.currentTimeMillis() - baseTime, response);
+                log.debug("Response in {} msec: {}", System.currentTimeMillis() - baseTime, response);
 
                 return new JSONObject(response);
               }
