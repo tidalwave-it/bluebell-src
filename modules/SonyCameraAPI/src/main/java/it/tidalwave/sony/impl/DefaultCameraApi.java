@@ -42,6 +42,8 @@ import it.tidalwave.sony.CameraDevice.ApiService;
 import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.StatusCode;
+import java.net.MalformedURLException;
+import java.net.URL;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -84,7 +86,7 @@ import lombok.extern.slf4j.Slf4j;
         public GenericResponse (final @Nonnull JSONObject jsonObject)
           {
             this.jsonObject = jsonObject;
-            this.statusCode = statusCode.OK;
+            this.statusCode = StatusCode.OK;
           }
 
 //        @Nonnull
@@ -398,6 +400,49 @@ import lombok.extern.slf4j.Slf4j;
      *
      *
      ******************************************************************************************************************/
+    class DefaultTakePictureResponse extends ErrorCheckingResponse implements TakePictureResponse
+      {
+        @Getter @Nonnull
+        private final URL imageUrl;
+
+        public DefaultTakePictureResponse (final @Nonnull JSONObject jsonObject)
+          throws CameraApiException
+          {
+            super(jsonObject);
+            try
+              {
+                final JSONArray resultsObj = jsonObject.getJSONArray("result");
+                final JSONArray imageUrlsObj = resultsObj.getJSONArray(0);
+                String urlAsString = null;
+
+                if (imageUrlsObj.length() >= 1)
+                  {
+                    urlAsString = imageUrlsObj.getString(0);
+                  }
+
+                if (urlAsString == null)
+                  {
+                    throw new CameraApiException(this, "takeAndFetchPicture: post image URL is null.", null);
+                  }
+
+                imageUrl = new URL(urlAsString);
+              }
+            catch (MalformedURLException e)
+              {
+                throw new RuntimeException("malformed URL", e);
+              }
+            catch (JSONException e)
+              {
+                throw new RuntimeException("malformed JSON", e);
+              }
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     class Call
       {
         private final JSONObject request = new JSONObject();
@@ -633,11 +678,11 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Response actTakePicture()
+    public TakePictureResponse actTakePicture()
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("actTakePicture");
-        return new GenericResponse(call.post());
+        return new DefaultTakePictureResponse(call.post());
       }
 
     /*******************************************************************************************************************

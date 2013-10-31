@@ -30,6 +30,7 @@ package it.tidalwave.bluebell.cameraview;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.io.IOException;
@@ -44,7 +45,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.sony.CameraApi.*;
-import java.util.List;
 
 /***********************************************************************************************************************
  *
@@ -232,49 +232,26 @@ public class DefaultCameraViewControl implements CameraViewControl
     @Override
     public void takeAndFetchPicture()
       {
-        if (!liveViewStarted)
-          {
-            view.notifyErrorWhileTakingPhoto();
-            return;
-          }
-
         new Thread()
           {
             @Override
             public void run()
               {
+                if (!liveViewStarted)
+                  {
+                    view.notifyErrorWhileTakingPhoto();
+                    return;
+                  }
+
                 try
                   {
-                    final JSONObject replyJson = cameraApi.actTakePicture().getJsonObject();
-                    final JSONArray resultsObj = replyJson.getJSONArray("result");
-                    final JSONArray imageUrlsObj = resultsObj.getJSONArray(0);
-                    String postImageUrl = null;
-
-                    if (1 <= imageUrlsObj.length())
-                      {
-                        postImageUrl = imageUrlsObj.getString(0);
-                      }
-
-                    if (postImageUrl == null)
-                      {
-                        log.warn("takeAndFetchPicture: post image URL is null.");
-                        view.notifyErrorWhileTakingPhoto();
-                        return;
-                      }
-
                     view.showProgressBar();
-                    final URL url = new URL(postImageUrl);
-                    final Object picture = loadPicture(url);
-                    view.showPhoto(picture);
+                    final URL url = cameraApi.actTakePicture().getImageUrl();
+                    view.showPhoto(loadPicture(url));
                   }
                 catch (IOException e)
                   {
                     log.warn("IOException while closing slicer: ", e);
-                    view.notifyErrorWhileTakingPhoto();
-                  }
-                catch (JSONException e)
-                  {
-                    log.warn("JSONException while closing slicer");
                     view.notifyErrorWhileTakingPhoto();
                   }
                 finally
