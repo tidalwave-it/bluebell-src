@@ -334,11 +334,11 @@ import lombok.extern.slf4j.Slf4j;
               }
             catch (JSONException e)
               {
-                log.warn("isSupportedServerVersion: JSON format error.");
+                log.warn("in getVersion()", e);
               }
             catch (NumberFormatException e)
               {
-                log.warn("isSupportedServerVersion: Number format error.");
+                log.warn("in getVersion()", e);
               }
 
             return 0;
