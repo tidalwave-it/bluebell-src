@@ -6,8 +6,6 @@ package it.tidalwave.bluebell.mobile;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import it.tidalwave.sony.CameraObserver;
-import it.tidalwave.sony.CameraApi;
 import it.tidalwave.bluebell.cameraview.CameraView;
 import it.tidalwave.bluebell.cameraview.DefaultCameraViewControl;
 import it.tidalwave.bluebell.cameraview.impl.android.AndroidCameraViewControl;
@@ -50,10 +48,6 @@ public class SampleCameraActivity extends Activity implements CameraView
     private final DefaultCameraViewControl control = new AndroidCameraViewControl(this, this);
 
     private boolean mRadioInitialChecked;
-
-    private CameraApi cameraApi;// FIXME: temporary
-
-    private CameraObserver cameraObserver; // FIXME: temporary
 
     /*******************************************************************************************************************
      *
@@ -460,16 +454,13 @@ public class SampleCameraActivity extends Activity implements CameraView
         final SampleApplication app = (SampleApplication)getApplication();
         control.bind(app.getCameraDevice());
 
-        cameraApi = control.getCameraApi();
-        cameraObserver = control.getCameraObserver();
-
         ivPhotoBox = (ImageView)findViewById(R.id.image_picture_wipe);
         rbShootModeSelector = (RadioGroup)findViewById(R.id.radio_group_shoot_mode);
         btTakePhoto = (Button)findViewById(R.id.button_take_picture);
         btRecStartStop = (Button)findViewById(R.id.button_rec_start_stop);
         tvCameraStatus = (TextView)findViewById(R.id.text_camera_status);
         liveviewSurface = (SimpleLiveviewSurfaceView)findViewById(R.id.surfaceview_liveview);
-        liveviewSurface.bindRemoteApi(cameraApi);
+        liveviewSurface.bindRemoteApi(control.getCameraApi());
 
         log.info("onCreate() completed.");
       }

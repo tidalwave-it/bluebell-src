@@ -55,13 +55,11 @@ public class DefaultCameraViewControl implements CameraViewControl
     @Nonnull
     private final CameraView view;
 
-    @Getter // FIXME: temporary
     private CameraDevice cameraDevice;
 
     @Getter // FIXME: temporary
     private CameraApi cameraApi;
 
-    @Getter // FIXME: temporary
     private CameraObserver cameraObserver;
 
     private boolean liveViewStarted;
