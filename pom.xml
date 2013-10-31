@@ -44,6 +44,8 @@
     <name>blueBell (master)</name>
 
     <properties>
+        <netbeans.compile.on.save>test</netbeans.compile.on.save>
+        
         <tft.javac.source>1.5</tft.javac.source>
         <tft.javac.target>1.5</tft.javac.target>
     </properties>
