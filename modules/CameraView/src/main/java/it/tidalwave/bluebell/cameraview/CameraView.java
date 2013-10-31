@@ -71,7 +71,7 @@ public interface CameraView
      * Set the shoot mode widgets, creating options for the given available modes and a current mode selection.
      *
      * @param  availableModes   the available modes
-     * @param  currentMode      the curent mode
+     * @param  currentMode      the current mode
      *
      ******************************************************************************************************************/
     public void setShootModeControl (@Nonnull List<String> availableModes, @Nonnull String currentMode);
