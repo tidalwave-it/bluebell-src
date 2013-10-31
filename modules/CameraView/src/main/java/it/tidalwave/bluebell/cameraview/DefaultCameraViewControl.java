@@ -187,6 +187,7 @@ public class DefaultCameraViewControl implements CameraViewControl
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Override
     public void stop()
       {
         new Thread()
@@ -226,9 +227,10 @@ public class DefaultCameraViewControl implements CameraViewControl
 
     /*******************************************************************************************************************
      *
-     *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Override
     public void takeAndFetchPicture()
       {
         if (!liveViewStarted)
@@ -279,6 +281,90 @@ public class DefaultCameraViewControl implements CameraViewControl
                 finally
                   {
                     view.hideProgressBar();
+                  }
+              }
+          }.start();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void startMovieRec()
+      {
+        new Thread()
+          {
+            @Override
+            public void run()
+              {
+                try
+                  {
+                    log.info("startMovieRec: exec.");
+                    final JSONObject replyJson = cameraApi.startMovieRec().getJsonObject();
+                    final JSONArray resultsObj = replyJson.getJSONArray("result");
+                    final int resultCode = resultsObj.getInt(0);
+
+                    if (resultCode == 0)
+                      {
+                        view.notifyRecStart();
+                      }
+                    else
+                      {
+                        log.warn("startMovieRec: error: {}", resultCode);
+                        view.notifyErrorWhileRecordingMovie();
+                      }
+                  }
+                catch (IOException e)
+                  {
+                    log.warn("startMovieRec: IOException: ", e);
+                  }
+                catch (JSONException e)
+                  {
+                    log.warn("startMovieRec: JSON format error.");
+                  }
+              }
+          }.start();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void stopMovieRec()
+      {
+        new Thread()
+          {
+            @Override
+            public void run()
+              {
+                try
+                  {
+                    log.info("stopMovieRec: exec.");
+                    final JSONObject replyJson = cameraApi.stopMovieRec().getJsonObject();
+                    final JSONArray resultsObj = replyJson.getJSONArray("result");
+                    final String thumbnailUrl = resultsObj.getString(0);
+
+                    if (thumbnailUrl != null)
+                      {
+                        view.notifyRecStop();
+                      }
+                    else
+                      {
+                        log.warn("stopMovieRec: error");
+                        view.notifyErrorWhileRecordingMovie();
+                      }
+                  }
+                catch (IOException e)
+                  {
+                    log.warn("stopMovieRec: IOException: ", e);
+                  }
+                catch (JSONException e)
+                  {
+                    log.warn("stopMovieRec: JSON format error.");
                   }
               }
           }.start();

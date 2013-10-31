@@ -385,6 +385,57 @@ public class SampleCameraActivity extends Activity implements CameraView
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    public void notifyRecStart()
+      {
+        handler.post(new Runnable()
+          {
+            @Override
+            public void run()
+              {
+                Toast.makeText(SampleCameraActivity.this, R.string.msg_rec_start, Toast.LENGTH_SHORT).show();
+              }
+          });
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    public void notifyRecStop()
+      {
+        handler.post(new Runnable()
+          {
+            @Override
+            public void run()
+              {
+                Toast.makeText(SampleCameraActivity.this, R.string.msg_rec_stop, Toast.LENGTH_SHORT).show();
+              }
+          });
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    public void notifyErrorWhileRecordingMovie()
+      {
+        handler.post(new Runnable()
+          {
+            @Override
+            public void run()
+              {
+                Toast.makeText(SampleCameraActivity.this, R.string.msg_error_api_calling, Toast.LENGTH_SHORT).show();
+              }
+          });
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     protected void onCreate (Bundle savedInstanceState)
       {
@@ -436,11 +487,11 @@ public class SampleCameraActivity extends Activity implements CameraView
               {
                 if ("MovieRecording".equals(cameraObserver.getStatus()))
                   {
-                    stopMovieRec();
+                    control.stopMovieRec();
                   }
                 else if ("IDLE".equals(cameraObserver.getStatus()))
                   {
-                    startMovieRec();
+                    control.startMovieRec();
                   }
               }
           });
@@ -565,74 +616,4 @@ public class SampleCameraActivity extends Activity implements CameraView
               }
           }.start();
       }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    // Call startMovieRec
-    private void startMovieRec() {
-        new Thread() {
-
-            @Override
-            public void run() {
-                try {
-                    log.info("startMovieRec: exec.");
-                    JSONObject replyJson = cameraApi.startMovieRec().getJsonObject();
-                    JSONArray resultsObj = replyJson.getJSONArray("result");
-                    int resultCode = resultsObj.getInt(0);
-
-                    if (resultCode == 0)
-                      {
-                        Toast.makeText(SampleCameraActivity.this, R.string.msg_rec_start, Toast.LENGTH_SHORT).show();
-                      }
-                    else
-                      {
-                        log.warn("startMovieRec: error: {}", resultCode);
-                        Toast.makeText(SampleCameraActivity.this, R.string.msg_error_api_calling, Toast.LENGTH_SHORT).show();
-                      }
-                } catch (IOException e) {
-                    log.warn("startMovieRec: IOException: ", e);
-                } catch (JSONException e) {
-                    log.warn("startMovieRec: JSON format error.");
-                }
-            }
-        }.start();
-    }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    // Call stopMovieRec
-    private void stopMovieRec() {
-        new Thread() {
-
-            @Override
-            public void run() {
-                try {
-                    log.info("stopMovieRec: exec.");
-                    JSONObject replyJson = cameraApi.stopMovieRec().getJsonObject();
-                    JSONArray resultsObj = replyJson.getJSONArray("result");
-                    String thumbnailUrl = resultsObj.getString(0);
-
-                    if (thumbnailUrl != null)
-                      {
-                        Toast.makeText(SampleCameraActivity.this, R.string.msg_rec_stop, Toast.LENGTH_SHORT).show();
-                      }
-                    else
-                      {
-                        log.warn("stopMovieRec: error");
-                        Toast.makeText(SampleCameraActivity.this, R.string.msg_error_api_calling, Toast.LENGTH_SHORT).show();
-                      }
-                } catch (IOException e) {
-                    log.warn("stopMovieRec: IOException: ", e);
-                } catch (JSONException e) {
-                    log.warn("stopMovieRec: JSON format error.");
-                }
-            }
-        }.start();
-    }
   }

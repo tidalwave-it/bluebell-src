@@ -58,4 +58,10 @@ public interface CameraViewControl
      *
      ******************************************************************************************************************/
     public void stop();
+
+    public void stopMovieRec();
+
+    public void startMovieRec();
+
+    public void takeAndFetchPicture();
   }
