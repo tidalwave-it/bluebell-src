@@ -15,7 +15,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -29,14 +28,14 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * A SurfaceView based class to draw liveview frames serially.
  */
+@Slf4j
 public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHolder.Callback
   {
-    private static final String TAG = SimpleLiveviewSurfaceView.class.getSimpleName();
-
     private CameraApi cameraApi;
 
     private boolean mWhileFetching;
@@ -142,7 +141,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
 
         if (mWhileFetching)
           {
-            Log.w(TAG, "start() already starting.");
+            log.warn("start() already starting.");
             return false;
           }
 
@@ -154,7 +153,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
             @Override
             public void run()
               {
-                Log.d(TAG, "Starting retrieving liveview data from server.");
+                log.debug("Starting retrieving liveview data from server.");
                 SimpleLiveviewSlicer slicer = null;
 
                 try
@@ -191,7 +190,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
 
                         if (payload == null)
                           { // never occurs
-                            Log.e(TAG, "Liveview Payload is null.");
+                            log.warn("Liveview Payload is null.");
                             continue;
                           }
 
@@ -205,11 +204,11 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
                   }
                 catch (IOException e)
                   {
-                    Log.w(TAG, "IOException while fetching: " + e.getMessage());
+                    log.warn("IOException while fetching: " + e.getMessage());
                   }
                 catch (JSONException e)
                   {
-                    Log.w(TAG, "JSONException while fetching");
+                    log.warn("JSONException while fetching");
                   }
                 finally
                   {
@@ -224,7 +223,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
                       }
                     catch (IOException e)
                       {
-                        Log.w(TAG, "IOException while closing slicer: " + e.getMessage());
+                        log.warn("IOException while closing slicer: " + e.getMessage());
                       }
 
                     if (mDrawerThread != null)
@@ -244,7 +243,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
             @Override
             public void run()
               {
-                Log.d(TAG, "Starting drawing liveview frame.");
+                log.debug("Starting drawing liveview frame.");
                 Bitmap frameBitmap = null;
 
                 BitmapFactory.Options factoryOptions = new BitmapFactory.Options();
@@ -272,7 +271,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
                       }
                     catch (InterruptedException e)
                       {
-                        Log.i(TAG, "Drawer thread is Interrupted.");
+                        log.info("Drawer thread is Interrupted.");
                         break;
                       }
 
@@ -365,7 +364,7 @@ public class SimpleLiveviewSurfaceView extends SurfaceView implements SurfaceHol
     // Called when the width or height of liveview frame image is changed.
     private void onDetectedFrameSizeChanged(int width, int height)
       {
-        Log.d(TAG, "Change of aspect ratio detected");
+        log.debug("Change of aspect ratio detected");
         mPreviousWidth = width;
         mPreviousHeight = height;
         drawBlackFrame();
