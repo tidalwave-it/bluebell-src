@@ -38,6 +38,7 @@ import it.tidalwave.sony.StatusCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.sony.CameraApi.Polling.*;
 
 /***********************************************************************************************************************
  *
@@ -94,7 +95,7 @@ import lombok.extern.slf4j.Slf4j;
                   {
                     try
                       {
-                        final EventResponse response = cameraApi.getEvent(firstCall);
+                        final EventResponse response = cameraApi.getEvent(firstCall ? LONG_POLLING : SHORT_POLLING);
                         final StatusCode statusCode = response.getStatusCode();
                         firstCall = false;
                         log.debug(">>>> statusCode {}", statusCode);

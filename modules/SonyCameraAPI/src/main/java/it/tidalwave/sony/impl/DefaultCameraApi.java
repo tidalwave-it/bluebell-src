@@ -787,13 +787,12 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public EventResponse getEvent (final boolean longPolling)
+    public EventResponse getEvent (final @Nonnull Polling polling)
       throws IOException
       {
         final Call call = createCall(CAMERA_SERVICE).withMethod("getEvent")
-                                                    .withParam(longPolling);
-        final int longPollingTimeout = longPolling ? 20000 : 8000; // msec
-        return new DefaultEventResponse(call.post(longPollingTimeout));
+                                                    .withParam(polling == Polling.LONG_POLLING);
+        return new DefaultEventResponse(call.post(polling.getTimeout()));
       }
 
     /*******************************************************************************************************************

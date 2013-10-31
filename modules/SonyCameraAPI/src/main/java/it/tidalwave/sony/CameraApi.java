@@ -27,13 +27,14 @@
  */
 package it.tidalwave.sony;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.util.Set;
 import java.io.IOException;
 import java.net.URL;
-import javax.annotation.Nonnegative;
 import org.json.JSONObject;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -56,6 +57,20 @@ public interface CameraApi
     public static final String CAMERA_STATUS_IDLE = "IDLE";
     public static final String CAMERA_STATUS_MOVIE_RECORDING = "MovieRecording";
 
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @RequiredArgsConstructor
+    public static enum Polling
+      {
+        SHORT_POLLING(8000),
+        LONG_POLLING(20000);
+
+        @Getter
+        private final int timeout;
+      }
+    
     /*******************************************************************************************************************
      *
      *
@@ -288,7 +303,7 @@ public interface CameraApi
      *
      ******************************************************************************************************************/
     @Nonnull
-    public EventResponse getEvent (boolean longPollingFlag)
+    public EventResponse getEvent (final Polling polling)
       throws IOException;
 
     /*******************************************************************************************************************
