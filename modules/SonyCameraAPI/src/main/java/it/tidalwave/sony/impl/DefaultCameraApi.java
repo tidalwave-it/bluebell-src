@@ -530,19 +530,7 @@ import lombok.extern.slf4j.Slf4j;
         public JSONObject post()
           throws IOException
           {
-            try
-              {
-                request.put("params", params);
-                log.info("Request: {}", request);
-                final String response = httpClient.post(url, request.toString());
-                log.info("Response: {}", response);
-
-                return new JSONObject(response);
-              }
-            catch (JSONException e)
-              {
-                throw new IOException(e);
-              }
+            return post(0);
           }
 
         @Nonnull
@@ -553,8 +541,10 @@ import lombok.extern.slf4j.Slf4j;
               {
                 request.put("params", params);
                 log.info("Request: {}", request);
-                final String response = httpClient.post(url, request.toString(), timeout);
-                log.info("Response: {}", response);
+                final long baseTime = System.currentTimeMillis();
+                final String response = (timeout > 0) ? httpClient.post(url, request.toString(), timeout)
+                                                      : httpClient.post(url, request.toString());
+                log.info("Response in {} msec: {}", System.currentTimeMillis() - baseTime, response);
 
                 return new JSONObject(response);
               }
