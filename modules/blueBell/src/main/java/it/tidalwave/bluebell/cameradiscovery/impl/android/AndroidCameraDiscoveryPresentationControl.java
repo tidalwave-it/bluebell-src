@@ -46,18 +46,21 @@ import static android.content.Context.WIFI_SERVICE;
 public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDiscoveryPresentationControl
   {
     @Nonnull
-    private final WifiManager wifiManager;
+    private WifiManager wifiManager;
 
     public AndroidCameraDiscoveryPresentationControl (final @Nonnull CameraDiscoveryPresentation presentation)
       {
         super(presentation);
-        wifiManager = (WifiManager)((Activity)presentation).getSystemService(WIFI_SERVICE); // FIXME: getContext
+        // doesn't' work here
+//        wifiManager = (WifiManager)((Activity)presentation).getSystemService(WIFI_SERVICE); // FIXME: getContext
         // TODO: poll and notify state changes
       }
 
     @Override
     protected void populateWiFi()
       {
+        wifiManager = (WifiManager)((Activity)presentation).getSystemService(WIFI_SERVICE); // FIXME: getContext
+
         if (wifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED)
           {
             final WifiInfo wifiInfo = wifiManager.getConnectionInfo();
