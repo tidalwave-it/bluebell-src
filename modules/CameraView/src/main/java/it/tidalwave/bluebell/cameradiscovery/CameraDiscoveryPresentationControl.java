@@ -25,50 +25,21 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.bluebell.cameradiscovery.impl.android;
-
-import javax.annotation.Nonnull;
-import android.app.Activity;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryView;
-import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryViewControl;
-import static android.content.Context.WIFI_SERVICE;
-import it.tidalwave.bluebell.mobile.R;
+package it.tidalwave.bluebell.cameradiscovery;
 
 /***********************************************************************************************************************
- *
- * The Android specialisation of {@link DefaultCameraDiscoveryViewControl} that is able to populate the WiFi state.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class AndroidCameraDiscoveryViewControl extends DefaultCameraDiscoveryViewControl
+public interface CameraDiscoveryPresentationControl
   {
-    @Nonnull
-    private final WifiManager wifiManager;
+    public void initialize();
 
-    public AndroidCameraDiscoveryViewControl (final @Nonnull CameraDiscoveryView view)
-      {
-        super(view);
-        wifiManager = (WifiManager)((Activity)view).getSystemService(WIFI_SERVICE); // FIXME: getContext
-        // TODO: poll and notify state changes
-      }
+    public void stop();
 
-    @Override
-    protected void populateWiFi()
-      {
-        if (wifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED)
-          {
-            final WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-            final String htmlLabel = String.format("SSID: <b>%s</b>", wifiInfo.getSSID());
-            view.populateWiFiState(htmlLabel);
-          }
-        else
-          {
-            view.populateWiFiState("WiFi disconnected");
-            // R.string.msg_wifi_disconnect FIXME drop
-          }
-      }
+    public void startDiscovery();
+
+    public void activate();
   }

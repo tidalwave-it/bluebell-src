@@ -25,23 +25,49 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.bluebell.liveview;
+package it.tidalwave.bluebell.cameradiscovery.impl.android;
+
+import javax.annotation.Nonnull;
+import android.app.Activity;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
+import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryPresentationControl;
+import static android.content.Context.WIFI_SERVICE;
 
 /***********************************************************************************************************************
  *
- * The control of the {@link LiveView}.
- * 
- * @stereotype Control
+ * The Android specialisation of {@link DefaultCameraDiscoveryViewControl} that is able to populate the WiFi state.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface LiveViewControl
+public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDiscoveryPresentationControl
   {
-    public void start();
+    @Nonnull
+    private final WifiManager wifiManager;
 
-    public void stop();
+    public AndroidCameraDiscoveryPresentationControl (final @Nonnull CameraDiscoveryPresentation presentation)
+      {
+        super(presentation);
+        wifiManager = (WifiManager)((Activity)presentation).getSystemService(WIFI_SERVICE); // FIXME: getContext
+        // TODO: poll and notify state changes
+      }
 
-    public boolean isRunning();
+    @Override
+    protected void populateWiFi()
+      {
+        if (wifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED)
+          {
+            final WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+            final String htmlLabel = String.format("SSID: <b>%s</b>", wifiInfo.getSSID());
+            presentation.populateWiFiState(htmlLabel);
+          }
+        else
+          {
+            presentation.populateWiFiState("WiFi disconnected");
+            // R.string.msg_wifi_disconnect FIXME drop
+          }
+      }
   }

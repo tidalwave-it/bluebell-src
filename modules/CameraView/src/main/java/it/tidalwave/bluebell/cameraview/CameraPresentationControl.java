@@ -33,7 +33,7 @@ package it.tidalwave.bluebell.cameraview;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface CameraViewControl
+public interface CameraPresentationControl
   {
     /*******************************************************************************************************************
      *

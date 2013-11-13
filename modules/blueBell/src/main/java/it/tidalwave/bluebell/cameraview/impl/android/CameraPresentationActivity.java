@@ -29,8 +29,8 @@ package it.tidalwave.bluebell.cameraview.impl.android;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import it.tidalwave.bluebell.cameraview.CameraView;
-import it.tidalwave.bluebell.cameraview.DefaultCameraViewControl;
+import it.tidalwave.bluebell.cameraview.CameraPresentation;
+import it.tidalwave.bluebell.cameraview.DefaultCameraPresentationControl;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -55,7 +55,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class CameraViewActivity extends Activity implements CameraView
+public class CameraPresentationActivity extends Activity implements CameraPresentation
   {
     private Handler handler;
 
@@ -69,9 +69,9 @@ public class CameraViewActivity extends Activity implements CameraView
 
     private TextView tvCameraStatus;
 
-    private LiveviewSurfaceView liveviewSurface;
+    private LiveViewSurfaceView liveviewSurface;
 
-    private DefaultCameraViewControl control;
+    private DefaultCameraPresentationControl control;
 
     private boolean radioInitialChecked;
 
@@ -88,7 +88,7 @@ public class CameraViewActivity extends Activity implements CameraView
             @Override
             public void run()
               {
-                Toast.makeText(CameraViewActivity.this, R.string.msg_error_connection, Toast.LENGTH_SHORT).show();
+                Toast.makeText(CameraPresentationActivity.this, R.string.msg_error_connection, Toast.LENGTH_SHORT).show();
                 setProgressBarIndeterminateVisibility(false); // FIXME: split
               }
           });
@@ -107,8 +107,8 @@ public class CameraViewActivity extends Activity implements CameraView
             @Override
             public void run()
               {
-                Toast.makeText(CameraViewActivity.this, R.string.msg_error_non_supported_device, Toast.LENGTH_SHORT).show();
-                CameraViewActivity.this.finish(); // FIXME: split
+                Toast.makeText(CameraPresentationActivity.this, R.string.msg_error_non_supported_device, Toast.LENGTH_SHORT).show();
+                CameraPresentationActivity.this.finish(); // FIXME: split
               }
           });
       }
@@ -181,7 +181,7 @@ public class CameraViewActivity extends Activity implements CameraView
             @Override
             public void run()
               {
-                Toast.makeText(CameraViewActivity.this, R.string.msg_error_take_picture, Toast.LENGTH_SHORT).show();
+                Toast.makeText(CameraPresentationActivity.this, R.string.msg_error_take_picture, Toast.LENGTH_SHORT).show();
               }
           });
       }
@@ -372,7 +372,7 @@ public class CameraViewActivity extends Activity implements CameraView
             @Override
             public void run()
               {
-                Toast.makeText(CameraViewActivity.this, R.string.msg_rec_start, Toast.LENGTH_SHORT).show();
+                Toast.makeText(CameraPresentationActivity.this, R.string.msg_rec_start, Toast.LENGTH_SHORT).show();
               }
           });
       }
@@ -389,7 +389,7 @@ public class CameraViewActivity extends Activity implements CameraView
             @Override
             public void run()
               {
-                Toast.makeText(CameraViewActivity.this, R.string.msg_rec_stop, Toast.LENGTH_SHORT).show();
+                Toast.makeText(CameraPresentationActivity.this, R.string.msg_rec_stop, Toast.LENGTH_SHORT).show();
               }
           });
       }
@@ -406,7 +406,7 @@ public class CameraViewActivity extends Activity implements CameraView
             @Override
             public void run()
               {
-                Toast.makeText(CameraViewActivity.this, R.string.msg_error_api_calling, Toast.LENGTH_SHORT).show();
+                Toast.makeText(CameraPresentationActivity.this, R.string.msg_error_api_calling, Toast.LENGTH_SHORT).show();
               }
           });
       }
@@ -423,7 +423,7 @@ public class CameraViewActivity extends Activity implements CameraView
             @Override
             public void run()
               {
-                Toast.makeText(CameraViewActivity.this, R.string.msg_error_api_calling, Toast.LENGTH_SHORT).show();
+                Toast.makeText(CameraPresentationActivity.this, R.string.msg_error_api_calling, Toast.LENGTH_SHORT).show();
               }
           });
       }
@@ -446,11 +446,11 @@ public class CameraViewActivity extends Activity implements CameraView
         btTakePhoto = (Button)findViewById(R.id.button_take_picture);
         btRecStartStop = (Button)findViewById(R.id.button_rec_start_stop);
         tvCameraStatus = (TextView)findViewById(R.id.text_camera_status);
-        liveviewSurface = (LiveviewSurfaceView)findViewById(R.id.surfaceview_liveview);
+        liveviewSurface = (LiveViewSurfaceView)findViewById(R.id.surfaceview_liveview);
 
         handler = new Handler();
         final BlueBellApplication application = (BlueBellApplication)getApplication();
-        control = new AndroidCameraViewControl(this, liveviewSurface, application.getCameraDevice(), this);
+        control = new AndroidCameraPresentationControl(this, liveviewSurface, application.getCameraDevice(), this);
 
         log.info("onCreate() completed.");
       }
@@ -524,7 +524,7 @@ public class CameraViewActivity extends Activity implements CameraView
         for (int i = 0; i < availableShootModes.length; i++)
           {
             final String mode = availableShootModes[i];
-            final RadioButton radioBtn = new RadioButton(CameraViewActivity.this);
+            final RadioButton radioBtn = new RadioButton(CameraPresentationActivity.this);
             final int viewId = 10000 + i;
             radioBtn.setId(viewId);
             radioBtn.setText(mode);

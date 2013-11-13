@@ -27,22 +27,21 @@
  */
 package it.tidalwave.bluebell.liveview;
 
-import javax.annotation.Nonnull;
-import it.tidalwave.sony.SimpleLiveviewSlicer.Payload;
-
 /***********************************************************************************************************************
  *
- * @stereotype Presentation
+ * The control of the {@link LiveView}.
  * 
+ * @stereotype Control
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface LiveView
+public interface LiveViewPresentationControl
   {
-    public void stop();
-
     public void start();
 
-    public void postPayload (@Nonnull Payload payload);
+    public void stop();
+
+    public boolean isRunning();
   }

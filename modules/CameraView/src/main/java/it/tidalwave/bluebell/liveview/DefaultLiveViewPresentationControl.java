@@ -43,13 +43,13 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
-public class DefaultLiveViewControl implements LiveViewControl
+public class DefaultLiveViewPresentationControl implements LiveViewPresentationControl
   {
     @Nonnull
     private final CameraApi cameraApi;
 
     @Nonnull
-    private final LiveView view;
+    private final LiveViewPresentation presentation;
 
     private final SimpleLiveviewSlicer slicer = new SimpleLiveviewSlicer();
 
@@ -60,7 +60,7 @@ public class DefaultLiveViewControl implements LiveViewControl
     public void start()
       {
         log.info("start()");
-        view.start();
+        presentation.start();
 
         // A thread for retrieving liveview data from server.
         new Thread()
@@ -81,7 +81,7 @@ public class DefaultLiveViewControl implements LiveViewControl
 
                         if (!payload.isEmpty())
                           {
-                            view.postPayload(payload);
+                            presentation.postPayload(payload);
                           }
                       }
                   }
@@ -111,7 +111,7 @@ public class DefaultLiveViewControl implements LiveViewControl
                         log.warn("While stopping liveView", e);
                       }
 
-                    view.stop();
+                    presentation.stop();
                   }
               }
           }.start();

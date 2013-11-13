@@ -33,9 +33,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import it.tidalwave.sony.CameraDevice;
-import it.tidalwave.bluebell.cameraview.CameraView;
-import it.tidalwave.bluebell.cameraview.DefaultCameraViewControl;
-import it.tidalwave.bluebell.liveview.LiveView;
+import it.tidalwave.bluebell.cameraview.CameraPresentation;
+import it.tidalwave.bluebell.cameraview.DefaultCameraPresentationControl;
+import it.tidalwave.bluebell.liveview.LiveViewPresentation;
 import android.app.Activity;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -48,7 +48,7 @@ import lombok.Cleanup;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class AndroidCameraViewControl extends DefaultCameraViewControl
+public class AndroidCameraPresentationControl extends DefaultCameraPresentationControl
   {
     @Nonnull
     private final Activity activity;
@@ -58,8 +58,8 @@ public class AndroidCameraViewControl extends DefaultCameraViewControl
      *
      *
      ******************************************************************************************************************/
-    public AndroidCameraViewControl (final @Nonnull CameraView view,
-                                     final @Nonnull LiveView liveView,
+    public AndroidCameraPresentationControl (final @Nonnull CameraPresentation view,
+                                     final @Nonnull LiveViewPresentation liveView,
                                      final @Nonnull CameraDevice cameraDevice,
                                      final @Nonnull Activity activity)
       {

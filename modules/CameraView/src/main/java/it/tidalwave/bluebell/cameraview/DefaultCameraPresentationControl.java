@@ -39,9 +39,9 @@ import java.net.URL;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraObserver;
-import it.tidalwave.bluebell.liveview.DefaultLiveViewControl;
-import it.tidalwave.bluebell.liveview.LiveView;
-import it.tidalwave.bluebell.liveview.LiveViewControl;
+import it.tidalwave.bluebell.liveview.DefaultLiveViewPresentationControl;
+import it.tidalwave.bluebell.liveview.LiveViewPresentation;
+import it.tidalwave.bluebell.liveview.LiveViewPresentationControl;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.sony.CameraApi.*;
 
@@ -52,17 +52,17 @@ import static it.tidalwave.sony.CameraApi.*;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class DefaultCameraViewControl implements CameraViewControl
+public class DefaultCameraPresentationControl implements CameraPresentationControl
   {
     @Nonnull
-    private final CameraView view;
+    private final CameraPresentation presentation;
 
     @Nonnull
     private final CameraApi cameraApi;
 
     private CameraObserver cameraObserver;
 
-    private LiveViewControl liveViewControl;
+    private LiveViewPresentationControl liveViewPresentationControl;
 
     private final Set<String> availableApis = Collections.synchronizedSet(new TreeSet<String>());
 
@@ -71,14 +71,14 @@ public class DefaultCameraViewControl implements CameraViewControl
      *
      *
      ******************************************************************************************************************/
-    public DefaultCameraViewControl (final @Nonnull CameraView view,
-                                     final @Nonnull LiveView liveView,
-                                     final @Nonnull CameraDevice cameraDevice)
+    public DefaultCameraPresentationControl (final @Nonnull CameraPresentation presentation,
+                                             final @Nonnull LiveViewPresentation liveViewPresentation,
+                                             final @Nonnull CameraDevice cameraDevice)
       {
-        this.view = view;
+        this.presentation = presentation;
         cameraApi = cameraDevice.getApi();
         cameraObserver = cameraDevice.getObserver();
-        liveViewControl = new DefaultLiveViewControl(cameraApi, liveView);
+        liveViewPresentationControl = new DefaultLiveViewPresentationControl(cameraApi, liveViewPresentation);
       }
 
     /*******************************************************************************************************************
@@ -89,7 +89,7 @@ public class DefaultCameraViewControl implements CameraViewControl
     // Open connection to the camera device to start monitoring Camera events
     // and showing liveview.
     @Override
-    public void start() 
+    public void start()
       {
         cameraObserver.setListener(new CameraObserver.ChangeListener()
           {
@@ -132,13 +132,13 @@ public class DefaultCameraViewControl implements CameraViewControl
 
                         if (cameraApi.getApplicationInfo().getVersion() < 2)
                           {
-                            view.notifyDeviceNotSupportedAndQuit();
+                            presentation.notifyDeviceNotSupportedAndQuit();
                             return;
                           }
                       }
                     else // never happens
                       {
-                        view.notifyDeviceNotSupportedAndQuit();
+                        presentation.notifyDeviceNotSupportedAndQuit();
                         return;
                       }
 
@@ -158,7 +158,7 @@ public class DefaultCameraViewControl implements CameraViewControl
                     if (isApiAvailable(API_START_LIVEVIEW))
                       {
                         log.info("openConnection(): LiveviewSurface.start()");
-                        liveViewControl.start();
+                        liveViewPresentationControl.start();
                       }
 
                     if (isApiAvailable(API_AVAILABLE_SHOOT_MODE))
@@ -172,7 +172,7 @@ public class DefaultCameraViewControl implements CameraViewControl
                 catch (IOException e)
                   {
                     log.warn("openConnection: IOException: ", e);
-                    view.notifyConnectionError();
+                    presentation.notifyConnectionError();
                   }
               }
           }.start();
@@ -192,7 +192,7 @@ public class DefaultCameraViewControl implements CameraViewControl
             public void run()
               {
                 log.info("stop()");
-                liveViewControl.stop();
+                liveViewPresentationControl.stop();
                 cameraObserver.stop();
 
                 if (isApiAvailable(API_STOP_REC_MODE))
@@ -224,25 +224,25 @@ public class DefaultCameraViewControl implements CameraViewControl
             @Override
             public void run()
               {
-                if (!liveViewControl.isRunning())
+                if (!liveViewPresentationControl.isRunning())
                   {
-                    view.notifyErrorWhileTakingPhoto();
+                    presentation.notifyErrorWhileTakingPhoto();
                     return;
                   }
 
                 try
                   {
-                    view.showProgressBar();
-                    view.showPhoto(loadPicture(cameraApi.actTakePicture().getImageUrl()));
+                    presentation.showProgressBar();
+                    presentation.showPhoto(loadPicture(cameraApi.actTakePicture().getImageUrl()));
                   }
                 catch (IOException e)
                   {
                     log.warn("IOException while closing slicer: ", e);
-                    view.notifyErrorWhileTakingPhoto();
+                    presentation.notifyErrorWhileTakingPhoto();
                   }
                 finally
                   {
-                    view.hideProgressBar();
+                    presentation.hideProgressBar();
                   }
               }
           }.start();
@@ -269,7 +269,7 @@ public class DefaultCameraViewControl implements CameraViewControl
                 catch (IOException e)
                   {
                     log.warn("setShootMode: IOException: ", e);
-                    view.notifyGenericError();
+                    presentation.notifyGenericError();
                   }
               }
           }.start();
@@ -297,19 +297,19 @@ public class DefaultCameraViewControl implements CameraViewControl
                       {
                         log.info("startMovieRec: exec.");
                         cameraApi.startMovieRec();
-                        view.notifyRecStart();
+                        presentation.notifyRecStart();
                       }
                     else if (CAMERA_STATUS_MOVIE_RECORDING.equals(cameraStatus))
                       {
                         log.info("stopMovieRec: exec.");
                         cameraApi.stopMovieRec().getThumbnailUrl();
-                        view.notifyRecStop();
+                        presentation.notifyRecStop();
                       }
                   }
                 catch (IOException e)
                   {
                     log.warn("startOrStopMovieRecording()", e);
-                    view.notifyErrorWhileRecordingMovie();
+                    presentation.notifyErrorWhileRecordingMovie();
                   }
               }
           }.start();
@@ -337,35 +337,35 @@ public class DefaultCameraViewControl implements CameraViewControl
         final String cameraStatus = cameraObserver.getStatus();
         final String shootMode = cameraObserver.getShootMode();
 
-        view.renderCameraStatus(cameraStatus);
+        presentation.renderCameraStatus(cameraStatus);
 
         if (CAMERA_STATUS_MOVIE_RECORDING.equals(cameraStatus))
           {
-            view.renderRecStartStopButtonAsStop();
+            presentation.renderRecStartStopButtonAsStop();
           }
         else if (CAMERA_STATUS_IDLE.equals(cameraStatus) && SHOOT_MODE_MOVIE.equals(shootMode))
           {
-            view.renderRecStartStopButtonAsStart();
+            presentation.renderRecStartStopButtonAsStart();
           }
         else
           {
-            view.disableRecStartStopButton();
+            presentation.disableRecStartStopButton();
           }
 
-        view.enableTakePhotoButton(SHOOT_MODE_STILL.equals(shootMode) && CAMERA_STATUS_IDLE.equals(cameraStatus));
+        presentation.enableTakePhotoButton(SHOOT_MODE_STILL.equals(shootMode) && CAMERA_STATUS_IDLE.equals(cameraStatus));
 
         if (!SHOOT_MODE_STILL.equals(shootMode))
           {
-            view.hidePhotoBox();
+            presentation.hidePhotoBox();
           }
 
         if (CAMERA_STATUS_IDLE.equals(cameraStatus))
           {
-            view.enableShootModeSelector(shootMode);
+            presentation.enableShootModeSelector(shootMode);
           }
         else
           {
-            view.disableShootModeSelector();
+            presentation.disableShootModeSelector();
           }
       }
 
@@ -400,7 +400,7 @@ public class DefaultCameraViewControl implements CameraViewControl
             final String currentMode = response.getCurrentMode();
             final List<String> availableModes = new ArrayList<String>(response.getModes());
             availableModes.retainAll(Arrays.asList(SHOOT_MODE_MOVIE, SHOOT_MODE_STILL));
-            view.setShootModeControl(availableModes, currentMode);
+            presentation.setShootModeControl(availableModes, currentMode);
           }
         catch (IOException e)
           {

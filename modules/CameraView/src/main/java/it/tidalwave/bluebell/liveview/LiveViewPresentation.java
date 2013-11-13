@@ -25,21 +25,24 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.bluebell.cameradiscovery;
+package it.tidalwave.bluebell.liveview;
+
+import javax.annotation.Nonnull;
+import it.tidalwave.sony.SimpleLiveviewSlicer.Payload;
 
 /***********************************************************************************************************************
  *
+ * @stereotype Presentation
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface CameraDiscoveryViewControl
+public interface LiveViewPresentation
   {
-    public void initialize();
-
     public void stop();
 
-    public void startDiscovery();
+    public void start();
 
-    public void activate();
+    public void postPayload (@Nonnull Payload payload);
   }

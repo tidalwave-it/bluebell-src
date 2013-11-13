@@ -42,7 +42,7 @@ import android.graphics.Rect;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import it.tidalwave.sony.SimpleLiveviewSlicer;
-import it.tidalwave.bluebell.liveview.LiveView;
+import it.tidalwave.bluebell.liveview.LiveViewPresentation;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -54,7 +54,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class LiveviewSurfaceView extends SurfaceView implements LiveView, SurfaceHolder.Callback
+public class LiveViewSurfaceView extends SurfaceView implements LiveViewPresentation, SurfaceHolder.Callback
   {
     private volatile boolean running;
 
@@ -77,7 +77,7 @@ public class LiveviewSurfaceView extends SurfaceView implements LiveView, Surfac
      * @param context
      *
      ******************************************************************************************************************/
-    public LiveviewSurfaceView (final @Nonnull Context context)
+    public LiveViewSurfaceView (final @Nonnull Context context)
       {
         super(context);
         getHolder().addCallback(this);
@@ -90,7 +90,7 @@ public class LiveviewSurfaceView extends SurfaceView implements LiveView, Surfac
      * @param attrs
      *
      ******************************************************************************************************************/
-    public LiveviewSurfaceView (final @Nonnull Context context, final @Nonnull AttributeSet attrs)
+    public LiveViewSurfaceView (final @Nonnull Context context, final @Nonnull AttributeSet attrs)
       {
         super(context, attrs);
         getHolder().addCallback(this);
@@ -104,7 +104,7 @@ public class LiveviewSurfaceView extends SurfaceView implements LiveView, Surfac
      * @param defStyle
      *
      ******************************************************************************************************************/
-    public LiveviewSurfaceView (final @Nonnull Context context, final @Nonnull AttributeSet attrs, final int defStyle)
+    public LiveViewSurfaceView (final @Nonnull Context context, final @Nonnull AttributeSet attrs, final int defStyle)
       {
         super(context, attrs, defStyle);
         getHolder().addCallback(this);

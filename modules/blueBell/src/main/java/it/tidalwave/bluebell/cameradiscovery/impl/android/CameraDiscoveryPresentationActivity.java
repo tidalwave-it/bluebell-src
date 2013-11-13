@@ -29,9 +29,9 @@ package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.sony.CameraDevice;
-import it.tidalwave.bluebell.cameraview.impl.android.CameraViewActivity;
-import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryView;
-import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryViewControl;
+import it.tidalwave.bluebell.cameraview.impl.android.CameraPresentationActivity;
+import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
+import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentationControl;
 import it.tidalwave.bluebell.mobile.R;
 import android.app.Activity;
 import android.content.Intent;
@@ -56,9 +56,9 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class CameraDiscoveryViewActivity extends Activity implements CameraDiscoveryView
+public class CameraDiscoveryPresentationActivity extends Activity implements CameraDiscoveryPresentation
   {
-    private final CameraDiscoveryViewControl control = new AndroidCameraDiscoveryViewControl(this);
+    private final CameraDiscoveryPresentationControl control = new AndroidCameraDiscoveryPresentationControl(this);
 
     private Handler handler;
 
@@ -133,7 +133,7 @@ public class CameraDiscoveryViewActivity extends Activity implements CameraDisco
           {
             public void run()
               {
-                Toast.makeText(CameraDiscoveryViewActivity.this, R.string.msg_device_search_finish, Toast.LENGTH_SHORT).show();
+                Toast.makeText(CameraDiscoveryPresentationActivity.this, R.string.msg_device_search_finish, Toast.LENGTH_SHORT).show();
               }
           });
       }
@@ -150,7 +150,7 @@ public class CameraDiscoveryViewActivity extends Activity implements CameraDisco
           {
             public void run()
               {
-                Toast.makeText(CameraDiscoveryViewActivity.this, R.string.msg_error_device_searching, Toast.LENGTH_SHORT).show();
+                Toast.makeText(CameraDiscoveryPresentationActivity.this, R.string.msg_error_device_searching, Toast.LENGTH_SHORT).show();
               }
           });
       }
@@ -305,10 +305,10 @@ public class CameraDiscoveryViewActivity extends Activity implements CameraDisco
       {
         if (device.hasApiService("camera"))
           {
-            Toast.makeText(CameraDiscoveryViewActivity.this, device.getFriendlyName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(CameraDiscoveryPresentationActivity.this, device.getFriendlyName(), Toast.LENGTH_SHORT).show();
             final BlueBellApplication application = (BlueBellApplication) getApplication();
             application.setCameraDevice(device);
-            final Intent intent = new Intent(this, CameraViewActivity.class);
+            final Intent intent = new Intent(this, CameraPresentationActivity.class);
             startActivity(intent);
           }
         else

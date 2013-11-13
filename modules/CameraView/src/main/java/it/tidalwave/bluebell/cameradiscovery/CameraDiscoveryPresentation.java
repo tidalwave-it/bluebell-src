@@ -36,7 +36,7 @@ import it.tidalwave.sony.CameraDevice;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface CameraDiscoveryView
+public interface CameraDiscoveryPresentation
   {
     public void populateWiFiState (@Nonnull String wiFiState);
 

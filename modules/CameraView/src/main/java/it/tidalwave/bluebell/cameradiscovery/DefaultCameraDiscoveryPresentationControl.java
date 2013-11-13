@@ -41,10 +41,10 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
-public class DefaultCameraDiscoveryViewControl implements CameraDiscoveryViewControl
+public class DefaultCameraDiscoveryPresentationControl implements CameraDiscoveryPresentationControl
   {
     @Nonnull
-    protected final CameraDiscoveryView view;
+    protected final CameraDiscoveryPresentation presentation;
 
     private SsdpDiscoverer ssdpClient = new DefaultSsdpDiscoverer();
 
@@ -98,9 +98,9 @@ public class DefaultCameraDiscoveryViewControl implements CameraDiscoveryViewCon
       {
         if (!ssdpClient.isSearching())
           {
-            view.disableSearchButton();
-            view.clearDevices();
-            view.showProgressBar();
+            presentation.disableSearchButton();
+            presentation.clearDevices();
+            presentation.showProgressBar();
 
             ssdpClient.search(new SsdpDiscoverer.Callback()
               {
@@ -109,19 +109,19 @@ public class DefaultCameraDiscoveryViewControl implements CameraDiscoveryViewCon
                   {
                     // Called by non-UI thread.
                     log.info(">>>> Search device found: {}", device.getFriendlyName());
-                    view.renderOneMoreDevice(device);
+                    presentation.renderOneMoreDevice(device);
                   }
 
                 @Override
                 public void onFinished()
                   {
                     log.info(">>>> Search finished.");
-                    view.hideProgressBar();
-                    view.enableSearchButton();
+                    presentation.hideProgressBar();
+                    presentation.enableSearchButton();
 
                     if (active)
                       {
-                        view.notifySearchFinished();
+                        presentation.notifySearchFinished();
                       }
                   }
 
@@ -129,12 +129,12 @@ public class DefaultCameraDiscoveryViewControl implements CameraDiscoveryViewCon
                 public void onErrorFinished()
                   {
                     log.info(">>>> Search Error finished.");
-                    view.hideProgressBar();
-                    view.enableSearchButton();
+                    presentation.hideProgressBar();
+                    presentation.enableSearchButton();
 
                     if (active)
                       {
-                        view.notifySearchFinishedWithError();
+                        presentation.notifySearchFinishedWithError();
                       }
                   }
               });
