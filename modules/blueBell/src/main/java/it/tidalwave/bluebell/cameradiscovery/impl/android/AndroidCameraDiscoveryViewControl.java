@@ -37,6 +37,8 @@ import static android.content.Context.WIFI_SERVICE;
 
 /***********************************************************************************************************************
  *
+ * The Android specialisation of {@link DefaultCameraDiscoveryViewControl} that is able to populate the WiFi state.
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -52,6 +54,7 @@ public class AndroidCameraDiscoveryViewControl extends DefaultCameraDiscoveryVie
         activity = (Activity)view;
       }
 
+    @Override
     protected void populateWiFi()
       {
         final WifiManager wifiManager = (WifiManager)activity.getSystemService(WIFI_SERVICE); // FIXME: getContext
