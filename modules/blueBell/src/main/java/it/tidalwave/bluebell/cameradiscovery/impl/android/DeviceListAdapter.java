@@ -27,6 +27,10 @@
  */
 package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 import android.content.Context;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -36,8 +40,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import it.tidalwave.bluebell.mobile.R;
 import it.tidalwave.sony.CameraDevice;
-import java.util.ArrayList;
-import java.util.List;
+import it.tidalwave.sony.CameraDevice.ApiService;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -52,66 +55,63 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class DeviceListAdapter extends BaseAdapter
   {
-    private List<CameraDevice> mDeviceList;
-    private LayoutInflater mInflater;
+    private final List<CameraDevice> devices;
 
-    public DeviceListAdapter (Context context)
+    private final LayoutInflater inflater;
+
+    public DeviceListAdapter (final @Nonnull Context context)
       {
-        mDeviceList = new ArrayList<CameraDevice>();
-        mInflater = LayoutInflater.from(context);
+        devices = new ArrayList<CameraDevice>();
+        inflater = LayoutInflater.from(context);
       }
 
-    public void addDevice (CameraDevice device)
+    public void addDevice (final @Nonnull CameraDevice device)
       {
-        mDeviceList.add(device);
+        devices.add(device);
         notifyDataSetChanged();
       }
 
     public void clearDevices()
       {
-        mDeviceList.clear();
+        devices.clear();
         notifyDataSetChanged();
       }
 
     @Override
     public int getCount()
       {
-        return mDeviceList.size();
+        return devices.size();
       }
 
     @Override
-    public Object getItem (int position)
+    public Object getItem (final int position)
       {
-        return mDeviceList.get(position);
+        return devices.get(position);
       }
 
     @Override
-    public long getItemId (int position)
+    public long getItemId (final int position)
       {
-        return 0; // not fine
+        return position;
       }
 
     @Override
-    public View getView (final int position, final View convertView, final ViewGroup parent)
+    public View getView (final int position, final @CheckForNull View convertView, final @Nonnull ViewGroup parent)
       {
-        TextView textView = (TextView) convertView;
+        TextView textView = (TextView)convertView;
 
         if (textView == null)
           {
-            textView = (TextView) mInflater.inflate(R.layout.device_list_item, null);
+            textView = (TextView) inflater.inflate(R.layout.device_list_item, null);
           }
 
-        CameraDevice device = (CameraDevice) getItem(position);
+        final CameraDevice device = (CameraDevice)getItem(position);
         log.info(">>>> found {}, services: {}", device.getFriendlyName(), device.getApiServices());
-        CameraDevice.ApiService apiService = device.getApiService("camera");
-        String endpointUrl = "?";
+        final ApiService apiService = device.getApiService("camera");
+        final String endpointUrl = (apiService == null) ? "?" : apiService.getEndpointUrl();
 
-        if (apiService != null)
-          {
-            endpointUrl = apiService.getEndpointUrl();
-          }
-
-        final String htmlLabel = String.format("%s ", device.getFriendlyName()) + String.format("<br><small>Endpoint URL:  <font color=\"blue\">%s</font></small>", endpointUrl);
+        final String htmlLabel = String.format("%s ", device.getFriendlyName()) +
+                String.format("<br>Endpoint URL: %s", endpointUrl);
         textView.setText(Html.fromHtml(htmlLabel));
 
         return textView;

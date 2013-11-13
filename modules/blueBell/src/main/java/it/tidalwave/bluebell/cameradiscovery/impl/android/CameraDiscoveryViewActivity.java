@@ -58,11 +58,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CameraDiscoveryViewActivity extends Activity implements CameraDiscoveryView
   {
+    private final CameraDiscoveryViewControl control = new AndroidCameraDiscoveryViewControl(this);
+
     private Handler handler;
 
     private DeviceListAdapter listAdapter;
 
-    private final CameraDiscoveryViewControl control = new AndroidCameraDiscoveryViewControl(this);
+    private ListView lvDevices;
+
+    private TextView tvWifiStatus;
+
+    private View btSearch;
 
     /*******************************************************************************************************************
      *
@@ -76,8 +82,7 @@ public class CameraDiscoveryViewActivity extends Activity implements CameraDisco
           {
             public void run()
               {
-                final TextView textWifiSsid = (TextView)findViewById(R.id.text_wifi_ssid); // FIXME
-                textWifiSsid.setText(Html.fromHtml(wiFiState));
+                tvWifiStatus.setText(Html.fromHtml(wiFiState));
               }
           });
       }
@@ -111,7 +116,7 @@ public class CameraDiscoveryViewActivity extends Activity implements CameraDisco
           {
             public void run()
               {
-                findViewById(R.id.button_search).setEnabled(true);
+                btSearch.setEnabled(true);
               }
           });
       }
@@ -128,9 +133,7 @@ public class CameraDiscoveryViewActivity extends Activity implements CameraDisco
           {
             public void run()
               {
-                Toast.makeText(CameraDiscoveryViewActivity.this,
-                               R.string.msg_device_search_finish,
-                               Toast.LENGTH_SHORT).show();
+                Toast.makeText(CameraDiscoveryViewActivity.this, R.string.msg_device_search_finish, Toast.LENGTH_SHORT).show();
               }
           });
       }
@@ -147,9 +150,7 @@ public class CameraDiscoveryViewActivity extends Activity implements CameraDisco
           {
             public void run()
               {
-                Toast.makeText(CameraDiscoveryViewActivity.this,
-                               R.string.msg_error_device_searching,
-                               Toast.LENGTH_SHORT).show();
+                Toast.makeText(CameraDiscoveryViewActivity.this, R.string.msg_error_device_searching, Toast.LENGTH_SHORT).show();
               }
           });
       }
@@ -183,7 +184,7 @@ public class CameraDiscoveryViewActivity extends Activity implements CameraDisco
           {
             public void run()
               {
-                findViewById(R.id.button_search).setEnabled(false);
+                btSearch.setEnabled(false);
               }
           });
       }
@@ -228,17 +229,20 @@ public class CameraDiscoveryViewActivity extends Activity implements CameraDisco
      *
      ******************************************************************************************************************/
     @Override
-    protected void onCreate (Bundle savedInstanceState)
+    protected void onCreate (final @Nonnull Bundle savedInstanceState)
       {
+        log.info("onCreate({})", savedInstanceState);
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_device_discovery);
         setProgressBarIndeterminateVisibility(false);
 
+        lvDevices = (ListView)findViewById(R.id.list_device);
+        tvWifiStatus = (TextView)findViewById(R.id.text_wifi_ssid);
+        btSearch = findViewById(R.id.button_search);
+
         handler = new Handler();
         listAdapter = new DeviceListAdapter(this);
-
-        log.debug("onCreate() completed.");
       }
 
     /*******************************************************************************************************************
@@ -249,12 +253,12 @@ public class CameraDiscoveryViewActivity extends Activity implements CameraDisco
     @Override
     protected void onResume()
       {
+        log.info("onResume()");
         super.onResume();
         control.activate();
-        ListView listView = (ListView) findViewById(R.id.list_device);
-        listView.setAdapter(listAdapter);
+        lvDevices.setAdapter(listAdapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        lvDevices.setOnItemClickListener(new AdapterView.OnItemClickListener()
           {
             @Override
             public void onItemClick (AdapterView<?> parent, View view, int position, long id)
@@ -265,7 +269,7 @@ public class CameraDiscoveryViewActivity extends Activity implements CameraDisco
               }
           });
 
-        findViewById(R.id.button_search).setOnClickListener(new View.OnClickListener()
+        btSearch.setOnClickListener(new View.OnClickListener()
           {
             @Override
             public void onClick (View v)
@@ -287,35 +291,29 @@ public class CameraDiscoveryViewActivity extends Activity implements CameraDisco
     @Override
     protected void onPause()
       {
+        log.info("onPause()");
         super.onPause();
         control.stop();
-        log.debug("onPause() completed.");
       }
 
     /*******************************************************************************************************************
      *
-     *
+     * FIXME: move to controller
      *
      ******************************************************************************************************************/
-    // Launch a SampleCameraActivity.
     private void launchSampleActivity (final @Nonnull CameraDevice device)
       {
         if (device.hasApiService("camera"))
           {
-            // Go to CameraSampleActivity.
-            Toast.makeText(CameraDiscoveryViewActivity.this,
-                    device.getFriendlyName(), Toast.LENGTH_SHORT).show();
-
-            // Set target ServerDevice instance to control in Activity.
-            BlueBellApplication app = (BlueBellApplication) getApplication();
-            app.setCameraDevice(device);
-            Intent intent = new Intent(this, CameraViewActivity.class);
+            Toast.makeText(CameraDiscoveryViewActivity.this, device.getFriendlyName(), Toast.LENGTH_SHORT).show();
+            final BlueBellApplication application = (BlueBellApplication) getApplication();
+            application.setCameraDevice(device);
+            final Intent intent = new Intent(this, CameraViewActivity.class);
             startActivity(intent);
           }
         else
           {
-            Toast.makeText(this, R.string.msg_error_non_supported_device,
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.msg_error_non_supported_device, Toast.LENGTH_SHORT).show();
           }
       }
   }

@@ -73,7 +73,7 @@ public class CameraViewActivity extends Activity implements CameraView
 
     private DefaultCameraViewControl control;
 
-    private boolean mRadioInitialChecked;
+    private boolean radioInitialChecked;
 
     /*******************************************************************************************************************
      *
@@ -434,8 +434,9 @@ public class CameraViewActivity extends Activity implements CameraView
      *
      ******************************************************************************************************************/
     @Override
-    protected void onCreate (Bundle savedInstanceState)
+    protected void onCreate (final @Nonnull Bundle savedInstanceState)
       {
+        log.info("onCreate({})", savedInstanceState);
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_sample_camera);
@@ -448,8 +449,8 @@ public class CameraViewActivity extends Activity implements CameraView
         liveviewSurface = (LiveviewSurfaceView)findViewById(R.id.surfaceview_liveview);
 
         handler = new Handler();
-        final BlueBellApplication app = (BlueBellApplication)getApplication();
-        control = new AndroidCameraViewControl(this, liveviewSurface, app.getCameraDevice(), this);
+        final BlueBellApplication application = (BlueBellApplication)getApplication();
+        control = new AndroidCameraViewControl(this, liveviewSurface, application.getCameraDevice(), this);
 
         log.info("onCreate() completed.");
       }
@@ -462,6 +463,7 @@ public class CameraViewActivity extends Activity implements CameraView
     @Override
     protected void onResume()
       {
+        log.info("onResume()");
         super.onResume();
 
         btTakePhoto.setOnClickListener(new View.OnClickListener()
@@ -493,7 +495,6 @@ public class CameraViewActivity extends Activity implements CameraView
 
         setProgressBarIndeterminateVisibility(true);
         control.start();
-        log.info("onResume() completed.");
       }
 
     /*******************************************************************************************************************
@@ -504,17 +505,16 @@ public class CameraViewActivity extends Activity implements CameraView
     @Override
     protected void onPause()
       {
+        log.info("onPause()");
         super.onPause();
         control.stop();
-        log.info("onPause() completed.");
       }
 
     /*******************************************************************************************************************
      *
-     *
+     * Creates the selector for the shoot modes.
      *
      ******************************************************************************************************************/
-    // Prepare for Radio Button UI of Shoot Mode.
     private void prepareShootModeRadioButtonsUi (final @Nonnull String[] availableShootModes,
                                                  final @Nonnull String currentMode)
       {
@@ -525,7 +525,7 @@ public class CameraViewActivity extends Activity implements CameraView
           {
             final String mode = availableShootModes[i];
             final RadioButton radioBtn = new RadioButton(CameraViewActivity.this);
-            final int viewId = 123456 + i; // workaround
+            final int viewId = 10000 + i;
             radioBtn.setId(viewId);
             radioBtn.setText(mode);
             radioBtn.setTag(mode);
@@ -537,11 +537,11 @@ public class CameraViewActivity extends Activity implements CameraView
                   {
                     if (isChecked)
                       {
-                        if (mRadioInitialChecked)
+                        if (radioInitialChecked)
                           {
                             // ignore because this callback is invoked by
                             // initializing.
-                            mRadioInitialChecked = false;
+                            radioInitialChecked = false;
                           }
                         else
                           {
@@ -557,7 +557,7 @@ public class CameraViewActivity extends Activity implements CameraView
             if (mode.equals(currentMode))
               {
                 // Set the flag true to suppress unnecessary API calling.
-                mRadioInitialChecked = true;
+                radioInitialChecked = true;
                 rbShootModeSelector.check(viewId);
               }
           }

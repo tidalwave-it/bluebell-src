@@ -78,7 +78,7 @@ public class AndroidCameraViewControl extends DefaultCameraViewControl
       {
         final @Cleanup InputStream is = new BufferedInputStream(url.openStream());
         final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 4; // irresponsible value
+        options.inSampleSize = 4; // FIXME
         final Drawable pictureDrawable = new BitmapDrawable(activity.getResources(),
                                                             BitmapFactory.decodeStream(is, null, options));
         is.close();

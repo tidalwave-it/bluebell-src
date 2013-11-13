@@ -58,7 +58,7 @@ public class LiveviewSurfaceView extends SurfaceView implements LiveView, Surfac
   {
     private volatile boolean running;
 
-    private final BlockingQueue<byte[]> mJpegQueue = new ArrayBlockingQueue<byte[]>(2);
+    private final BlockingQueue<byte[]> imageQueue = new ArrayBlockingQueue<byte[]>(2);
 
     private final boolean mInMutableAvailable = false;
 
@@ -66,54 +66,55 @@ public class LiveviewSurfaceView extends SurfaceView implements LiveView, Surfac
 
     private Thread consumerThread;
 
-    private int mPreviousWidth = 0;
+    private int prevoiusWidth = 0;
 
-    private int mPreviousHeight = 0;
+    private int previousHeight = 0;
 
-    private final Paint mFramePaint;
+    private final Paint imagePaint = new Paint();
 
-    /**
-     * Contractor
+    /*******************************************************************************************************************
      *
      * @param context
-     */
-    public LiveviewSurfaceView (Context context)
+     *
+     ******************************************************************************************************************/
+    public LiveviewSurfaceView (final @Nonnull Context context)
       {
         super(context);
         getHolder().addCallback(this);
-        mFramePaint = new Paint();
-        mFramePaint.setDither(true);
+        imagePaint.setDither(true);
       }
 
-    /**
-     * Contractor
+    /*******************************************************************************************************************
      *
      * @param context
      * @param attrs
-     */
-    public LiveviewSurfaceView (Context context, AttributeSet attrs)
+     *
+     ******************************************************************************************************************/
+    public LiveviewSurfaceView (final @Nonnull Context context, final @Nonnull AttributeSet attrs)
       {
         super(context, attrs);
         getHolder().addCallback(this);
-        mFramePaint = new Paint();
-        mFramePaint.setDither(true);
+        imagePaint.setDither(true);
       }
 
-    /**
-     * Contractor
+    /*******************************************************************************************************************
      *
      * @param context
      * @param attrs
      * @param defStyle
-     */
-    public LiveviewSurfaceView (Context context, AttributeSet attrs, int defStyle)
+     *
+     ******************************************************************************************************************/
+    public LiveviewSurfaceView (final @Nonnull Context context, final @Nonnull AttributeSet attrs, final int defStyle)
       {
         super(context, attrs, defStyle);
         getHolder().addCallback(this);
-        mFramePaint = new Paint();
-        mFramePaint.setDither(true);
+        imagePaint.setDither(true);
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     @Override
     public void postPayload (final @Nonnull SimpleLiveviewSlicer.Payload payload)
       {
@@ -121,41 +122,51 @@ public class LiveviewSurfaceView extends SurfaceView implements LiveView, Surfac
 
         if (running)
           {
-            if (mJpegQueue.size() == 2)
+            if (imageQueue.size() == 2)
               {
-                mJpegQueue.remove();
+                imageQueue.remove();
               }
 
-            mJpegQueue.add(payload.jpegData);
+            imageQueue.add(payload.jpegData);
           }
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     @Override
-    public void surfaceChanged (SurfaceHolder holder, int format, int width, int height)
+    public void surfaceChanged (final @Nonnull SurfaceHolder holder, final int format, final int width, final int height)
       {
         // do nothing.
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     @Override
-    public void surfaceCreated (SurfaceHolder holder)
+    public void surfaceCreated (final @Nonnull SurfaceHolder holder)
       {
         // do nothing.
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     @Override
-    public void surfaceDestroyed (SurfaceHolder holder)
+    public void surfaceDestroyed (final @Nonnull SurfaceHolder holder)
       {
         running = false;
 //        FIXME: stop the controller?
       }
 
-    /**
-     * Start retrieving and drawing liveview frame data by new threads.
+    /*******************************************************************************************************************
      *
-     * @return true if the starting is completed successfully, false otherwise.
-     * @exception IllegalStateException when Remote API object is not set.
-     * @see SimpleLiveviewSurfaceView#bindRemoteApi(SimpleRemoteApi)
-     */
+     * Start the consumer thread that refresh the view pulling images from the qeueu.
+     *
+     ******************************************************************************************************************/
     @Override
     public void start()
       {
@@ -167,7 +178,6 @@ public class LiveviewSurfaceView extends SurfaceView implements LiveView, Surfac
 
         running = true;
 
-        // A thread for drawing liveview frame fetched by above thread.
         consumerThread = new Thread()
           {
             @Override
@@ -176,7 +186,7 @@ public class LiveviewSurfaceView extends SurfaceView implements LiveView, Surfac
                 log.debug("Starting drawing liveview frame.");
                 Bitmap frameBitmap = null;
 
-                BitmapFactory.Options factoryOptions = new BitmapFactory.Options();
+                final BitmapFactory.Options factoryOptions = new BitmapFactory.Options();
                 factoryOptions.inSampleSize = 1;
 
                 if (mInMutableAvailable)
@@ -188,7 +198,7 @@ public class LiveviewSurfaceView extends SurfaceView implements LiveView, Surfac
                   {
                     try
                       {
-                        byte[] jpegData = mJpegQueue.take();
+                        final byte[] jpegData = imageQueue.take();
                         frameBitmap = BitmapFactory.decodeByteArray(jpegData, 0, jpegData.length, factoryOptions);
                       }
                     catch (IllegalArgumentException e)
@@ -223,12 +233,13 @@ public class LiveviewSurfaceView extends SurfaceView implements LiveView, Surfac
           };
 
         consumerThread.start();
-        return; // true;
       }
 
-    /**
-     * Request to stop retrieving and drawing liveview data.
-     */
+    /*******************************************************************************************************************
+     *
+     * Stops the refreshing of the view.
+     *
+     ******************************************************************************************************************/
     @Override
     public void stop()
       {
@@ -237,15 +248,16 @@ public class LiveviewSurfaceView extends SurfaceView implements LiveView, Surfac
             consumerThread.interrupt();
           }
 
-        mJpegQueue.clear();
+        imageQueue.clear();
         running = false;
       }
 
-    /**
-     * Check to see whether start() is already called.
+    /*******************************************************************************************************************
      *
-     * @return true if start() is already called, false otherwise.
-     */
+     *
+     * @return  true if started
+     *
+     ******************************************************************************************************************/
     public boolean isStarted()
       {
         return running;
@@ -270,60 +282,67 @@ public class LiveviewSurfaceView extends SurfaceView implements LiveView, Surfac
 //        options.inBitmap = bitmap;
 //    }
 
-    // Draw frame bitmap onto a canvas.
-    private void drawFrame(Bitmap frame)
+    /*******************************************************************************************************************
+     *
+     * Renders a frame.
+     *
+     ******************************************************************************************************************/
+    private void drawFrame (final @Nonnull Bitmap frame)
       {
-        if (frame.getWidth() != mPreviousWidth || frame.getHeight() != mPreviousHeight)
+        if ((frame.getWidth() != prevoiusWidth) || (frame.getHeight() != previousHeight))
           {
             onDetectedFrameSizeChanged(frame.getWidth(), frame.getHeight());
-            return;
           }
-
-        Canvas canvas = getHolder().lockCanvas();
-
-        if (canvas == null)
+        else
           {
-            return;
+            final Canvas canvas = getHolder().lockCanvas();
+
+            if (canvas != null)
+              {
+                final int width = frame.getWidth();
+                final int height = frame.getHeight();
+                final Rect source = new Rect(0, 0, width, height);
+                final float aspectRatio = Math.min((float)getWidth() / width, (float)getHeight() / height);
+                final int offsetX = (getWidth() - (int)(width * aspectRatio)) / 2;
+                final int offsetY = (getHeight() - (int)(height * aspectRatio)) / 2;
+                final Rect destination = new Rect(offsetX, offsetY, getWidth() - offsetX, getHeight() - offsetY);
+                canvas.drawBitmap(frame, source, destination, imagePaint);
+                getHolder().unlockCanvasAndPost(canvas);
+              }
           }
-
-        int w = frame.getWidth();
-        int h = frame.getHeight();
-        Rect src = new Rect(0, 0, w, h);
-
-        float by = Math.min((float) getWidth() / w, (float) getHeight() / h);
-        int offsetX = (getWidth() - (int) (w * by)) / 2;
-        int offsetY = (getHeight() - (int) (h * by)) / 2;
-        Rect dst = new Rect(offsetX, offsetY, getWidth() - offsetX, getHeight() - offsetY);
-        canvas.drawBitmap(frame, src, dst, mFramePaint);
-        getHolder().unlockCanvasAndPost(canvas);
       }
 
-    // Called when the width or height of liveview frame image is changed.
-    private void onDetectedFrameSizeChanged(int width, int height)
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    private void onDetectedFrameSizeChanged (final int width, final int height)
       {
         log.debug("Change of aspect ratio detected");
-        mPreviousWidth = width;
-        mPreviousHeight = height;
+        prevoiusWidth = width;
+        previousHeight = height;
         drawBlackFrame();
         drawBlackFrame();
         drawBlackFrame(); // delete triple buffers
      }
 
-    // Draw black screen.
+    /*******************************************************************************************************************
+     *
+     * Renders black on the view.
+     *
+     ******************************************************************************************************************/
     private void drawBlackFrame()
       {
-        Canvas canvas = getHolder().lockCanvas();
+        final Canvas canvas = getHolder().lockCanvas();
 
-        if (canvas == null)
+        if (canvas != null)
           {
-            return;
+            final Paint blackPaint = new Paint();
+            blackPaint.setColor(Color.BLACK);
+            blackPaint.setStyle(Paint.Style.FILL);
+
+            canvas.drawRect(new Rect(0, 0, getWidth(), getHeight()), blackPaint);
+            getHolder().unlockCanvasAndPost(canvas);
           }
-
-        Paint paint = new Paint();
-        paint.setColor(Color.BLACK);
-        paint.setStyle(Paint.Style.FILL);
-
-        canvas.drawRect(new Rect(0, 0, getWidth(), getHeight()), paint);
-        getHolder().unlockCanvasAndPost(canvas);
       }
   }
