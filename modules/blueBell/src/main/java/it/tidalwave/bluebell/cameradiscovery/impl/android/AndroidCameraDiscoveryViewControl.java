@@ -25,7 +25,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.bluebell.mobile.android;
+package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
 import javax.annotation.Nonnull;
 import android.app.Activity;

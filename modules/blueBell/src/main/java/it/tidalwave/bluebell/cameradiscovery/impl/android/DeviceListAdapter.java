@@ -25,7 +25,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.bluebell.mobile.android;
+package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
 import android.content.Context;
 import android.text.Html;

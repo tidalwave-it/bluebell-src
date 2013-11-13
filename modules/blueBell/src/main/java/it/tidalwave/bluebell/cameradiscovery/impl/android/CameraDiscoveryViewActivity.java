@@ -25,7 +25,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.bluebell.mobile.android;
+package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.sony.CameraDevice;
@@ -44,6 +44,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import it.tidalwave.bluebell.mobile.android.BlueBellApplication;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
