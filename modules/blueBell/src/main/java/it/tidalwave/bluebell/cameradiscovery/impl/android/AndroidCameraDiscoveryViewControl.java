@@ -34,6 +34,7 @@ import android.net.wifi.WifiManager;
 import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryView;
 import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryViewControl;
 import static android.content.Context.WIFI_SERVICE;
+import it.tidalwave.bluebell.mobile.R;
 
 /***********************************************************************************************************************
  *
@@ -46,19 +47,18 @@ import static android.content.Context.WIFI_SERVICE;
 public class AndroidCameraDiscoveryViewControl extends DefaultCameraDiscoveryViewControl
   {
     @Nonnull
-    private final Activity activity;
+    private final WifiManager wifiManager;
 
     public AndroidCameraDiscoveryViewControl (final @Nonnull CameraDiscoveryView view)
       {
         super(view);
-        activity = (Activity)view;
+        wifiManager = (WifiManager)((Activity)view).getSystemService(WIFI_SERVICE); // FIXME: getContext
+        // TODO: poll and notify state changes
       }
 
     @Override
     protected void populateWiFi()
       {
-        final WifiManager wifiManager = (WifiManager)activity.getSystemService(WIFI_SERVICE); // FIXME: getContext
-
         if (wifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED)
           {
             final WifiInfo wifiInfo = wifiManager.getConnectionInfo();
