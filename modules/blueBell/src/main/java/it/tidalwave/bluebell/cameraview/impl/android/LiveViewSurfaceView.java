@@ -54,7 +54,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class X extends SurfaceView implements LiveViewPresentation, SurfaceHolder.Callback
+public class LiveViewSurfaceView extends SurfaceView implements LiveViewPresentation, SurfaceHolder.Callback
   {
     private volatile boolean running;
 
@@ -77,7 +77,7 @@ public class X extends SurfaceView implements LiveViewPresentation, SurfaceHolde
      * @param context
      *
      ******************************************************************************************************************/
-    public X (final @Nonnull Context context)
+    public LiveViewSurfaceView (final @Nonnull Context context)
       {
         super(context);
         getHolder().addCallback(this);
@@ -90,7 +90,7 @@ public class X extends SurfaceView implements LiveViewPresentation, SurfaceHolde
      * @param attrs
      *
      ******************************************************************************************************************/
-    public X (final @Nonnull Context context, final @Nonnull AttributeSet attrs)
+    public LiveViewSurfaceView (final @Nonnull Context context, final @Nonnull AttributeSet attrs)
       {
         super(context, attrs);
         getHolder().addCallback(this);
@@ -104,7 +104,7 @@ public class X extends SurfaceView implements LiveViewPresentation, SurfaceHolde
      * @param defStyle
      *
      ******************************************************************************************************************/
-    public X (final @Nonnull Context context, final @Nonnull AttributeSet attrs, final int defStyle)
+    public LiveViewSurfaceView (final @Nonnull Context context, final @Nonnull AttributeSet attrs, final int defStyle)
       {
         super(context, attrs, defStyle);
         getHolder().addCallback(this);
