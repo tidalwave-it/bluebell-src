@@ -32,6 +32,8 @@ import it.tidalwave.sony.SimpleLiveviewSlicer.Payload;
 
 /***********************************************************************************************************************
  *
+ * @stereotype Presentation
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *

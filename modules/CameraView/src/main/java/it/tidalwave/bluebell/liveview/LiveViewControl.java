@@ -29,6 +29,10 @@ package it.tidalwave.bluebell.liveview;
 
 /***********************************************************************************************************************
  *
+ * The control of the {@link LiveView}.
+ * 
+ * @stereotype Control
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
