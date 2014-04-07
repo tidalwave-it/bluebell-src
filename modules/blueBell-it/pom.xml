@@ -63,14 +63,14 @@
         </dependency>
         <dependency>
             <groupId>it.tidalwave.bluebell</groupId>
-            <artifactId>blueBell</artifactId>
+            <artifactId>bluebell-application</artifactId>
             <type>apk</type>
-            <version>1.0-ALPHA-1-SNAPSHOT</version>
+            <version>1.0-ALPHA-1-SNAPSHOT</version> <!-- FIXME -->
             <classifier>${zipaligned-classifier}</classifier> <!--  classifier set according to the ran profile -->
         </dependency>
         <dependency>
             <groupId>it.tidalwave.bluebell</groupId>
-            <artifactId>blueBell</artifactId>
+            <artifactId>bluebell-application</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
