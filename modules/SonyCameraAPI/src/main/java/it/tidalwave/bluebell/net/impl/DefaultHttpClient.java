@@ -38,6 +38,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import it.tidalwave.bluebell.net.HttpClient;
 import lombok.Cleanup;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -45,6 +46,7 @@ import lombok.Cleanup;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class DefaultHttpClient implements HttpClient 
   {
     /*******************************************************************************************************************
@@ -68,6 +70,7 @@ public class DefaultHttpClient implements HttpClient
     public String get (final @Nonnull String urlAsString, final @Nonnull int timeout)
       throws IOException 
       {
+        log.info(">>>> GET {}", urlAsString);
         final URL url = new URL(urlAsString);
         final @Cleanup("disconnect") HttpURLConnection connection = (HttpURLConnection)url.openConnection();
         connection.setRequestMethod("GET");
