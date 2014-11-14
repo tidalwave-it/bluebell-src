@@ -1,0 +1,32 @@
+apply plugin: 'java'
+
+description = 'blueBell - Sony Camera API'
+sourceCompatibility = 1.5
+targetCompatibility = 1.5
+
+configurations {
+    provided
+    lombok
+}
+
+sourceSets {
+    main.compileClasspath += configurations.provided
+}
+
+sourceSets.each{ sourceSet -> 
+    sourceSet.compileClasspath += configurations.lombok
+    sourceSet.ext.delombok = new File(buildDir, "generated-src/delombok/" + sourceSet.name);
+}
+
+dependencies {
+    compile 'com.google.code.findbugs:jsr305:3.0.0'
+    compile 'org.slf4j:slf4j-api:1.6.1'
+
+    provided 'org.json:json:20080701'
+    provided 'xpp3:xpp3:1.1.4c'
+    lombok 'org.projectlombok:lombok:1.14.8'
+
+    testCompile 'org.testng:testng:6.1.1'
+    testCompile 'org.hamcrest:hamcrest-all:1.1'
+}
+

@@ -1,0 +1,37 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+
+description = 'blueBell - Application'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "21.1.0"
+
+    defaultConfig {
+        applicationId "it.tidalwave.bluebell"
+        minSdkVersion 15
+        targetSdkVersion 19
+        versionCode 1
+        versionName "1.0"
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    compile(project(':bluebell-modules:camera-view')) {
+        transitive = false
+    }
+    compile(project(':bluebell-modules:sony-camera-api')) {
+        transitive = false
+    }
+
+    //    compile 'de.akquinet.android.androlog:androlog:1.0.4'
+    compile 'org.slf4j:slf4j-android:1.6.1-RC1'
+    compile 'com.google.code.findbugs:jsr305:3.0.0'
+
+    provided 'org.projectlombok:lombok:1.14.8'
+    apt 'org.projectlombok:lombok:1.14.8'
+}
