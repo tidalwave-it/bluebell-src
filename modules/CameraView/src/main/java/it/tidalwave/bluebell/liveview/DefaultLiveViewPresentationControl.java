@@ -114,7 +114,7 @@ public class DefaultLiveViewPresentationControl implements LiveViewPresentationC
                     presentation.stop();
                   }
               }
-          });
+          };
 
           new Thread(runnable).start();
       }
