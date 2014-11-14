@@ -15,7 +15,6 @@ sourceSets {
 
 sourceSets.each{ sourceSet -> 
     sourceSet.compileClasspath += configurations.lombok
-    sourceSet.ext.delombok = new File(buildDir, "generated-src/delombok/" + sourceSet.name);
 }
 
 dependencies {
