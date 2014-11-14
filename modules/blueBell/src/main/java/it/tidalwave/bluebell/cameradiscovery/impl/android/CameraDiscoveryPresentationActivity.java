@@ -225,6 +225,31 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
 
     /*******************************************************************************************************************
      *
+     *
+     *
+     ******************************************************************************************************************/
+    public void onSearchButtonClicked (final @Nonnull View view)
+      {
+        control.startDiscovery();
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    private void onDeviceClicked (final @Nonnull AdapterView<?> parent,
+                                  final @Nonnull View view, 
+                                  final int position, 
+                                  final long id)
+      {
+        final ListView listView = (ListView) parent;
+        final CameraDevice device = (CameraDevice) listView.getAdapter().getItem(position);
+        launchSampleActivity(device);
+      }
+    
+    /*******************************************************************************************************************
+     *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
@@ -240,6 +265,14 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
         lvDevices = (ListView)findViewById(R.id.list_device);
         tvWifiStatus = (TextView)findViewById(R.id.text_wifi_ssid);
         btSearch = findViewById(R.id.button_search);
+        
+        lvDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() 
+          {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
+              {
+                  onDeviceClicked(parent, view, position, id);
+              }
+          });
 
         handler = new Handler();
         listAdapter = new DeviceListAdapter(this);
@@ -257,29 +290,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
         super.onResume();
         control.activate();
         lvDevices.setAdapter(listAdapter);
-
-        lvDevices.setOnItemClickListener(new AdapterView.OnItemClickListener()
-          {
-            @Override
-            public void onItemClick (AdapterView<?> parent, View view, int position, long id)
-              {
-                ListView listView = (ListView) parent;
-                CameraDevice device = (CameraDevice) listView.getAdapter().getItem(position);
-                launchSampleActivity(device);
-              }
-          });
-
-        btSearch.setOnClickListener(new View.OnClickListener()
-          {
-            @Override
-            public void onClick (View v)
-              {
-                control.startDiscovery();
-              }
-          });
-
         control.initialize();
-
         log.debug("onResume() completed.");
       }
 
