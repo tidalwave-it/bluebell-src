@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello blueBell!</string>
-    <!--<string name="app_name">blueBell</string>-->
     
-    <string name="app_name">Camera Remote API Sample</string>
-    <string name="sample_camera">Camera Remote API Sample</string>
+    <string name="app_name">blueBell</string>
+    <string name="sample_camera">blueBell</string>
     <string name="msg_wifi_disconnect">(Wi-Fi disconnected)</string>
     <string name="button_take_picture">Take Picture</string>
     <string name="button_rec_start">Start movie\nrecording</string>
