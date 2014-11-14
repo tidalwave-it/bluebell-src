@@ -46,8 +46,8 @@
     <properties>
         <netbeans.compile.on.save>test</netbeans.compile.on.save>
         
-        <tft.javac.source>1.5</tft.javac.source>
-        <tft.javac.target>1.5</tft.javac.target>
+        <tft.javac.source>1.7</tft.javac.source>
+        <tft.javac.target>1.7</tft.javac.target>
     </properties>
 
     <dependencyManagement>

@@ -2,8 +2,8 @@ apply plugin: 'java'
 
 description = 'blueBell - Camera View'
 
-sourceCompatibility = 1.5
-targetCompatibility = 1.5
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
 configurations {
     provided
