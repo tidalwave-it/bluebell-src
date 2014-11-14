@@ -63,7 +63,7 @@ public class DefaultLiveViewPresentationControl implements LiveViewPresentationC
         presentation.start();
 
         // A thread for retrieving liveview data from server.
-        new Thread()
+        final Runnable runnable = new Runnable()
           {
             @Override
             public void run()
@@ -114,7 +114,9 @@ public class DefaultLiveViewPresentationControl implements LiveViewPresentationC
                     presentation.stop();
                   }
               }
-          }.start();
+          });
+
+          new Thread(runnable).start();
       }
 
     @Override
