@@ -489,7 +489,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
         log.info("onCreate({})", savedInstanceState);
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.activity_sample_camera);
+        setContentView(R.layout.activity_camera_presentation);
 
         ivPhotoBox = (ImageView)findViewById(R.id.image_picture_wipe);
         rbShootModeSelector = (RadioGroup)findViewById(R.id.radio_group_shoot_mode);

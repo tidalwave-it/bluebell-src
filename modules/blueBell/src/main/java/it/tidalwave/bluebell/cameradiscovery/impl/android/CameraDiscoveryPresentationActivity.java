@@ -259,7 +259,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
         log.info("onCreate({})", savedInstanceState);
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.activity_device_discovery);
+        setContentView(R.layout.activity_camera_discovery_presentation);
         setProgressBarIndeterminateVisibility(false);
 
         lvDevices = (ListView)findViewById(R.id.list_device);
