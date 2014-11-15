@@ -27,14 +27,13 @@
  */
 package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import android.net.wifi.WifiManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.wifi.WifiManager;
 import it.tidalwave.sony.CameraDeviceDescriptor;
 import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryPresentationControl;
@@ -117,8 +116,10 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
      * 
      ******************************************************************************************************************/
     @Override
-    public void notifyCameraDeviceSelected (final @Nonnull CameraDeviceDescriptor cameraDeviceDescriptor)
+    public void notifyCameraDeviceSelected (final @Nonnegative int index)
       {
+        final CameraDeviceDescriptor cameraDeviceDescriptor = cameraDeviceDescriptors.get(index);
+        
         if (!cameraDeviceDescriptor.createDevice().hasApiService("camera"))
           {
             presentation.notifySelectedDeviceNotSupported();
@@ -176,17 +177,5 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
     private void unregisterWiFiReceiver() 
       {
         context.unregisterReceiver(wiFiReceiver);
-      }
-
-    void setCameraDeviceDescriptors (final @Nonnull List<CameraDeviceDescriptor> cameraDeviceDescriptors) 
-      {
-        cameraDeviceDescriptors.clear();
-        cameraDeviceDescriptors.addAll(cameraDeviceDescriptors);
-        // FIXNE: notify?
-      }
-
-    List<CameraDeviceDescriptor> getCameraDeviceDescriptors() 
-      {
-        return new CopyOnWriteArrayList<>(cameraDeviceDescriptors);
       }
   }

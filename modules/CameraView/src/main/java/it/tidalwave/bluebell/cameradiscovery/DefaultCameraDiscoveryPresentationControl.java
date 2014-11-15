@@ -28,8 +28,10 @@
 package it.tidalwave.bluebell.cameradiscovery;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 import it.tidalwave.sony.CameraDeviceDescriptor;
 import it.tidalwave.sony.SsdpDiscoverer;
 import it.tidalwave.sony.impl.DefaultSsdpDiscoverer;
@@ -145,6 +147,32 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
 
     /*******************************************************************************************************************
      *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public Serializable getMemento() 
+      {
+        return new ArrayList<>(cameraDeviceDescriptors);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void setMemento (final @Nullable Serializable memento) 
+      {
+        if (memento != null)
+          {
+            cameraDeviceDescriptors.clear();
+            cameraDeviceDescriptors.addAll((List<? extends CameraDeviceDescriptor>)memento);
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
      * Sets the current SSID of the Wifi network.
      * 
      * @param       ssid        the SSID
@@ -171,7 +199,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
               }
           }
       }
-
+    
     /*******************************************************************************************************************
      *
      * Checks the Wifi status. This method is abstract since its actual implementation depends on Android. It must be
@@ -180,6 +208,5 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
      ******************************************************************************************************************/
     protected abstract void checkWifiStatusChange();
     
-
     protected abstract void notifyDevicesChanged();
   }

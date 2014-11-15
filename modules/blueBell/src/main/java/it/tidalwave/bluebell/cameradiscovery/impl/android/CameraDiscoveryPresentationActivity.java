@@ -29,8 +29,6 @@ package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
-import java.io.Serializable;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Html;
@@ -41,7 +39,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import it.tidalwave.sony.CameraDeviceDescriptor;
 import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 import it.tidalwave.bluebell.mobile.R;
 import lombok.extern.slf4j.Slf4j;
@@ -58,11 +55,9 @@ import static it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecoratorFacto
 @Slf4j
 public class CameraDiscoveryPresentationActivity extends Activity implements CameraDiscoveryPresentation
   {
-    private static final String CAMERA_DEVICES = CameraDiscoveryPresentationActivity.class.getName() + ".devices";
+    private static final String MEMENTO = CameraDiscoveryPresentationActivity.class.getName() + ".memento";
     
     private AndroidCameraDiscoveryPresentationControl control;
-
-    private DeviceListAdapter listAdapter;
 
     private ListView lvCameraDevices;
 
@@ -199,7 +194,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
           {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
               {
-                control.notifyCameraDeviceSelected(control.getCameraDeviceDescriptors().get(position));
+                control.notifyCameraDeviceSelected(position);
               }
           });
 
@@ -207,9 +202,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
                                                                 CameraDiscoveryPresentation.class), this);
         if (savedInstanceState != null)
           {
-            final List<CameraDeviceDescriptor> cameraDeviceDescriptors = 
-                    (List<CameraDeviceDescriptor>) savedInstanceState.getSerializable(CAMERA_DEVICES);
-            control.setCameraDeviceDescriptors(cameraDeviceDescriptors);
+            control.setMemento(savedInstanceState.getSerializable(MEMENTO));
           }
         
         lvCameraDevices.setAdapter(control.getDeviceListAdapter());
@@ -224,8 +217,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     protected void onSaveInstanceState (final @Nonnull Bundle outState) 
       {
         super.onSaveInstanceState(outState); 
-        final List<CameraDeviceDescriptor> cameraDeviceDescriptors = control.getCameraDeviceDescriptors();
-        outState.putSerializable(CAMERA_DEVICES, (Serializable)cameraDeviceDescriptors);
+        outState.putSerializable(MEMENTO, control.getMemento());
       }
     
     /*******************************************************************************************************************

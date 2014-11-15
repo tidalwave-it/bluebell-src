@@ -28,6 +28,9 @@
 package it.tidalwave.bluebell.cameradiscovery;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nullable;
+import java.io.Serializable;
 import it.tidalwave.sony.CameraDeviceDescriptor;
 
 /***********************************************************************************************************************
@@ -63,13 +66,32 @@ public interface CameraDiscoveryPresentationControl
     
     /*******************************************************************************************************************
      *
-     * Shows the presentation for controlling the given {@link CameraDeviceDescriptor} if it exposes an API for remote control;
-     * otherwise notify that the device is not compatible.
+     * Returns a {@link Serializable} object that represents the internal status of the controller.
      * 
-     * TODO: this should be moved into a global application controller
-     *
-     * @param cameraDeviceDescriptor    the camera
+     * @return      the memento
      * 
      ******************************************************************************************************************/
-    public void notifyCameraDeviceSelected (@Nonnull CameraDeviceDescriptor cameraDeviceDescriptor);
+    @Nonnull
+    public Serializable getMemento();
+    
+    /*******************************************************************************************************************
+     *
+     * Sets the internal status of the controller from a previously retrieved memento.
+     * 
+     * @param       memento     the memento
+     * @see #getMemento() 
+     * 
+     ******************************************************************************************************************/
+    public void setMemento (@Nullable Serializable memento);
+    
+    /*******************************************************************************************************************
+     *
+     * Notifies that the presentation has selected a {@link CameraDeviceDescriptor}. if it exposes an API for remote 
+     * control, a presentation for controlling it will be shown. Otherwise a notification that the device is not 
+     * compatible will be rendered.
+     * 
+     * @param index    the index of the selected camera
+     * 
+     ******************************************************************************************************************/
+    public void notifyCameraDeviceSelected (@Nonnegative int index);
   }
