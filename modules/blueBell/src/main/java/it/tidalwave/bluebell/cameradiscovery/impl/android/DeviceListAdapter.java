@@ -40,7 +40,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import it.tidalwave.bluebell.mobile.R;
 import it.tidalwave.sony.CameraDevice;
-import it.tidalwave.sony.CameraDevice.ApiService;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
