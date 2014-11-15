@@ -60,16 +60,22 @@ public class DefaultCameraPresentationControl implements CameraPresentationContr
     @Nonnull
     private final CameraApi cameraApi;
 
-    private CameraObserver cameraObserver;
+    @Nonnull
+    private final CameraObserver cameraObserver;
 
-    private LiveViewPresentationControl liveViewPresentationControl;
+    @Nonnull
+    private final LiveViewPresentationControl liveViewPresentationControl;
 
     private final Set<String> availableApis = Collections.synchronizedSet(new TreeSet<String>());
 
     /*******************************************************************************************************************
      *
+     * Creates a new instance.
      *
-     *
+     * @param presentation              the controlled presentation
+     * @param liveViewPresentation      the controller of the live view
+     * @param cameraDevice              the current device
+     * 
      ******************************************************************************************************************/
     public DefaultCameraPresentationControl (final @Nonnull CameraPresentation presentation,
                                              final @Nonnull LiveViewPresentation liveViewPresentation,
@@ -398,7 +404,7 @@ public class DefaultCameraPresentationControl implements CameraPresentationContr
           {
             final AvailableShootModeResponse response = cameraApi.getAvailableShootMode();
             final String currentMode = response.getCurrentMode();
-            final List<String> availableModes = new ArrayList<String>(response.getModes());
+            final List<String> availableModes = new ArrayList<>(response.getModes());
             availableModes.retainAll(Arrays.asList(SHOOT_MODE_MOVIE, SHOOT_MODE_STILL));
             presentation.setShootModeControl(availableModes, currentMode);
           }
