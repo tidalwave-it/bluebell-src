@@ -1,4 +1,6 @@
 
+Explain: try-with-resources java 6 vs 7
+Explain: main Lombok annotations
 
 
 Notes:

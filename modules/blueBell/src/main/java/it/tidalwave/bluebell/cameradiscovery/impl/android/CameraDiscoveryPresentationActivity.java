@@ -60,7 +60,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
 
     private DeviceListAdapter listAdapter;
 
-    private ListView lvDevices;
+    private ListView lvCameraDevices;
 
     private TextView tvWifiStatus;
 
@@ -224,11 +224,11 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
         setContentView(R.layout.activity_camera_discovery_presentation);
         setProgressBarIndeterminateVisibility(false);
 
-        lvDevices = (ListView)findViewById(R.id.list_device);
-        tvWifiStatus = (TextView)findViewById(R.id.text_wifi_ssid);
-        btSearch = (Button)findViewById(R.id.button_search);
+        lvCameraDevices = (ListView)findViewById(R.id.lvCameraDevices);
+        tvWifiStatus = (TextView)findViewById(R.id.tvWifiStatus);
+        btSearch = (Button)findViewById(R.id.btSearch);
         
-        lvDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() 
+        lvCameraDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() 
           {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
               {
@@ -237,7 +237,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
           });
 
         listAdapter = new DeviceListAdapter(this);
-        lvDevices.setAdapter(listAdapter);
+        lvCameraDevices.setAdapter(listAdapter);
       }
 
     /*******************************************************************************************************************
