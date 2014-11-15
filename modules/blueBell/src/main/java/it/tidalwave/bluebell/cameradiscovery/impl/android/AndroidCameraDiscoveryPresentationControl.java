@@ -40,6 +40,7 @@ import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryPresentationC
 import it.tidalwave.bluebell.cameraview.impl.android.CameraPresentationActivity;
 import lombok.Getter;
 import static android.content.Context.WIFI_SERVICE;
+import android.os.Handler;
 
 /***********************************************************************************************************************
  *
@@ -56,6 +57,8 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
     
     @Getter
     private final DeviceListAdapter deviceListAdapter;
+    
+    private final Handler handler = new Handler();
     
     /*******************************************************************************************************************
      *
@@ -155,7 +158,14 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
     @Override
     protected void notifyDevicesChanged() 
       {
-        deviceListAdapter.notifyDataSetChanged();
+        handler.post(new Runnable() 
+          {
+            @Override
+            public void run() 
+              {
+                deviceListAdapter.notifyDataSetChanged();
+              }
+          });
       }
     
     /*******************************************************************************************************************
