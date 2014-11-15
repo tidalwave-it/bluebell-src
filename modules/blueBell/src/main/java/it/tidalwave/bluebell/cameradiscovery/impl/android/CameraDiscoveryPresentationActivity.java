@@ -320,6 +320,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
             final BlueBellApplication application = (BlueBellApplication) getApplication();
             application.setCameraDevice(device);
             final Intent intent = new Intent(this, CameraPresentationActivity.class);
+            // FIXME: pass the device as extra
             startActivity(intent);
           }
         else
