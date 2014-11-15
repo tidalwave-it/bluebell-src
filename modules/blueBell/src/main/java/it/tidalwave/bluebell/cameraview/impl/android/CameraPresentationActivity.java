@@ -47,6 +47,7 @@ import it.tidalwave.bluebell.cameraview.DefaultCameraPresentationControl;
 import it.tidalwave.bluebell.mobile.R;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecoratorFactory.*;
+import javax.annotation.Nullable;
 
 /***********************************************************************************************************************
  *
@@ -345,7 +346,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      *
      ******************************************************************************************************************/
     @Override
-    protected void onCreate (final @Nonnull Bundle savedInstanceState)
+    protected void onCreate (final @Nullable Bundle savedInstanceState)
       {
         log.info("onCreate({})", savedInstanceState);
         super.onCreate(savedInstanceState);
