@@ -265,4 +265,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
         control.stop();
         super.onPause();
       }
+
+    // TODO: should save the device list as part of its state, otherwise it restarts scanning at resume
+    // This requires CameraDevice to be Serializable
  }
