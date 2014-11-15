@@ -34,6 +34,14 @@ import lombok.Setter;
 
 /***********************************************************************************************************************
  *
+ * This class can be used as a customized context, containing shared resources to the whole application. 
+ * In each {@link Activity} it can be retrieved as:
+ * 
+ * <pre>
+ * final BlueBellApplication application = (BlueBellApplication)getApplication();
+ * </pre>
+ * 
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
