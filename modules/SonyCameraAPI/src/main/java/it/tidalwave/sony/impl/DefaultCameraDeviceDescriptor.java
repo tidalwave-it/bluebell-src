@@ -35,7 +35,7 @@ import java.util.List;
 import java.io.IOException;
 import it.tidalwave.bluebell.net.impl.DefaultHttpClient;
 import it.tidalwave.bluebell.net.impl.XmlElement;
-import it.tidalwave.sony.CameraDevice;
+import it.tidalwave.sony.CameraDeviceDescriptor;
 import it.tidalwave.sony.CameraService;
 import lombok.Getter;
 import lombok.ToString;
@@ -50,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j @ToString
-public class DefaultCameraDevice implements CameraDevice
+public class DefaultCameraDeviceDescriptor implements CameraDeviceDescriptor
   {
     private static final long serialVersionUID = 56546340987457L;
         
@@ -106,7 +106,7 @@ public class DefaultCameraDevice implements CameraDevice
      *
      ******************************************************************************************************************/
     @CheckForNull
-    public static DefaultCameraDevice fetch (@Nonnull String ddUrl)
+    public static DefaultCameraDeviceDescriptor fetch (@Nonnull String ddUrl)
       {
         String ddXml = "";
         try
@@ -127,18 +127,18 @@ public class DefaultCameraDevice implements CameraDevice
 
         log.info("response XLM element: {}", rootElement);
         // "root"
-        DefaultCameraDevice device = null;
+        DefaultCameraDeviceDescriptor deviceDescriptor = null;
 
         if ("root".equals(rootElement.getTagName()))
           {
-            device = new DefaultCameraDevice();
-            device.ddUrl = ddUrl;
+            deviceDescriptor = new DefaultCameraDeviceDescriptor();
+            deviceDescriptor.ddUrl = ddUrl;
 
             // "device"
             final XmlElement deviceElement = rootElement.findChild("device");
-            device.friendlyName = deviceElement.findChild("friendlyName").getValue();
-            device.modelName = deviceElement.findChild("modelName").getValue();
-            device.udn = deviceElement.findChild("UDN").getValue();
+            deviceDescriptor.friendlyName = deviceElement.findChild("friendlyName").getValue();
+            deviceDescriptor.modelName = deviceElement.findChild("modelName").getValue();
+            deviceDescriptor.udn = deviceElement.findChild("UDN").getValue();
 
             // "iconList"
             final XmlElement iconListElement = deviceElement.findChild("iconList");
@@ -151,7 +151,7 @@ public class DefaultCameraDevice implements CameraDevice
                   {
                     final String _uri = iconElement.findChild("url").getValue();
                     final String hostUrl = toSchemeAndHost(ddUrl);
-                    device.iconUrl = hostUrl + _uri;
+                    deviceDescriptor.iconUrl = hostUrl + _uri;
                   }
               }
 
@@ -164,12 +164,12 @@ public class DefaultCameraDevice implements CameraDevice
               {
                 final String serviceName = wApiServiceElement.findChild("av:X_ScalarWebAPI_ServiceType").getValue();
                 final String actionUrl = wApiServiceElement.findChild("av:X_ScalarWebAPI_ActionList_URL").getValue();
-                device.addApiService(serviceName, actionUrl);
+                deviceDescriptor.addApiService(serviceName, actionUrl);
               }
           }
 
         log.debug("fetch() parsing XML done.");
-        return device;
+        return deviceDescriptor;
       }
 
     /*******************************************************************************************************************

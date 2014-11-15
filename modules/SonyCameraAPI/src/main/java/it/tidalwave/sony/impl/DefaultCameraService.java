@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import it.tidalwave.sony.CameraApi;
-import it.tidalwave.sony.CameraDevice.ApiService;
+import it.tidalwave.sony.CameraDeviceDescriptor.ApiService;
 import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.sony.CameraService;
 import lombok.ToString;

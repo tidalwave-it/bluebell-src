@@ -38,7 +38,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import it.tidalwave.bluebell.mobile.R;
-import it.tidalwave.sony.CameraDevice;
+import it.tidalwave.sony.CameraDeviceDescriptor;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -53,7 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class DeviceListAdapter extends BaseAdapter
   {
-    private final List<CameraDevice> devices = new ArrayList<>();
+    private final List<CameraDeviceDescriptor> cameraDeviceDescriptors = new ArrayList<>();
 
     private final LayoutInflater inflater;
 
@@ -62,28 +62,28 @@ class DeviceListAdapter extends BaseAdapter
         inflater = LayoutInflater.from(context);
       }
 
-    public void addDevice (final @Nonnull CameraDevice device)
+    public void addDevice (final @Nonnull CameraDeviceDescriptor cameraDeviceDescriptor)
       {
-        devices.add(device);
+        cameraDeviceDescriptors.add(cameraDeviceDescriptor);
         notifyDataSetChanged();
       }
 
     public void clearDevices()
       {
-        devices.clear();
+        cameraDeviceDescriptors.clear();
         notifyDataSetChanged();
       }
 
     @Override
     public int getCount()
       {
-        return devices.size();
+        return cameraDeviceDescriptors.size();
       }
 
     @Override
     public Object getItem (final int position)
       {
-        return devices.get(position);
+        return cameraDeviceDescriptors.get(position);
       }
 
     @Override
@@ -104,13 +104,14 @@ class DeviceListAdapter extends BaseAdapter
             layout = (ViewGroup)inflater.inflate(R.layout.device_list_item, null);
           }
 
-        final CameraDevice device = (CameraDevice)getItem(position);
+        final CameraDeviceDescriptor cameraDeviceDescriptor = (CameraDeviceDescriptor)getItem(position);
 //        log.info(">>>> found {}, services: {}", device.getFriendlyName(), device.getApiServices());
-        final String htmlLabel = String.format("%s %s", device.getModelName(), device.getFriendlyName());
+        final String htmlLabel = String.format("%s %s", cameraDeviceDescriptor.getModelName(), 
+                                                        cameraDeviceDescriptor.getFriendlyName());
         final TextView tvDeviceName = (TextView)layout.findViewById(R.id.tv_device_name);
         final TextView tvDeviceAddress = (TextView)layout.findViewById(R.id.tv_device_address);
         tvDeviceName.setText(htmlLabel);
-        tvDeviceAddress.setText(device.getIpAddress());
+        tvDeviceAddress.setText(cameraDeviceDescriptor.getIpAddress());
 
         return layout;
       }

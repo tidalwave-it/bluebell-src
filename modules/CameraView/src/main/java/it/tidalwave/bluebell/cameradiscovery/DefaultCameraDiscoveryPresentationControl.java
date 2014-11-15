@@ -30,7 +30,7 @@ package it.tidalwave.bluebell.cameradiscovery;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-import it.tidalwave.sony.CameraDevice;
+import it.tidalwave.sony.CameraDeviceDescriptor;
 import it.tidalwave.sony.SsdpDiscoverer;
 import it.tidalwave.sony.impl.DefaultSsdpDiscoverer;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +56,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
     
     private String currentSsid = NO_SSID;
 
-    private final List<CameraDevice> devices = new ArrayList<>();
+    private final List<CameraDeviceDescriptor> cameraDeviceDescriptors = new ArrayList<>();
 
     /*******************************************************************************************************************
      *
@@ -69,7 +69,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
         checkWifiStatusChange();
         active = true;
         
-        if (devices.isEmpty())
+        if (cameraDeviceDescriptors.isEmpty())
           {
             startDiscovery();
           }
@@ -101,7 +101,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
       {
         if (!ssdpDiscoverer.isSearching())
           {
-            devices.clear();
+            cameraDeviceDescriptors.clear();
             presentation.disableSearchButton();
             presentation.clearDeviceList();
             presentation.notifySearchInProgress();
@@ -109,10 +109,10 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
             ssdpDiscoverer.search(new SsdpDiscoverer.Callback()
               {
                 @Override
-                public void onDeviceFound(final CameraDevice device)
+                public void onDeviceFound (final CameraDeviceDescriptor cameraDeviceDescriptor)
                   {
-                    log.info(">>>> Search device found: {}", device.getFriendlyName());
-                    presentation.renderOneMoreDevice(device);
+                    log.info(">>>> Search found device: {}", cameraDeviceDescriptor.getFriendlyName());
+                    presentation.renderOneMoreDevice(cameraDeviceDescriptor);
                   }
 
                 @Override
@@ -159,7 +159,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
             
             if (currentSsid.equals(NO_SSID))
               {
-                devices.clear();
+                cameraDeviceDescriptors.clear();
                 presentation.clearDeviceList();
                 presentation.renderWiFiState("WiFi disconnected"); // R.string.msg_wifi_disconnect FIXME drop
               }

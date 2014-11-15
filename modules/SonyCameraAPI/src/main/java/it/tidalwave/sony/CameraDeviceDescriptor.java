@@ -43,7 +43,7 @@ import lombok.ToString;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface CameraDevice extends Serializable
+public interface CameraDeviceDescriptor extends Serializable
   {
     /*******************************************************************************************************************
      *

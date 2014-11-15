@@ -32,7 +32,7 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 import java.net.URL;
-import it.tidalwave.sony.CameraDevice;
+import it.tidalwave.sony.CameraDeviceDescriptor;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.sony.CameraService;
@@ -66,11 +66,11 @@ public class DefaultSimpleSsdpClientTest
       throws Exception
       {
         final CountDownLatch latch = new CountDownLatch(1);
-        final AtomicReference<CameraDevice> deviceHolder = new AtomicReference<CameraDevice>();
+        final AtomicReference<CameraDeviceDescriptor> deviceHolder = new AtomicReference<CameraDeviceDescriptor>();
 
         fixture.search(new SsdpDiscoverer.Callback()
           {
-            public void onDeviceFound (final @Nonnull CameraDevice device)
+            public void onDeviceFound (final @Nonnull CameraDeviceDescriptor device)
               {
                 log.info("onDeviceFound({})", device);
                 deviceHolder.set(device);
@@ -91,9 +91,9 @@ public class DefaultSimpleSsdpClientTest
           });
 
         latch.await();
-        final CameraDevice device = deviceHolder.get();
-        assertThat(device, is(notNullValue()));
-        final CameraService service = device.createService();
+        final CameraDeviceDescriptor cameraDeviceDescriptor = deviceHolder.get();
+        assertThat(cameraDeviceDescriptor, is(notNullValue()));
+        final CameraService service = cameraDeviceDescriptor.createService();
         assertThat(service, is(notNullValue()));
         final CameraApi cameraApi = service.getApi();
         final CameraObserver observer = service.getObserver();

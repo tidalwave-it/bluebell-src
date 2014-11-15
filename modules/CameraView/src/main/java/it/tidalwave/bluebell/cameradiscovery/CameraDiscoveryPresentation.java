@@ -28,7 +28,7 @@
 package it.tidalwave.bluebell.cameradiscovery;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.sony.CameraDevice;
+import it.tidalwave.sony.CameraDeviceDescriptor;
 
 /***********************************************************************************************************************
  *
@@ -94,7 +94,7 @@ public interface CameraDiscoveryPresentation
      * Renders one more device in the list. 
      *
      ******************************************************************************************************************/
-    public void renderOneMoreDevice (@Nonnull CameraDevice device);
+    public void renderOneMoreDevice (@Nonnull CameraDeviceDescriptor cameraDeviceDescriptor);
 
     /*******************************************************************************************************************
      *

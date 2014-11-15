@@ -32,7 +32,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import it.tidalwave.sony.CameraDevice;
+import it.tidalwave.sony.CameraDeviceDescriptor;
 import it.tidalwave.bluebell.cameraview.CameraPresentation;
 import it.tidalwave.bluebell.cameraview.DefaultCameraPresentationControl;
 import it.tidalwave.bluebell.liveview.LiveViewPresentation;
@@ -59,18 +59,18 @@ public class AndroidCameraPresentationControl extends DefaultCameraPresentationC
      *
      * Creates a new instance.
      *
-     * @param presentation      the controlled presentation
-     * @param context           the Android {@link Context}
-     * @param liveView          the live view
-     * @param cameraDevice      the current device
+     * @param presentation              the controlled presentation
+     * @param context                   the Android {@link Context}
+     * @param liveView                  the live view
+     * @param cameraDeviceDescriptor    the current device
      * 
      ******************************************************************************************************************/
     public AndroidCameraPresentationControl (final @Nonnull CameraPresentation presentation,
                                              final @Nonnull Context context,
                                              final @Nonnull LiveViewPresentation liveView,
-                                             final @Nonnull CameraDevice cameraDevice)
+                                             final @Nonnull CameraDeviceDescriptor cameraDeviceDescriptor)
       {
-        super(presentation, liveView, cameraDevice);
+        super(presentation, liveView, cameraDeviceDescriptor);
         this.context = context;
       }
 

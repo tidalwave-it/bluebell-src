@@ -28,7 +28,7 @@
 package it.tidalwave.bluebell.cameradiscovery;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.sony.CameraDevice;
+import it.tidalwave.sony.CameraDeviceDescriptor;
 
 /***********************************************************************************************************************
  *
@@ -63,13 +63,13 @@ public interface CameraDiscoveryPresentationControl
     
     /*******************************************************************************************************************
      *
-     * Shows the presentation for controlling the given {@link CameraDevice} if it exposes an API for remote control;
+     * Shows the presentation for controlling the given {@link CameraDeviceDescriptor} if it exposes an API for remote control;
      * otherwise notify that the device is not compatible.
      * 
      * TODO: this should be moved into a global application controller
      *
-     * @param cameraDevice    the camera
+     * @param cameraDeviceDescriptor    the camera
      * 
      ******************************************************************************************************************/
-    public void showCameraPresentation (@Nonnull CameraDevice cameraDevice);
+    public void showCameraPresentation (@Nonnull CameraDeviceDescriptor cameraDeviceDescriptor);
   }

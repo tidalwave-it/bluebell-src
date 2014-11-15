@@ -38,7 +38,7 @@ import java.net.URL;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import it.tidalwave.sony.CameraDevice.ApiService;
+import it.tidalwave.sony.CameraDeviceDescriptor.ApiService;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraService;
 import it.tidalwave.sony.StatusCode;

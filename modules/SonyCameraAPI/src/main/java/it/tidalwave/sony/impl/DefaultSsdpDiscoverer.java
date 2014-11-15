@@ -36,7 +36,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
-import it.tidalwave.sony.CameraDevice;
+import it.tidalwave.sony.CameraDeviceDescriptor;
 import it.tidalwave.sony.SsdpDiscoverer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -162,7 +162,7 @@ public class DefaultSsdpDiscoverer implements SsdpDiscoverer
                             final String ddLocation = findParameterValue(ssdpReplyMessage, "LOCATION");
                             foundDevices.add(ddUsn);
 
-                            final CameraDevice device = DefaultCameraDevice.fetch(ddLocation);
+                            final CameraDeviceDescriptor device = DefaultCameraDeviceDescriptor.fetch(ddLocation);
 
                             if (device != null)
                               {

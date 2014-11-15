@@ -54,7 +54,7 @@ public interface SsdpDiscoverer
          * @param device API server device that is found by searching
          * 
          **************************************************************************************************************/
-        public void onDeviceFound (@Nonnull CameraDevice device);
+        public void onDeviceFound (@Nonnull CameraDeviceDescriptor device);
 
         /***************************************************************************************************************
          * 

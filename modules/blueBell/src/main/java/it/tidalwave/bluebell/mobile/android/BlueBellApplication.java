@@ -27,7 +27,7 @@
  */
 package it.tidalwave.bluebell.mobile.android;
 
-import it.tidalwave.sony.CameraDevice;
+import it.tidalwave.sony.CameraDeviceDescriptor;
 import android.app.Application;
 import lombok.Getter;
 import lombok.Setter;
@@ -49,5 +49,5 @@ import lombok.Setter;
 public class BlueBellApplication extends Application
   {
     @Getter @Setter
-    private CameraDevice cameraDevice;
+    private CameraDeviceDescriptor cameraDeviceDescriptor;
   }

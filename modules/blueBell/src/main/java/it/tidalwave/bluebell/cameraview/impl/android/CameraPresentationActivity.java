@@ -365,7 +365,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
         control = new AndroidCameraPresentationControl(createUIThreadDecorator(this, CameraPresentation.class),
                                                        this,
                                                        svLiveView, 
-                                                       application.getCameraDevice());
+                                                       application.getCameraDeviceDescriptor());
 
         log.info("onCreate() completed.");
       }

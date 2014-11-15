@@ -65,7 +65,7 @@ public interface CameraService
      *
      ******************************************************************************************************************/
     @CheckForNull
-    public CameraDevice.ApiService getApiService (@Nullable String serviceName);
+    public CameraDeviceDescriptor.ApiService getApiService (@Nullable String serviceName);
 
     /*******************************************************************************************************************
      *
@@ -73,7 +73,7 @@ public interface CameraService
      *
      ******************************************************************************************************************/
     @Nonnull
-    public List<CameraDevice.ApiService> getApiServices();
+    public List<CameraDeviceDescriptor.ApiService> getApiServices();
 
     /*******************************************************************************************************************
      *

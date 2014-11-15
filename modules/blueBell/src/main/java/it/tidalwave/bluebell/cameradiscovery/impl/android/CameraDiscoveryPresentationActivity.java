@@ -38,7 +38,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import it.tidalwave.sony.CameraDevice;
+import it.tidalwave.sony.CameraDeviceDescriptor;
 import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 import it.tidalwave.bluebell.mobile.R;
 import lombok.extern.slf4j.Slf4j;
@@ -158,7 +158,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
      *
      ******************************************************************************************************************/
     @Override
-    public void renderOneMoreDevice (final @Nonnull CameraDevice device)
+    public void renderOneMoreDevice (final @Nonnull CameraDeviceDescriptor device)
       {
         listAdapter.addDevice(device);
       }
@@ -205,9 +205,10 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
                                   final int position, 
                                   final long id)
       {
-        final ListView listView = (ListView) parent;
-        final CameraDevice device = (CameraDevice) listView.getAdapter().getItem(position);
-        control.showCameraPresentation(device);
+        final ListView listView = (ListView)parent;
+        final CameraDeviceDescriptor cameraDeviceDescriptor = 
+                (CameraDeviceDescriptor) listView.getAdapter().getItem(position);
+        control.showCameraPresentation(cameraDeviceDescriptor);
       }
     
     /*******************************************************************************************************************
@@ -267,5 +268,5 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
       }
 
     // TODO: should save the device list as part of its state, otherwise it restarts scanning at resume
-    // This requires CameraDevice to be Serializable
+    // This requires CameraDeviceDescriptor to be Serializable
  }

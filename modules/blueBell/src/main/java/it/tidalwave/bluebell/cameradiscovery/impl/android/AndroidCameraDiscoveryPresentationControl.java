@@ -34,7 +34,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
-import it.tidalwave.sony.CameraDevice;
+import it.tidalwave.sony.CameraDeviceDescriptor;
 import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryPresentationControl;
 import it.tidalwave.bluebell.cameraview.impl.android.CameraPresentationActivity;
@@ -112,20 +112,20 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
      * 
      ******************************************************************************************************************/
     @Override
-    public void showCameraPresentation (final @Nonnull CameraDevice device)
+    public void showCameraPresentation (final @Nonnull CameraDeviceDescriptor cameraDeviceDescriptor)
       {
-        if (!device.createService().hasApiService("camera"))
+        if (!cameraDeviceDescriptor.createService().hasApiService("camera"))
           {
             presentation.notifySelectedDeviceNotSupported();
           }
         else
           {
-            presentation.notifySelectedDeviceName(device.getFriendlyName());
+            presentation.notifySelectedDeviceName(cameraDeviceDescriptor.getFriendlyName());
             final BlueBellApplication application = (BlueBellApplication)((Activity)context).getApplication();
-            application.setCameraDevice(device);
-            // We can't pass the device as an Intent extra because CameraDevice is not Serializable (it contains
+            application.setCameraDeviceDescriptor(cameraDeviceDescriptor);
+            // We can't pass the device as an Intent extra because CameraDeviceDescriptor is not Serializable (it contains
             // references to other objects). 
-            // TODO: check whether CameraDevice can be refactored so it's Serializable
+            // TODO: check whether CameraDeviceDescriptor can be refactored so it's Serializable
             final Intent intent = new Intent(context, CameraPresentationActivity.class);
             context.startActivity(intent);
           }
