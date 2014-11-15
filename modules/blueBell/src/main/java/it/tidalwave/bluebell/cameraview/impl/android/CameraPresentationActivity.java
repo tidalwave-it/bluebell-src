@@ -45,8 +45,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import it.tidalwave.bluebell.mobile.R;
 import it.tidalwave.bluebell.mobile.android.BlueBellApplication;
-import it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecorator;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecoratorFactory.*;
 
 /***********************************************************************************************************************
  *
@@ -362,7 +362,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
         liveviewSurface = (LiveViewSurfaceView)findViewById(R.id.surfaceview_liveview);
 
         final BlueBellApplication application = (BlueBellApplication)getApplication();
-        control = new AndroidCameraPresentationControl(AndroidUIThreadDecorator.createProxy(this, CameraPresentation.class),
+        control = new AndroidCameraPresentationControl(createUIThreadDecorator(this, CameraPresentation.class),
                                                        this,
                                                        liveviewSurface, 
                                                        application.getCameraDevice());

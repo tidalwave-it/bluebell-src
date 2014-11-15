@@ -40,8 +40,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import it.tidalwave.bluebell.mobile.R;
-import it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecorator;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecoratorFactory.*;
 
 /***********************************************************************************************************************
  *
@@ -55,7 +55,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CameraDiscoveryPresentationActivity extends Activity implements CameraDiscoveryPresentation
   {
     private final AndroidCameraDiscoveryPresentationControl control = 
-            new AndroidCameraDiscoveryPresentationControl(AndroidUIThreadDecorator.createProxy(this, CameraDiscoveryPresentation.class), this);
+            new AndroidCameraDiscoveryPresentationControl(createUIThreadDecorator(this, CameraDiscoveryPresentation.class), this);
 
 //    private Handler handler;
 

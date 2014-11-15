@@ -44,10 +44,14 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class AndroidUIThreadDecorator
+public final class AndroidUIThreadDecoratorFactory
   {
-    public static <PRESENTATION> PRESENTATION createProxy (final @Nonnull PRESENTATION presentation,
-                                                           final Class<PRESENTATION> interfaceClass) 
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    public static <PRESENTATION> PRESENTATION createUIThreadDecorator (final @Nonnull PRESENTATION presentation,
+                                                                       final Class<PRESENTATION> interfaceClass) 
       {
         return (PRESENTATION)Proxy.newProxyInstance(
                     Thread.currentThread().getContextClassLoader(), 
