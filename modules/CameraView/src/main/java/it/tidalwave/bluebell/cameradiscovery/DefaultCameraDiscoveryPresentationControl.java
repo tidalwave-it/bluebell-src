@@ -28,6 +28,8 @@
 package it.tidalwave.bluebell.cameradiscovery;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.SsdpDiscoverer;
 import it.tidalwave.sony.impl.DefaultSsdpDiscoverer;
@@ -54,6 +56,8 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
     
     private String currentSsid = NO_SSID;
 
+    private final List<CameraDevice> devices = new ArrayList<>();
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -64,6 +68,11 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
       {
         checkWifiStatusChange();
         active = true;
+        
+        if (devices.isEmpty())
+          {
+            startDiscovery();
+          }
       }
 
     /*******************************************************************************************************************
@@ -92,6 +101,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
       {
         if (!ssdpDiscoverer.isSearching())
           {
+            devices.clear();
             presentation.disableSearchButton();
             presentation.clearDeviceList();
             presentation.notifySearchInProgress();
@@ -149,8 +159,9 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
             
             if (currentSsid.equals(NO_SSID))
               {
-                presentation.renderWiFiState("WiFi disconnected"); // R.string.msg_wifi_disconnect FIXME drop
+                devices.clear();
                 presentation.clearDeviceList();
+                presentation.renderWiFiState("WiFi disconnected"); // R.string.msg_wifi_disconnect FIXME drop
               }
             else
               {
