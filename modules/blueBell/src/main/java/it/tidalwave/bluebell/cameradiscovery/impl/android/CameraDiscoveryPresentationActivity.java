@@ -185,6 +185,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
         
         lvCameraDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() 
           {
+            @Override
             public void onItemClick (AdapterView<?> parent, View view, int position, long id) 
               {
                 control.notifyCameraDeviceSelected(position);
