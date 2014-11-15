@@ -57,8 +57,6 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     private final AndroidCameraDiscoveryPresentationControl control = 
             new AndroidCameraDiscoveryPresentationControl(createUIThreadDecorator(this, CameraDiscoveryPresentation.class), this);
 
-//    private Handler handler;
-
     private DeviceListAdapter listAdapter;
 
     private ListView lvDevices;
@@ -256,7 +254,6 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
         super.onResume();
         control.start();
         lvDevices.setAdapter(listAdapter);
-        log.debug("onResume() completed.");
       }
 
     /*******************************************************************************************************************
