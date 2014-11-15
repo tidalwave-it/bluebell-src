@@ -130,7 +130,7 @@ public class DefaultLiveViewPresentationControl implements LiveViewPresentationC
         log.info("start()");
         presentation.start();
 
-        if (liveViewThread != null) 
+        if (liveViewThread == null) 
           {
             running = true;
             liveViewThread = new Thread(liveViewConsumer);
