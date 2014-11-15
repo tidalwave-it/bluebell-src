@@ -41,6 +41,14 @@ import java.util.Set;
  **********************************************************************************************************************/
 public interface CameraObserver
   {
+    public enum Property
+      {
+        F_NUMBER,
+        SHUTTER_SPEED,
+        ISO_SPEED_RATE,
+        EXPOSURE_COMPENSATION
+      }
+
     /*******************************************************************************************************************
      *
      * A listener interface to receive these changes. These methods will be called by UI thread.
@@ -74,6 +82,8 @@ public interface CameraObserver
          *
          **************************************************************************************************************/
         public void onShootModeChanged (@Nonnull String shootMode);
+        
+        public void onPropertyChanged (@Nonnull Property property, @Nonnull String value);
       }
 
     /*******************************************************************************************************************
@@ -103,6 +113,14 @@ public interface CameraObserver
     @Nonnull
     public String getShootMode();
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public String getProperty (@Nonnull Property property);
+            
     /*******************************************************************************************************************
      *
      * Checks to see whether a monitoring is already started.

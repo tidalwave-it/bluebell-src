@@ -119,6 +119,11 @@ public class DefaultSimpleSsdpClientTest
               {
                 log.info("shoot mode changed: {}", shootMode);
               }
+
+            @Override
+            public void onPropertyChanged (final CameraObserver.Property property, final String value) 
+              {
+              }
           });
 
         observer.start();

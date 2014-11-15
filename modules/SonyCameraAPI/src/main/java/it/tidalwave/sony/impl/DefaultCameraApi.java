@@ -267,6 +267,43 @@ import lombok.extern.slf4j.Slf4j;
                 throw new RuntimeException("malformed JSON", e);
               }
           }
+
+        private String getValue (final String field, final int index, final String expectedType) 
+          {
+            try
+              {
+                String value = "";
+                JSONArray resultsObj = responseJson.getJSONArray("result");
+
+                if (!resultsObj.isNull(index))
+                  {
+                    JSONObject shootModeObj = resultsObj.getJSONObject(index);
+                    String type = shootModeObj.getString("type");
+
+                    if (expectedType.equals(type))
+                      {
+                        value = shootModeObj.getString(field);
+                      }
+                    else
+                      {
+                        log.warn("Event reply: Illegal Index ({}: {} - {}) ",
+                                new Object[] { index, field, type });
+                      }
+                  }
+
+                return value;
+              }
+            catch (JSONException e)
+              {
+                throw new RuntimeException("malformed JSON", e);
+              }
+          }
+        
+        @Override @Nonnull
+        public String getProperty (final @Nonnull Property property)
+          {
+            return getValue(property.getName(), property.getIndex(), property.getType());
+          }
       }
 
     /*******************************************************************************************************************

@@ -63,6 +63,25 @@ public interface CameraApi
      *
      *
      ******************************************************************************************************************/
+    @RequiredArgsConstructor @Getter
+    public static enum Property
+      {
+        EXPOSURE_COMPENSATION("currentExposureCompensation", 25, "exposureCompensation"),
+        F_NUMBER("currentFNumber", 27, "fNumber"),
+        ISO_SPEED_RATE("currentIsoSpeedRate", 29, "isoSpeedRate"),
+        SHUTTER_SPEED("currentShutterSpeed", 32, "shutterSpeed");
+        
+        private final String name;
+        
+        private final int index;
+        
+        private final String type;
+      }
+        
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     @RequiredArgsConstructor
     public static enum Polling
       {
@@ -132,6 +151,10 @@ public interface CameraApi
 
         @Nonnull
         public String getCameraStatus();
+        
+        @Nonnull
+        public String getProperty (@Nonnull Property property);
+        
       }
 
     /*******************************************************************************************************************

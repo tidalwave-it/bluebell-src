@@ -29,11 +29,14 @@ package it.tidalwave.sony.impl;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.io.IOException;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraApi.EventResponse;
 import it.tidalwave.sony.CameraObserver;
+import it.tidalwave.sony.CameraObserver.Property;
 import it.tidalwave.sony.StatusCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -66,7 +69,42 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
 
     @Getter @Nonnull
     private String shootMode = "";
-
+    
+    private final Map<Property, String> valueMap = new HashMap<>();
+    
+    // FIXME: should also make the Camera API dynamic, so we don't need those adapters
+    @RequiredArgsConstructor
+    enum PropertyFetcher
+      {
+        FETCHER_F_NUMBER(Property.F_NUMBER, CameraApi.Property.F_NUMBER),
+        FETCHER_SHUTTER(Property.SHUTTER_SPEED, CameraApi.Property.SHUTTER_SPEED),
+        FETCHER_ISO(Property.ISO_SPEED_RATE, CameraApi.Property.ISO_SPEED_RATE),
+        FETCHER_EXPOSURE_COMPENSATION(Property.EXPOSURE_COMPENSATION, CameraApi.Property.EXPOSURE_COMPENSATION);
+        
+        @Nonnull
+        public String fetch (final @Nonnull EventResponse response)
+          {
+            return response.getProperty(apiProperty);
+          }
+        
+        @Getter
+        private final Property property;
+        
+        private final CameraApi.Property apiProperty;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+      {
+        for (final PropertyFetcher fetcher : PropertyFetcher.values())
+          {
+            valueMap.put(fetcher.getProperty(), "");
+          }
+      }
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -147,6 +185,19 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
                             shootMode = newShootMode;
                             fireShootModeChanged(shootMode);
                           }
+                        
+                        for (final PropertyFetcher fetcher : PropertyFetcher.values())
+                          {
+                            final Property property = fetcher.getProperty();
+                            final String oldValue = valueMap.get(property);
+                            final String newValue = fetcher.fetch(response);
+                            
+                            if (!oldValue.equals(newValue))
+                              {
+                                valueMap.put(property, newValue);
+                                firePropertyChanged(property, newValue);
+                              }
+                          }
                       }
                     catch (IOException e) // Occurs when the server is not available now.
                       {
@@ -199,6 +250,17 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
       {
         listener = null;
       }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public String getProperty (final @Nonnull Property property)
+      {
+        return valueMap.get(property);
+      }
 
     /*******************************************************************************************************************
      *
@@ -237,6 +299,14 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
         if (listener != null)
           {
             listener.onShootModeChanged(shootMode);
+          }
+      }
+    
+    private void firePropertyChanged (final @Nonnull Property property, final String value)
+      {
+        if (listener != null)
+          {
+            listener.onPropertyChanged(property, value);
           }
       }
   }
