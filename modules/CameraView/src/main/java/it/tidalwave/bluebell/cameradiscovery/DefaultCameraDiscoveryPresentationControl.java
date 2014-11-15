@@ -117,7 +117,7 @@ public class DefaultCameraDiscoveryPresentationControl implements CameraDiscover
                 @Override
                 public void onErrorFinished()
                   {
-                    log.info(">>>> Search Error finished.");
+                    log.info(">>>> Search finished with error.");
                     presentation.hideProgressBar();
                     presentation.enableSearchButton();
 
