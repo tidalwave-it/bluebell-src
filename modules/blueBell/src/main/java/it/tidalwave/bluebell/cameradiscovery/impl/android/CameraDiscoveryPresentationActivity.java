@@ -262,7 +262,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     protected void onPause()
       {
         log.info("onPause()");
-        super.onPause();
         control.stop();
+        super.onPause();
       }
  }
