@@ -36,7 +36,7 @@ import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.bluebell.cameraview.CameraPresentation;
 import it.tidalwave.bluebell.cameraview.DefaultCameraPresentationControl;
 import it.tidalwave.bluebell.liveview.LiveViewPresentation;
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -53,24 +53,25 @@ import lombok.Cleanup;
 public class AndroidCameraPresentationControl extends DefaultCameraPresentationControl
   {
     @Nonnull
-    private final Activity activity;
+    private final Context context;
 
     /*******************************************************************************************************************
      *
      * Creates a new instance.
      *
-     * @param presentation    the controlled presentation
-     * @param liveView              the live view
-     * @param cameraDevice          the current device
+     * @param presentation      the controlled presentation
+     * @param context           the Android {@link Context}
+     * @param liveView          the live view
+     * @param cameraDevice      the current device
      * 
      ******************************************************************************************************************/
     public AndroidCameraPresentationControl (final @Nonnull CameraPresentation presentation,
-                                             final @Nonnull CameraPresentationActivity activity,
+                                             final @Nonnull Context context,
                                              final @Nonnull LiveViewPresentation liveView,
                                              final @Nonnull CameraDevice cameraDevice)
       {
         super(presentation, liveView, cameraDevice);
-        this.activity = activity;
+        this.context = context;
       }
 
     /*******************************************************************************************************************
@@ -79,13 +80,13 @@ public class AndroidCameraPresentationControl extends DefaultCameraPresentationC
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    protected Object loadPicture (final @Nonnull URL url)
+    protected Drawable loadPicture (final @Nonnull URL url)
       throws IOException
       {
         final @Cleanup InputStream is = new BufferedInputStream(url.openStream());
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 4; // FIXME
-        final Drawable pictureDrawable = new BitmapDrawable(activity.getResources(),
+        final Drawable pictureDrawable = new BitmapDrawable(context.getResources(),
                                                             BitmapFactory.decodeStream(is, null, options));
         is.close();
         return pictureDrawable;

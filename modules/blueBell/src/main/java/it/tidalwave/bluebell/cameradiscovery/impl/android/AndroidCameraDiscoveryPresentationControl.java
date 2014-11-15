@@ -28,13 +28,14 @@
 package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
 import javax.annotation.Nonnull;
+import android.app.Activity;
 import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryPresentationControl;
-import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.content.Intent;
 import it.tidalwave.bluebell.cameraview.impl.android.CameraPresentationActivity;
 import it.tidalwave.bluebell.mobile.android.BlueBellApplication;
 import static android.content.Context.WIFI_SERVICE;
@@ -50,21 +51,21 @@ import static android.content.Context.WIFI_SERVICE;
 public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDiscoveryPresentationControl
   {
     @Nonnull
-    private final Activity activity;
+    private final Context context;
     
     /*******************************************************************************************************************
      *
      * Creates a new instance.
      *
      * @param presentation      the controlled presentation
-     * @param activity          the controlled activity
+     * @param context           the Android {@link Context}
      * 
      ******************************************************************************************************************/
     public AndroidCameraDiscoveryPresentationControl (final @Nonnull CameraDiscoveryPresentation presentation,
-                                                      final @Nonnull CameraDiscoveryPresentationActivity activity)
+                                                      final @Nonnull Context context)
       {
         super(presentation);
-        this.activity = activity;
+        this.context = context;
         // TODO: poll and notify state changes
       }
 
@@ -83,13 +84,13 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
         else
           {
             presentation.notifyDeviceName(device.getFriendlyName());
-            final BlueBellApplication application = (BlueBellApplication)activity.getApplication();
+            final BlueBellApplication application = (BlueBellApplication)((Activity)context).getApplication();
             application.setCameraDevice(device);
             // We can't pass the device as an Intent extra because CameraDevice is not Serializable (it contains
             // references to other objects). 
             // TODO: check whether CameraDevice can be refactored so it's Serializable
-            final Intent intent = new Intent(activity, CameraPresentationActivity.class);
-            activity.startActivity(intent);
+            final Intent intent = new Intent(context, CameraPresentationActivity.class);
+            context.startActivity(intent);
           }
       }
     
@@ -101,7 +102,7 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
     @Override
     protected void populateWiFi()
       {
-        final WifiManager wifiManager = (WifiManager)activity.getSystemService(WIFI_SERVICE); 
+        final WifiManager wifiManager = (WifiManager)context.getSystemService(WIFI_SERVICE); 
 
         if (wifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED)
           {
