@@ -297,7 +297,7 @@ public interface CameraApi
      * }
      * </pre>
      *
-     * @param longPollingFlag true means long polling request.
+     * @param               polling     long or short polling
      * @throws IOException  in case of error
      * @return              the JSON response
      *
