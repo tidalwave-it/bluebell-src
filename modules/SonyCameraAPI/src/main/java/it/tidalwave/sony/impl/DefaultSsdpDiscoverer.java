@@ -86,6 +86,7 @@ public class DefaultSsdpDiscoverer implements SsdpDiscoverer
           }
 
         log.info("search() Start.");
+        searching = true;
 
         final String ssdpRequest = "M-SEARCH * HTTP/1.1\r\n"
                 + String.format("HOST: %s:%d\r\n", SSDP_ADDR, SSDP_PORT)
@@ -140,7 +141,6 @@ public class DefaultSsdpDiscoverer implements SsdpDiscoverer
                   }
 
                 // Receive reply packets
-                searching = true;
                 long startTime = System.currentTimeMillis();
                 List<String> foundDevices = new ArrayList<String>();
 
