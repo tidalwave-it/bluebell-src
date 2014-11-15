@@ -32,7 +32,6 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import android.content.Context;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,21 +93,25 @@ class DeviceListAdapter extends BaseAdapter
       }
 
     @Override
-    public View getView (final int position, final @CheckForNull View convertView, final @Nonnull ViewGroup parent)
+    public View getView (final int position,
+                         final @CheckForNull View convertView,
+                         final @Nonnull ViewGroup parent)
       {
-        TextView textView = (TextView)convertView;
+        ViewGroup layout = (ViewGroup)convertView;
 
-        if (textView == null)
+        if (layout == null)
           {
-            textView = (TextView)inflater.inflate(R.layout.device_list_item, null);
+            layout = (ViewGroup)inflater.inflate(R.layout.device_list_item, null);
           }
 
         final CameraDevice device = (CameraDevice)getItem(position);
 //        log.info(">>>> found {}, services: {}", device.getFriendlyName(), device.getApiServices());
-        final String htmlLabel = String.format("%s %s<br>%s", 
-                device.getModelName(), device.getFriendlyName(), device.getIpAddress());
-        textView.setText(Html.fromHtml(htmlLabel));
+        final String htmlLabel = String.format("%s %s", device.getModelName(), device.getFriendlyName());
+        final TextView tvDeviceName = (TextView)layout.findViewById(R.id.tv_device_name);
+        final TextView tvDeviceAddress = (TextView)layout.findViewById(R.id.tv_device_address);
+        tvDeviceName.setText(htmlLabel);
+        tvDeviceAddress.setText(device.getIpAddress());
 
-        return textView;
+        return layout;
       }
   }
