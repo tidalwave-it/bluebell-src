@@ -97,5 +97,5 @@ public interface CameraDeviceDescriptor extends Serializable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public CameraService createService();
+    public CameraDevice createDevice();
   }

@@ -25,123 +25,63 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.sony.impl;
+package it.tidalwave.sony;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import it.tidalwave.sony.CameraApi;
-import it.tidalwave.sony.CameraApiService;
-import it.tidalwave.sony.CameraObserver;
-import it.tidalwave.sony.CameraService;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * A server device description class.
+ * 
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j @ToString
-public class DefaultCameraService implements CameraService
+public interface CameraDevice
   {
-    private final List<CameraApiService> apiServices = new ArrayList<>();
-
-    private CameraApi api;
-
-    private CameraObserver observer;
-
     /*******************************************************************************************************************
      *
-     * 
-     *
-     ******************************************************************************************************************/
-    public DefaultCameraService (final List<CameraApiService> apiServices) 
-      {
-        this.apiServices.addAll(apiServices);
-      }
-    
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public List<CameraApiService> getApiServices()
-      {
-        return Collections.unmodifiableList(apiServices);
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public boolean hasApiService (final @CheckForNull String serviceName)
-      {
-        return getApiService(serviceName) != null;
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @CheckForNull
-    public CameraApiService getApiService (final @Nullable String serviceName)
-      {
-        if (serviceName == null)
-          {
-            return null;
-          }
-
-        for (final CameraApiService apiService : apiServices)
-          {
-            if (serviceName.equals(apiService.getName()))
-              {
-                return apiService;
-              }
-          }
-
-        return null;
-    }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
-    public synchronized CameraApi getApi()
-      {
-        if (api == null)
-          {
-            api = new DefaultCameraApi(this);
-          }
-
-        return api;
-      }
+    public CameraApi getApi();
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
-    public synchronized CameraObserver getObserver()
-      {
-        if (observer == null)
-          {
-            observer = new DefaultCameraObserver(getApi());
-          }
+    public CameraObserver getObserver();
 
-        return observer;
-      }
+    /*******************************************************************************************************************
+     *
+     * Returns a CameraApiService object.
+     *
+     * @param serviceName category name
+     * @return CameraApiService object
+     *
+     ******************************************************************************************************************/
+    @CheckForNull
+    public CameraApiService getApiService (@Nullable String serviceName);
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public List<CameraApiService> getApiServices();
+
+    /*******************************************************************************************************************
+     *
+     * Checks to see whether the server supports the category.
+     *
+     * @param serviceName category name
+     * @return true if it's supported.
+     *
+     ******************************************************************************************************************/
+    public boolean hasApiService (@CheckForNull String serviceName);
   }

@@ -35,7 +35,7 @@ import java.net.URL;
 import it.tidalwave.sony.CameraDeviceDescriptor;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraObserver;
-import it.tidalwave.sony.CameraService;
+import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.SimpleLiveviewSlicer;
 import it.tidalwave.sony.SsdpDiscoverer;
 import lombok.extern.slf4j.Slf4j;
@@ -93,7 +93,7 @@ public class DefaultSimpleSsdpClientTest
         latch.await();
         final CameraDeviceDescriptor cameraDeviceDescriptor = deviceHolder.get();
         assertThat(cameraDeviceDescriptor, is(notNullValue()));
-        final CameraService service = cameraDeviceDescriptor.createService();
+        final CameraDevice service = cameraDeviceDescriptor.createDevice();
         assertThat(service, is(notNullValue()));
         final CameraApi cameraApi = service.getApi();
         final CameraObserver observer = service.getObserver();

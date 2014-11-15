@@ -40,7 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraApiService;
-import it.tidalwave.sony.CameraService;
+import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.StatusCode;
 import it.tidalwave.bluebell.net.impl.DefaultHttpClient;
 import it.tidalwave.bluebell.net.HttpClient;
@@ -61,7 +61,7 @@ import lombok.extern.slf4j.Slf4j;
   {
     private static final String CAMERA_SERVICE = "camera";
 
-    private final CameraService cameraService;
+    private final CameraDevice cameraService;
 
     // Request ID of API calling. This will be counted up by each API calling.
     private int requestId;
@@ -604,7 +604,7 @@ import lombok.extern.slf4j.Slf4j;
      * @param cameraDevice server device of Remote API
      *
      ******************************************************************************************************************/
-    public DefaultCameraApi (final @Nonnull CameraService cameraService)
+    public DefaultCameraApi (final @Nonnull CameraDevice cameraService)
       {
         this.cameraService = cameraService;
         requestId = 1;

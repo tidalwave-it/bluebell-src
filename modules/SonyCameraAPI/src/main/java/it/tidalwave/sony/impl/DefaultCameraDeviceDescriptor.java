@@ -37,7 +37,7 @@ import it.tidalwave.bluebell.net.impl.DefaultHttpClient;
 import it.tidalwave.bluebell.net.impl.XmlElement;
 import it.tidalwave.sony.CameraApiService;
 import it.tidalwave.sony.CameraDeviceDescriptor;
-import it.tidalwave.sony.CameraService;
+import it.tidalwave.sony.CameraDevice;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -96,9 +96,9 @@ public class DefaultCameraDeviceDescriptor implements CameraDeviceDescriptor
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public CameraService createService() 
+    public CameraDevice createDevice() 
       {
-        return new DefaultCameraService(apiServices);
+        return new DefaultCameraDevice(apiServices);
       }
     
     /*******************************************************************************************************************

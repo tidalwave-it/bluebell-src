@@ -44,7 +44,7 @@ import it.tidalwave.bluebell.liveview.LiveViewPresentation;
 import it.tidalwave.bluebell.liveview.LiveViewPresentationControl;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.sony.CameraApi.*;
-import it.tidalwave.sony.CameraService;
+import it.tidalwave.sony.CameraDevice;
 
 /***********************************************************************************************************************
  *
@@ -83,9 +83,9 @@ public class DefaultCameraPresentationControl implements CameraPresentationContr
                                              final @Nonnull CameraDeviceDescriptor cameraDeviceDescriptor)
       {
         this.presentation = presentation;
-        final CameraService cameraService = cameraDeviceDescriptor.createService();
-        cameraApi = cameraService.getApi();
-        cameraObserver = cameraService.getObserver();
+        final CameraDevice cameraDevice = cameraDeviceDescriptor.createDevice();
+        cameraApi = cameraDevice.getApi();
+        cameraObserver = cameraDevice.getObserver();
         liveViewPresentationControl = new DefaultLiveViewPresentationControl(cameraApi, liveViewPresentation);
       }
 
