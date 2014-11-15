@@ -97,7 +97,6 @@ public class DefaultCameraDiscoveryPresentationControl implements CameraDiscover
                 @Override
                 public void onDeviceFound(final CameraDevice device)
                   {
-                    // Called by non-UI thread.
                     log.info(">>>> Search device found: {}", device.getFriendlyName());
                     presentation.renderOneMoreDevice(device);
                   }
