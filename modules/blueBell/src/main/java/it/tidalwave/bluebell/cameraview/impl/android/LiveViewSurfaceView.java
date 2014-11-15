@@ -118,7 +118,7 @@ public class LiveViewSurfaceView extends SurfaceView implements LiveViewPresenta
     @Override
     public void postPayload (final @Nonnull SimpleLiveviewSlicer.Payload payload)
       {
-        log.info("postPayload({}) - {}", payload, running);
+        log.debug("postPayload({}) - {}", payload, running);
 
         if (running)
           {
