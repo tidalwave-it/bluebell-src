@@ -82,7 +82,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
         checkWifiStatusChange();
         active = true;
         
-        if (cameraDeviceDescriptors.isEmpty())
+        if (cameraDeviceDescriptors.isEmpty() && !ssdpDiscoverer.isSearching())
           {
             startDiscovery();
           }
