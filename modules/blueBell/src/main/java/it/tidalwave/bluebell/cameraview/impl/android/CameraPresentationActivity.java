@@ -500,7 +500,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
 
         handler = new Handler();
         final BlueBellApplication application = (BlueBellApplication)getApplication();
-        control = new AndroidCameraPresentationControl(this, liveviewSurface, application.getCameraDevice(), this);
+        control = new AndroidCameraPresentationControl(this, liveviewSurface, application.getCameraDevice());
 
         log.info("onCreate() completed.");
       }

@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import it.tidalwave.sony.CameraDevice;
-import it.tidalwave.bluebell.cameraview.CameraPresentation;
 import it.tidalwave.bluebell.cameraview.DefaultCameraPresentationControl;
 import it.tidalwave.bluebell.liveview.LiveViewPresentation;
 import android.app.Activity;
@@ -43,6 +42,8 @@ import android.graphics.drawable.Drawable;
 import lombok.Cleanup;
 
 /***********************************************************************************************************************
+ *
+ * The Android specialisation of {@link DefaultCameraPresentationControl}, which contains Android-specific code.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -55,21 +56,24 @@ public class AndroidCameraPresentationControl extends DefaultCameraPresentationC
 
     /*******************************************************************************************************************
      *
+     * Creates a new instance.
      *
-     *
+     * @param cameraPresentation    the controlled presentation
+     * @param liveView              the live view
+     * @param cameraDevice          the current device
+     * 
      ******************************************************************************************************************/
-    public AndroidCameraPresentationControl (final @Nonnull CameraPresentation view,
-                                     final @Nonnull LiveViewPresentation liveView,
-                                     final @Nonnull CameraDevice cameraDevice,
-                                     final @Nonnull Activity activity)
+    public AndroidCameraPresentationControl (final @Nonnull CameraPresentationActivity cameraPresentation,
+                                             final @Nonnull LiveViewPresentation liveView,
+                                             final @Nonnull CameraDevice cameraDevice)
       {
-        super(view, liveView, cameraDevice);
-        this.activity = activity;
+        super(cameraPresentation, liveView, cameraDevice);
+        this.activity = cameraPresentation;
       }
 
     /*******************************************************************************************************************
      *
-     *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
