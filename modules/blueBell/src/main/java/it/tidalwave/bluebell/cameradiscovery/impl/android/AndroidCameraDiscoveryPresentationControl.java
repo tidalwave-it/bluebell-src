@@ -51,8 +51,6 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
     public AndroidCameraDiscoveryPresentationControl (final @Nonnull CameraDiscoveryPresentation presentation)
       {
         super(presentation);
-        // doesn't' work here
-//        wifiManager = (WifiManager)((Activity)presentation).getSystemService(WIFI_SERVICE); // FIXME: getContext
         // TODO: poll and notify state changes
       }
 
