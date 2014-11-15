@@ -29,6 +29,7 @@ package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
 import javax.annotation.Nonnull;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
@@ -39,6 +40,7 @@ import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryPresentationC
 import it.tidalwave.bluebell.cameraview.impl.android.CameraPresentationActivity;
 import it.tidalwave.bluebell.mobile.android.BlueBellApplication;
 import static android.content.Context.WIFI_SERVICE;
+import android.content.IntentFilter;
 
 /***********************************************************************************************************************
  *
@@ -52,6 +54,19 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
   {
     @Nonnull
     private final Context context;
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    private final BroadcastReceiver wiFiReceiver = new BroadcastReceiver()
+      {
+        @Override
+        public void onReceive (final Context context, final Intent intent) 
+          {
+            renderWiFiStatus();
+          }
+      };
     
     /*******************************************************************************************************************
      *
@@ -69,6 +84,30 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
         // TODO: poll and notify state changes
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc} 
+     * 
+     ******************************************************************************************************************/
+    @Override
+    public void start()
+      {
+        super.start(); 
+        registerWiFiReceiver();
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc} 
+     * 
+     ******************************************************************************************************************/
+    @Override
+    public void stop() 
+      {
+        unregisterWiFiReceiver();
+        super.stop(); 
+      }
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc} 
@@ -115,5 +154,26 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
             presentation.renderWiFiState("WiFi disconnected");
             // R.string.msg_wifi_disconnect FIXME drop
           }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+    private void registerWiFiReceiver() 
+      {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        context.registerReceiver(wiFiReceiver, intentFilter); 
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    private void unregisterWiFiReceiver() 
+      {
+        context.unregisterReceiver(wiFiReceiver);
       }
   }
