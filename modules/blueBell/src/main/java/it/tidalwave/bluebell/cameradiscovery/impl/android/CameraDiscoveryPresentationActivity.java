@@ -30,8 +30,6 @@ package it.tidalwave.bluebell.cameradiscovery.impl.android;
 import javax.annotation.Nonnull;
 import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
-import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentationControl;
-import it.tidalwave.bluebell.mobile.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,6 +40,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import it.tidalwave.bluebell.mobile.R;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
