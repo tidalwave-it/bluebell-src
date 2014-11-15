@@ -5,7 +5,7 @@
  * blueBell
  * http://bluebell.tidalwave.it - hg clone https://bitbucket.org/tidalwave/bluebell-src
  * %%
- * Copyright (C) 2013 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2013 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
