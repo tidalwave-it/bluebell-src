@@ -13,7 +13,7 @@
         android:text="@string/msg_search_devices" />
 
     <TextView
-        android:id="@+id/tvWifiStatus"
+        android:id="@+id/tv_wifi_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="35dp"
@@ -22,7 +22,7 @@
         android:text="@string/msg_wifi_disconnect" />
 
     <ListView
-        android:id="@+id/lvCameraDevices"
+        android:id="@+id/lv_camera_devices"
         android:layout_width="match_parent"
         android:layout_height="264dp"
         android:layout_marginLeft="30dp"
@@ -30,7 +30,7 @@
     </ListView>
 
     <Button
-        android:id="@+id/btSearch"
+        android:id="@+id/bt_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

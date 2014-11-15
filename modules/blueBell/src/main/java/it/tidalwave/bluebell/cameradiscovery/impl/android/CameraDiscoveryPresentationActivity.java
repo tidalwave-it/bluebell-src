@@ -224,9 +224,9 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
         setContentView(R.layout.activity_camera_discovery_presentation);
         setProgressBarIndeterminateVisibility(false);
 
-        lvCameraDevices = (ListView)findViewById(R.id.lvCameraDevices);
-        tvWifiStatus = (TextView)findViewById(R.id.tvWifiStatus);
-        btSearch = (Button)findViewById(R.id.btSearch);
+        lvCameraDevices = (ListView)findViewById(R.id.lv_camera_devices);
+        tvWifiStatus = (TextView)findViewById(R.id.tv_wifi_status);
+        btSearch = (Button)findViewById(R.id.bt_search);
         
         lvCameraDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() 
           {
