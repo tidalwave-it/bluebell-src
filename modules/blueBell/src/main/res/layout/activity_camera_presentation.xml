@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <it.tidalwave.bluebell.cameraview.impl.android.LiveViewSurfaceView
-        android:id="@+id/surfaceview_liveview"
+        android:id="@+id/sv_live_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -17,13 +17,13 @@
         android:paddingRight="10dp" >
 
         <RadioGroup
-            android:id="@+id/radio_group_shoot_mode"
+            android:id="@+id/rg_shoot_mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp" />
 
         <Button
-            android:id="@+id/button_take_picture"
+            android:id="@+id/bt_take_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
@@ -34,7 +34,7 @@
             android:onClick="onTakePhotoClickedClick" />
 
         <Button
-            android:id="@+id/button_rec_start_stop"
+            android:id="@+id/bt_rec_start_stop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
@@ -45,7 +45,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/text_camera_status"
+        android:id="@+id/tv_camera_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|left"
@@ -56,7 +56,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <ImageView
-        android:id="@+id/image_picture_wipe"
+        android:id="@+id/iv_photo_box"
         android:layout_width="150dp"
         android:layout_height="100dp"
         android:layout_gravity="bottom|right"

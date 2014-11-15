@@ -43,12 +43,16 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor @Slf4j
 public abstract class DefaultCameraDiscoveryPresentationControl implements CameraDiscoveryPresentationControl
   {
+    protected final static String NO_SSID = "";
+    
     @Nonnull
     protected final CameraDiscoveryPresentation presentation;
 
     private final SsdpDiscoverer ssdpDiscoverer = new DefaultSsdpDiscoverer();
 
     private boolean active;
+    
+    private String currentSsid = NO_SSID;
 
     /*******************************************************************************************************************
      *
@@ -58,7 +62,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
     @Override
     public void start()
       {
-        renderWiFiStatus();
+        checkWifiStatusChange();
         active = true;
       }
 
@@ -130,9 +134,37 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
 
     /*******************************************************************************************************************
      *
-     * Renders the WiFi status. This method is abstract since its actual implementation depends on Android. It must be
+     * Sets the current SSID of the Wifi network.
+     * 
+     * @param       ssid        the SSID
+     *
+     ******************************************************************************************************************/
+    protected void setWifiSsid (final @Nonnull String ssid)
+      {
+        log.info("setWifiSsid({})", ssid);
+        
+        if (!ssid.equals(currentSsid))
+          {
+            currentSsid = ssid;
+            
+            if (currentSsid.equals(NO_SSID))
+              {
+                presentation.renderWiFiState("WiFi disconnected"); // R.string.msg_wifi_disconnect FIXME drop
+                presentation.clearDeviceList();
+              }
+            else
+              {
+                presentation.renderWiFiState(String.format("SSID: <b>%s</b>", ssid));
+                startDiscovery();
+              }
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Checks the Wifi status. This method is abstract since its actual implementation depends on Android. It must be
      * implemented in a subclass.
      *
      ******************************************************************************************************************/
-    protected abstract void renderWiFiStatus();
+    protected abstract void checkWifiStatusChange();
   }

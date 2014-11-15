@@ -55,13 +55,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class DeviceListAdapter extends BaseAdapter
   {
-    private final List<CameraDevice> devices;
+    private final List<CameraDevice> devices = new ArrayList<>();
 
     private final LayoutInflater inflater;
 
     public DeviceListAdapter (final @Nonnull Context context)
       {
-        devices = new ArrayList<>();
         inflater = LayoutInflater.from(context);
       }
 
@@ -102,16 +101,13 @@ class DeviceListAdapter extends BaseAdapter
 
         if (textView == null)
           {
-            textView = (TextView) inflater.inflate(R.layout.device_list_item, null);
+            textView = (TextView)inflater.inflate(R.layout.device_list_item, null);
           }
 
         final CameraDevice device = (CameraDevice)getItem(position);
-        log.info(">>>> found {}, services: {}", device.getFriendlyName(), device.getApiServices());
-        final ApiService apiService = device.getApiService("camera");
-        final String endpointUrl = (apiService == null) ? "?" : apiService.getEndpointUrl();
-
-        final String htmlLabel = String.format("%s ", device.getFriendlyName()) +
-                String.format("<br>Endpoint URL: %s", endpointUrl);
+//        log.info(">>>> found {}, services: {}", device.getFriendlyName(), device.getApiServices());
+        final String htmlLabel = String.format("%s %s<br>%s", 
+                device.getModelName(), device.getFriendlyName(), device.getIpAddress());
         textView.setText(Html.fromHtml(htmlLabel));
 
         return textView;

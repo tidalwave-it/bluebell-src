@@ -59,7 +59,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
   {
     private ImageView ivPhotoBox;
 
-    private RadioGroup rbShootModeSelector;
+    private RadioGroup rbShootMode;
 
     private Button btTakePhoto;
 
@@ -67,7 +67,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
 
     private TextView tvCameraStatus;
 
-    private LiveViewSurfaceView liveviewSurface;
+    private LiveViewSurfaceView svLiveView;
 
     private DefaultCameraPresentationControl control;
 
@@ -222,20 +222,20 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void enableShootModeSelector (final @Nonnull String shootMode)
       {
-        for (int i = 0; i < rbShootModeSelector.getChildCount(); i++)
+        for (int i = 0; i < rbShootMode.getChildCount(); i++)
           {
-            rbShootModeSelector.getChildAt(i).setEnabled(true);
+            rbShootMode.getChildAt(i).setEnabled(true);
           }
 
-        View radioButton = rbShootModeSelector.findViewWithTag(shootMode);
+        View radioButton = rbShootMode.findViewWithTag(shootMode);
 
         if (radioButton != null)
           {
-            rbShootModeSelector.check(radioButton.getId());
+            rbShootMode.check(radioButton.getId());
           }
         else
           {
-            rbShootModeSelector.clearCheck();
+            rbShootMode.clearCheck();
           }
       }
 
@@ -247,9 +247,9 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void disableShootModeSelector()
       {
-        for (int i = 0; i < rbShootModeSelector.getChildCount(); i++)
+        for (int i = 0; i < rbShootMode.getChildCount(); i++)
           {
-            rbShootModeSelector.getChildAt(i).setEnabled(false);
+            rbShootMode.getChildAt(i).setEnabled(false);
           }
       }
 
@@ -354,17 +354,17 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_camera_presentation);
 
-        ivPhotoBox = (ImageView)findViewById(R.id.image_picture_wipe);
-        rbShootModeSelector = (RadioGroup)findViewById(R.id.radio_group_shoot_mode);
-        btTakePhoto = (Button)findViewById(R.id.button_take_picture);
-        btRecStartStop = (Button)findViewById(R.id.button_rec_start_stop);
-        tvCameraStatus = (TextView)findViewById(R.id.text_camera_status);
-        liveviewSurface = (LiveViewSurfaceView)findViewById(R.id.surfaceview_liveview);
+        ivPhotoBox = (ImageView)findViewById(R.id.iv_photo_box);
+        rbShootMode = (RadioGroup)findViewById(R.id.rg_shoot_mode);
+        btTakePhoto = (Button)findViewById(R.id.bt_take_photo);
+        btRecStartStop = (Button)findViewById(R.id.bt_rec_start_stop);
+        tvCameraStatus = (TextView)findViewById(R.id.tv_camera_status);
+        svLiveView = (LiveViewSurfaceView)findViewById(R.id.sv_live_view);
 
         final BlueBellApplication application = (BlueBellApplication)getApplication();
         control = new AndroidCameraPresentationControl(createUIThreadDecorator(this, CameraPresentation.class),
                                                        this,
-                                                       liveviewSurface, 
+                                                       svLiveView, 
                                                        application.getCameraDevice());
 
         log.info("onCreate() completed.");
@@ -405,8 +405,8 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     private void prepareShootModeRadioButtonsUi (final @Nonnull String[] availableShootModes,
                                                  final @Nonnull String currentMode)
       {
-        rbShootModeSelector.clearCheck();
-        rbShootModeSelector.removeAllViews();
+        rbShootMode.clearCheck();
+        rbShootMode.removeAllViews();
 
         for (int i = 0; i < availableShootModes.length; i++)
           {
@@ -439,13 +439,13 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
                   }
               });
 
-            rbShootModeSelector.addView(radioBtn);
+            rbShootMode.addView(radioBtn);
 
             if (mode.equals(currentMode))
               {
                 // Set the flag true to suppress unnecessary API calling.
                 radioInitialChecked = true;
-                rbShootModeSelector.check(viewId);
+                rbShootMode.check(viewId);
               }
           }
       }

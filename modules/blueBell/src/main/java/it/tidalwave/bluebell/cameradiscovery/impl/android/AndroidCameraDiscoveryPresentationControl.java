@@ -32,7 +32,7 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiInfo;
+import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
@@ -40,7 +40,6 @@ import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryPresentationC
 import it.tidalwave.bluebell.cameraview.impl.android.CameraPresentationActivity;
 import it.tidalwave.bluebell.mobile.android.BlueBellApplication;
 import static android.content.Context.WIFI_SERVICE;
-import android.content.IntentFilter;
 
 /***********************************************************************************************************************
  *
@@ -64,7 +63,7 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
         @Override
         public void onReceive (final Context context, final Intent intent) 
           {
-            renderWiFiStatus();
+            checkWifiStatusChange();
           }
       };
     
@@ -81,7 +80,6 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
       {
         super(presentation);
         this.context = context;
-        // TODO: poll and notify state changes
       }
 
     /*******************************************************************************************************************
@@ -94,7 +92,7 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
       {
         super.start(); 
         registerWiFiReceiver();
-          startDiscovery();
+        startDiscovery();
       }
     
     /*******************************************************************************************************************
@@ -140,23 +138,14 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
      *
      ******************************************************************************************************************/
     @Override
-    protected void renderWiFiStatus()
+    protected void checkWifiStatusChange()
       {
         final WifiManager wifiManager = (WifiManager)context.getSystemService(WIFI_SERVICE); 
-
-        if (wifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED)
-          {
-            final WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-            final String htmlLabel = String.format("SSID: <b>%s</b>", wifiInfo.getSSID());
-            presentation.renderWiFiState(htmlLabel);
-          }
-        else
-          {
-            presentation.renderWiFiState("WiFi disconnected");
-            // R.string.msg_wifi_disconnect FIXME drop
-          }
+        final String ssid = wifiManager.getWifiState() != WifiManager.WIFI_STATE_ENABLED ?
+                "" : wifiManager.getConnectionInfo().getSSID();
+        setWifiSsid(ssid);
       }
-
+    
     /*******************************************************************************************************************
      *
      * 
