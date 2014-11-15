@@ -240,6 +240,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
           });
 
         listAdapter = new DeviceListAdapter(this);
+        lvDevices.setAdapter(listAdapter);
       }
 
     /*******************************************************************************************************************
@@ -253,7 +254,6 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
         log.info("onResume()");
         super.onResume();
         control.start();
-        lvDevices.setAdapter(listAdapter);
       }
 
     /*******************************************************************************************************************
