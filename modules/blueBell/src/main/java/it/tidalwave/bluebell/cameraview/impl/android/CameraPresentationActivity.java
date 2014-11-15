@@ -306,9 +306,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void notifyGenericError()
       {
-        Toast.makeText(CameraPresentationActivity.this,
-                       R.string.msg_error_api_calling,
-                       Toast.LENGTH_SHORT).show();
+        Toast.makeText(CameraPresentationActivity.this, R.string.msg_error_api_calling, Toast.LENGTH_SHORT).show();
       }
     
     /*******************************************************************************************************************
