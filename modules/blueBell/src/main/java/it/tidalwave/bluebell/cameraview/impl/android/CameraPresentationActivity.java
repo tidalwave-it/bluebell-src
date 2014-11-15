@@ -43,6 +43,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import it.tidalwave.sony.CameraDescriptor;
+import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.bluebell.cameraview.CameraPresentation;
 import it.tidalwave.bluebell.cameraview.DefaultCameraPresentationControl;
 import it.tidalwave.bluebell.mobile.R;
@@ -78,7 +79,15 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     private LiveViewSurfaceView svLiveView;
 
     private boolean radioInitialChecked;
+    
+    private TextView tvFNumber;
+    
+    private TextView tvShutterSpeed;
 
+    private TextView tvExposureCompensation;
+
+    private TextView tvIsoSpeedRate;
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -313,6 +322,36 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
 
     /*******************************************************************************************************************
      *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void renderProperty (final @Nonnull CameraObserver.Property property, final @Nonnull String value) 
+      {
+        log.info("renderProperty({}, {})", property, value);
+        
+        switch (property) // FIXME: get rid of this switch
+          {
+            case F_NUMBER:
+                tvFNumber.setText("F" + value);
+                break;
+                
+            case SHUTTER_SPEED:
+                tvShutterSpeed.setText(value);
+                break;
+                
+            case EXPOSURE_COMPENSATION:
+                tvExposureCompensation.setText(value);
+                break;
+                
+            case ISO_SPEED_RATE:
+                tvIsoSpeedRate.setText("ISO " + value);
+                break;
+          }
+      }
+    
+    /*******************************************************************************************************************
+     *
      * Button callback.
      *
      ******************************************************************************************************************/
@@ -360,6 +399,10 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
         btRecStartStop = (Button)findViewById(R.id.bt_rec_start_stop);
         tvCameraStatus = (TextView)findViewById(R.id.tv_camera_status);
         svLiveView = (LiveViewSurfaceView)findViewById(R.id.sv_live_view);
+        tvFNumber = (TextView)findViewById(R.id.tv_f_number);
+        tvShutterSpeed = (TextView)findViewById(R.id.tv_shutter_speed);
+        tvExposureCompensation = (TextView)findViewById(R.id.tv_exposure_compensation);
+        tvIsoSpeedRate = (TextView)findViewById(R.id.tv_iso_speed_rate);
 
         final CameraDescriptor cameraDescriptor =
                 (CameraDescriptor)getIntent().getSerializableExtra("cameraDescriptor");

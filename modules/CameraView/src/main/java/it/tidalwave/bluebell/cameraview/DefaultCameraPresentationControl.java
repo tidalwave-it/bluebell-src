@@ -38,13 +38,14 @@ import java.io.IOException;
 import java.net.URL;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraDescriptor;
+import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraObserver;
+import it.tidalwave.sony.CameraObserver.Property;
 import it.tidalwave.bluebell.liveview.DefaultLiveViewPresentationControl;
 import it.tidalwave.bluebell.liveview.LiveViewPresentation;
 import it.tidalwave.bluebell.liveview.LiveViewPresentationControl;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.sony.CameraApi.*;
-import it.tidalwave.sony.CameraDevice;
 
 /***********************************************************************************************************************
  *
@@ -104,6 +105,11 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
     @Override
     public void start()
       {
+        for (final Property property : Property.values())
+          {
+            presentation.renderProperty(property, "");
+          }
+        
         cameraObserver.setListener(new CameraObserver.ChangeListener()
           {
             @Override
@@ -120,6 +126,13 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
                 refreshUi();
               }
 
+            @Override
+            public void onPropertyChanged (final @Nonnull Property property, final @Nonnull String value)
+              {
+                log.info("onPropertyChanged({}, {})", property, value);
+                refreshUi(property);
+              }
+            
             @Override
             public void onApisChanged (final @Nonnull Set<String> apis)
               {
@@ -380,6 +393,17 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
           }
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    private void refreshUi (final @Nonnull Property property) 
+      {
+        final String value = cameraObserver.getProperty(property);
+        presentation.renderProperty(property, value);
+      }
+    
     /*******************************************************************************************************************
      *
      *

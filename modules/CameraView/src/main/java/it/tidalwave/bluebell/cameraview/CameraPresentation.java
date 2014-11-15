@@ -29,6 +29,7 @@ package it.tidalwave.bluebell.cameraview;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import it.tidalwave.sony.CameraObserver;
 
 /***********************************************************************************************************************
  *
@@ -181,4 +182,14 @@ public interface CameraPresentation
      *
      ******************************************************************************************************************/
     public void notifyGenericError();
+
+    /*******************************************************************************************************************
+     *
+     * Renders a property.
+     * 
+     * @param   property    the property
+     * @param   value       the value
+     *
+     ******************************************************************************************************************/
+    public void renderProperty (@Nonnull CameraObserver.Property property, @Nonnull String value);
   }
