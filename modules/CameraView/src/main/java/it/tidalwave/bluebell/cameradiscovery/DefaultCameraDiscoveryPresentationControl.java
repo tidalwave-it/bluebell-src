@@ -36,7 +36,6 @@ import java.io.Serializable;
 import it.tidalwave.sony.CameraDeviceDescriptor;
 import it.tidalwave.sony.SsdpDiscoverer;
 import it.tidalwave.sony.impl.DefaultSsdpDiscoverer;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
