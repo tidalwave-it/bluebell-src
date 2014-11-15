@@ -30,7 +30,8 @@
             android:layout_marginTop="10dp"
             android:enabled="false"
             android:text="@string/button_take_picture"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:onClick="onTakePhotoClickedClick" />
 
         <Button
             android:id="@+id/button_rec_start_stop"
@@ -39,7 +40,8 @@
             android:layout_marginLeft="5dp"
             android:enabled="false"
             android:text="@string/button_rec_start"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:onClick="onRecStartStopClicked" />
     </LinearLayout>
 
     <TextView
@@ -63,6 +65,7 @@
         android:background="@drawable/picture_wipe_boarder"
         android:contentDescription="@string/no_image"
         android:src="@android:drawable/ic_menu_report_image"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        android:onClick="onPhotoViewClicked" />
 
 </merge>

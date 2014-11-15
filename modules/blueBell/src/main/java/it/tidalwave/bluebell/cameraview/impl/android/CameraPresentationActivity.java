@@ -107,7 +107,9 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
             @Override
             public void run()
               {
-                Toast.makeText(CameraPresentationActivity.this, R.string.msg_error_non_supported_device, Toast.LENGTH_SHORT).show();
+                Toast.makeText(CameraPresentationActivity.this, 
+                               R.string.msg_error_non_supported_device,
+                               Toast.LENGTH_SHORT).show();
                 CameraPresentationActivity.this.finish(); // FIXME: split
               }
           });
@@ -181,7 +183,9 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
             @Override
             public void run()
               {
-                Toast.makeText(CameraPresentationActivity.this, R.string.msg_error_take_picture, Toast.LENGTH_SHORT).show();
+                Toast.makeText(CameraPresentationActivity.this,
+                               R.string.msg_error_take_picture, 
+                               Toast.LENGTH_SHORT).show();
               }
           });
       }
@@ -191,6 +195,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Override
     public void renderCameraStatus (final @Nonnull String cameraStatus)
       {
         handler.post(new Runnable()
@@ -208,6 +213,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Override
     public void renderRecStartStopButtonAsStop()
       {
         handler.post(new Runnable()
@@ -226,6 +232,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Override
     public void renderRecStartStopButtonAsStart()
       {
         handler.post(new Runnable()
@@ -244,6 +251,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Override
     public void disableRecStartStopButton()
       {
         handler.post(new Runnable()
@@ -261,6 +269,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Override
     public void enableTakePhotoButton (final boolean enabled)
       {
         handler.post(new Runnable()
@@ -278,6 +287,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Override
     public void hidePhotoBox()
       {
         handler.post(new Runnable()
@@ -295,6 +305,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Override
     public void enableShootModeSelector (final @Nonnull String shootMode)
       {
         handler.post(new Runnable()
@@ -326,6 +337,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Override
     public void disableShootModeSelector()
       {
         handler.post(new Runnable()
@@ -365,6 +377,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Override
     public void notifyRecStart()
       {
         handler.post(new Runnable()
@@ -382,6 +395,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Override
     public void notifyRecStop()
       {
         handler.post(new Runnable()
@@ -399,6 +413,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Override
     public void notifyErrorWhileRecordingMovie()
       {
         handler.post(new Runnable()
@@ -406,7 +421,9 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
             @Override
             public void run()
               {
-                Toast.makeText(CameraPresentationActivity.this, R.string.msg_error_api_calling, Toast.LENGTH_SHORT).show();
+                Toast.makeText(CameraPresentationActivity.this,
+                               R.string.msg_error_api_calling,
+                               Toast.LENGTH_SHORT).show();
               }
           });
       }
@@ -416,6 +433,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Override
     public void notifyGenericError()
       {
         handler.post(new Runnable()
@@ -423,11 +441,43 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
             @Override
             public void run()
               {
-                Toast.makeText(CameraPresentationActivity.this, R.string.msg_error_api_calling, Toast.LENGTH_SHORT).show();
+                Toast.makeText(CameraPresentationActivity.this,
+                               R.string.msg_error_api_calling,
+                               Toast.LENGTH_SHORT).show();
               }
           });
       }
+    
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+    public void onTakePhotoClickedClick (final @Nonnull View view)
+      {
+        control.takeAndFetchPicture();
+      }
 
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+    public void onRecStartStopClicked (final @Nonnull View view)
+      {
+        control.startOrStopMovieRecording();
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+    public void onPhotoViewClicked (final @Nonnull View view)
+      {
+        ivPhotoBox.setVisibility(View.INVISIBLE);
+      }
+            
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -465,34 +515,6 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
       {
         log.info("onResume()");
         super.onResume();
-
-        btTakePhoto.setOnClickListener(new View.OnClickListener()
-          {
-            @Override
-            public void onClick(View v)
-              {
-                control.takeAndFetchPicture();
-              }
-          });
-
-        btRecStartStop.setOnClickListener(new View.OnClickListener()
-          {
-            @Override
-            public void onClick(View v)
-              {
-                control.startOrStopMovieRecording();
-              }
-          });
-
-        ivPhotoBox.setOnClickListener(new View.OnClickListener()
-          {
-            @Override
-            public void onClick(View v)
-              {
-                ivPhotoBox.setVisibility(View.INVISIBLE);
-              }
-          });
-
         setProgressBarIndeterminateVisibility(true);
         control.start();
       }
