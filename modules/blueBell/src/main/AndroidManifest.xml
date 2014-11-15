@@ -15,11 +15,13 @@
         android:name="it.tidalwave.bluebell.mobile.android.BlueBellApplication"
         android:allowBackup="true"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.Light">
+        android:theme="@android:style/Theme.Light"
+        android:icon="@drawable/crop_bluebell_icon" >
 
         <activity
             android:name="it.tidalwave.bluebell.cameradiscovery.impl.android.CameraDiscoveryPresentationActivity"
-            android:label="@string/activity_discover_label" >
+            android:label="@string/activity_discover_label"
+            android:configChanges="orientation|screenSize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
