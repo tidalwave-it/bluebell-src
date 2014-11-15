@@ -30,11 +30,13 @@ package it.tidalwave.bluebell.cameradiscovery;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.io.Serializable;
 import it.tidalwave.sony.CameraDeviceDescriptor;
 import it.tidalwave.sony.SsdpDiscoverer;
 import it.tidalwave.sony.impl.DefaultSsdpDiscoverer;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,7 +60,16 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
     
     private String currentSsid = NO_SSID;
 
-    protected final List<CameraDeviceDescriptor> cameraDeviceDescriptors = new ArrayList<>();
+    protected final List<CameraDeviceDescriptor> cameraDeviceDescriptors =
+            Collections.synchronizedList(new ArrayList<CameraDeviceDescriptor>());
+    
+    @RequiredArgsConstructor
+    static class Memento implements Serializable
+      {
+        private static final long serialVersionUID = 56546340987457L;
+        final List<CameraDeviceDescriptor> cameraDeviceDescriptors;
+        final String currentSsid;
+      }
 
     /*******************************************************************************************************************
      *
@@ -68,6 +79,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
     @Override
     public void start()
       {
+        log.info("start()");
         checkWifiStatusChange();
         active = true;
         
@@ -85,6 +97,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
     @Override
     public void stop()
       {
+        log.info("stop()");
         active = false;
 
         if (ssdpDiscoverer.isSearching())
@@ -153,7 +166,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
     @Override @Nonnull
     public Serializable getMemento() 
       {
-        return new ArrayList<>(cameraDeviceDescriptors);
+        return new Memento(cameraDeviceDescriptors, currentSsid);
       }
 
     /*******************************************************************************************************************
@@ -164,10 +177,14 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
     @Override
     public void setMemento (final @Nullable Serializable memento) 
       {
+        log.info("setMemento({})", memento);
+        
         if (memento != null)
           {
+            final Memento m = (Memento)memento;
             cameraDeviceDescriptors.clear();
-            cameraDeviceDescriptors.addAll((List<? extends CameraDeviceDescriptor>)memento);
+            cameraDeviceDescriptors.addAll(m.cameraDeviceDescriptors);
+            currentSsid = m.currentSsid;
           }
       }
 
@@ -208,5 +225,10 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
      ******************************************************************************************************************/
     protected abstract void checkWifiStatusChange();
     
+    /*******************************************************************************************************************
+     *
+     * Sends a notification that the device list has been changed.
+     *
+     ******************************************************************************************************************/
     protected abstract void notifyDevicesChanged();
   }

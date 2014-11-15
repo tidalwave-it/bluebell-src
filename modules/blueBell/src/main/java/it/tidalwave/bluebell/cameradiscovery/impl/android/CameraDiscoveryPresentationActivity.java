@@ -96,9 +96,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     public void notifySearchFinished()
       {
         setProgressBarIndeterminateVisibility(false);
-        Toast.makeText(CameraDiscoveryPresentationActivity.this, 
-                       R.string.msg_device_search_finish, 
-                       Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.msg_device_search_finish, Toast.LENGTH_SHORT).show();
       }
 
     /*******************************************************************************************************************
@@ -109,9 +107,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     @Override
     public void notifySearchFinishedWithError()
       {
-        Toast.makeText(CameraDiscoveryPresentationActivity.this, 
-                       R.string.msg_error_device_searching, 
-                       Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.msg_error_device_searching,  Toast.LENGTH_SHORT).show();
       }
 
     /*******************************************************************************************************************
@@ -122,9 +118,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     @Override
     public void notifySelectedDeviceName (final @Nonnull String deviceName) 
       {
-        Toast.makeText(CameraDiscoveryPresentationActivity.this,
-                       deviceName,
-                       Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, deviceName, Toast.LENGTH_SHORT).show();
       }
                 
     /*******************************************************************************************************************
@@ -135,9 +129,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     @Override
     public void notifySelectedDeviceNotSupported() 
       {
-        Toast.makeText(CameraDiscoveryPresentationActivity.this, 
-                       R.string.msg_error_non_supported_device, 
-                       Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.msg_error_non_supported_device, Toast.LENGTH_SHORT).show();
       }
     
     /*******************************************************************************************************************
@@ -192,7 +184,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
         
         lvCameraDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() 
           {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
+            public void onItemClick (AdapterView<?> parent, View view, int position, long id) 
               {
                 control.notifyCameraDeviceSelected(position);
               }
@@ -216,6 +208,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     @Override
     protected void onSaveInstanceState (final @Nonnull Bundle outState) 
       {
+        log.info("onSaveInstanceState({})", outState);
         super.onSaveInstanceState(outState); 
         outState.putSerializable(MEMENTO, control.getMemento());
       }
@@ -245,7 +238,4 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
         control.stop();
         super.onPause();
       }
-
-    // TODO: should save the device list as part of its state, otherwise it restarts scanning at resume
-    // This requires CameraDeviceDescriptor to be Serializable
  }
