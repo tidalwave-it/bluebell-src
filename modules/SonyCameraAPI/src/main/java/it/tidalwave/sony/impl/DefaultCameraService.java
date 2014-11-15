@@ -27,17 +27,16 @@
  */
 package it.tidalwave.sony.impl;
 
-import javax.annotation.Nonnull;
 import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.io.IOException;
-import it.tidalwave.bluebell.net.impl.DefaultHttpClient;
-import it.tidalwave.bluebell.net.impl.XmlElement;
-import it.tidalwave.sony.CameraDevice;
+import it.tidalwave.sony.CameraApi;
+import it.tidalwave.sony.CameraDevice.ApiService;
+import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.sony.CameraService;
-import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,136 +49,100 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j @ToString
-public class DefaultCameraDevice implements CameraDevice
+public class DefaultCameraService implements CameraService
   {
-    private static final long serialVersionUID = 56546340987457L;
-        
-    @Getter
-    private String ddUrl;
-
-    @Getter
-    private String friendlyName;
-
-    @Getter
-    private String modelName;
-
-    @Getter
-    private String udn;
-
-    @Getter
-    private String iconUrl;
-
     private final List<ApiService> apiServices = new ArrayList<>();
+
+    private CameraApi api;
+
+    private CameraObserver observer;
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
+     * 
      *
      ******************************************************************************************************************/
-    @Override @Nullable
-    public String getIpAddress()
+    public DefaultCameraService (final List<ApiService> apiServices) 
       {
-        String ip = null;
-
-        if (ddUrl != null)
-          {
-            return toHost(ddUrl);
-          }
-
-        return ip;
+        this.apiServices.addAll(apiServices);
       }
-
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public CameraService createService() 
+    public List<ApiService> getApiServices()
       {
-        return new DefaultCameraService(apiServices);
+        return Collections.unmodifiableList(apiServices);
       }
-    
+
     /*******************************************************************************************************************
      *
-     *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @CheckForNull
-    public static DefaultCameraDevice fetch (@Nonnull String ddUrl)
+    @Override
+    public boolean hasApiService (final @CheckForNull String serviceName)
       {
-        String ddXml = "";
-        try
+        return getApiService(serviceName) != null;
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @CheckForNull
+    public ApiService getApiService (final @Nullable String serviceName)
+      {
+        if (serviceName == null)
           {
-            ddXml = new DefaultHttpClient().get(ddUrl); // FIXME
-            log.debug("fetch() httpGet done.");
-          }
-        catch (IOException e)
-          {
-            log.error("fetch(): IOException.", e);
             return null;
           }
-        /*
-          * catch (Exception e) { Log.e(TAG, "fetch: Exception.", e); return
-          * null; }
-          */
-        XmlElement rootElement = XmlElement.parse(ddXml);
 
-        log.info("response XLM element: {}", rootElement);
-        // "root"
-        DefaultCameraDevice device = null;
-
-        if ("root".equals(rootElement.getTagName()))
+        for (final ApiService apiService : apiServices)
           {
-            device = new DefaultCameraDevice();
-            device.ddUrl = ddUrl;
-
-            // "device"
-            final XmlElement deviceElement = rootElement.findChild("device");
-            device.friendlyName = deviceElement.findChild("friendlyName").getValue();
-            device.modelName = deviceElement.findChild("modelName").getValue();
-            device.udn = deviceElement.findChild("UDN").getValue();
-
-            // "iconList"
-            final XmlElement iconListElement = deviceElement.findChild("iconList");
-            final List<XmlElement> iconElements = iconListElement.findChildren("icon");
-
-            for (final XmlElement iconElement : iconElements)
+            if (serviceName.equals(apiService.getName()))
               {
-                // Choose png icon to show Android UI.
-                if ("image/png".equals(iconElement.findChild("mimetype").getValue()))
-                  {
-                    final String _uri = iconElement.findChild("url").getValue();
-                    final String hostUrl = toSchemeAndHost(ddUrl);
-                    device.iconUrl = hostUrl + _uri;
-                  }
-              }
-
-            // "av:X_ScalarWebAPI_DeviceInfo"
-            final XmlElement wApiElement = deviceElement.findChild("av:X_ScalarWebAPI_DeviceInfo");
-            final XmlElement wApiServiceListElement = wApiElement.findChild("av:X_ScalarWebAPI_ServiceList");
-            final List<XmlElement> wApiServiceElements = wApiServiceListElement.findChildren("av:X_ScalarWebAPI_Service");
-
-            for (final XmlElement wApiServiceElement : wApiServiceElements)
-              {
-                final String serviceName = wApiServiceElement.findChild("av:X_ScalarWebAPI_ServiceType").getValue();
-                final String actionUrl = wApiServiceElement.findChild("av:X_ScalarWebAPI_ActionList_URL").getValue();
-                device.addApiService(serviceName, actionUrl);
+                return apiService;
               }
           }
 
-        log.debug("fetch() parsing XML done.");
-        return device;
+        return null;
+    }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public synchronized CameraApi getApi()
+      {
+        if (api == null)
+          {
+            api = new DefaultCameraApi(this);
+          }
+
+        return api;
       }
 
     /*******************************************************************************************************************
      *
-     *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    private void addApiService (final @Nonnull String name, final @Nonnull String actionUrl)
+    @Nonnull
+    public synchronized CameraObserver getObserver()
       {
-        apiServices.add(new ApiService(name, actionUrl));
+        if (observer == null)
+          {
+            observer = new DefaultCameraObserver(getApi());
+          }
+
+        return observer;
       }
 
     /*******************************************************************************************************************

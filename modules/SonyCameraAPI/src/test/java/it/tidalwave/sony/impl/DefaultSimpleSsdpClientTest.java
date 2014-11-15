@@ -31,12 +31,13 @@ import javax.annotation.Nonnull;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
+import java.net.URL;
 import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraObserver;
+import it.tidalwave.sony.CameraService;
 import it.tidalwave.sony.SimpleLiveviewSlicer;
 import it.tidalwave.sony.SsdpDiscoverer;
-import java.net.URL;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -92,9 +93,10 @@ public class DefaultSimpleSsdpClientTest
         latch.await();
         final CameraDevice device = deviceHolder.get();
         assertThat(device, is(notNullValue()));
-        final CameraApi cameraApi = device.getApi();
-
-        final CameraObserver observer = device.getObserver();
+        final CameraService service = device.createService();
+        assertThat(service, is(notNullValue()));
+        final CameraApi cameraApi = service.getApi();
+        final CameraObserver observer = service.getObserver();
         observer.setListener(new CameraObserver.ChangeListener()
           {
             public void onApisChanged (final @Nonnull Set<String> apis)

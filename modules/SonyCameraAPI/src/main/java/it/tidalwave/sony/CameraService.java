@@ -27,77 +27,45 @@
  */
 package it.tidalwave.sony;
 
-import java.io.Serializable;
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.List;
 
 /***********************************************************************************************************************
  *
- * A server device description class.
+ * 
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface CameraDevice extends Serializable
+public interface CameraService
   {
     /*******************************************************************************************************************
      *
-     * Camera Remote API service (category). For example, "camera", "guide" and
-     * so on. "Action List URL" is API request target URL of each service.
-     *
-     ******************************************************************************************************************/
-    @AllArgsConstructor @ToString
-    public static class ApiService implements Serializable
-      {
-        private static final long serialVersionUID = 2342353456363463L;
-        
-        @Getter @Setter @Nonnull
-        private String name;
-
-        @Getter @Setter @Nonnull
-        private String actionListUrl;
-
-        /***************************************************************************************************************
-         *
-         * Returns the endpoint URL of the category.
-         *
-         * @return endpoint URL
-         *
-         **************************************************************************************************************/
-        @Nonnull
-        public String getEndpointUrl()
-          {
-            String url = null;
-
-            if (actionListUrl == null || name == null)
-              {
-                url = null;
-              }
-            else if (actionListUrl.endsWith("/"))
-              {
-                url = actionListUrl + name;
-              }
-            else
-              {
-                url = actionListUrl + "/" + name;
-              }
-
-            return url;
-          }
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String getDdUrl();
+    public CameraApi getApi();
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public CameraObserver getObserver();
+
+    /*******************************************************************************************************************
+     *
+     * Returns a ApiService object.
+     *
+     * @param serviceName category name
+     * @return ApiService object
+     *
+     ******************************************************************************************************************/
+    @CheckForNull
+    public CameraDevice.ApiService getApiService (@Nullable String serviceName);
 
     /*******************************************************************************************************************
      *
@@ -105,47 +73,15 @@ public interface CameraDevice extends Serializable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String getFriendlyName();
+    public List<CameraDevice.ApiService> getApiServices();
 
     /*******************************************************************************************************************
      *
+     * Checks to see whether the server supports the category.
      *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public String getIconUrl();
-
-    /*******************************************************************************************************************
-     *
-     * Returns IP address of the DD.
-     *
-     * @return
+     * @param serviceName category name
+     * @return true if it's supported.
      *
      ******************************************************************************************************************/
-    @Nullable
-    public String getIpAddress();
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public String getModelName();
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public String getUdn();
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public CameraService createService();
+    public boolean hasApiService (@CheckForNull String serviceName);
   }

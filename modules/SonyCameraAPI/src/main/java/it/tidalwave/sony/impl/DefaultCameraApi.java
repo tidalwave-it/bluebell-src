@@ -33,17 +33,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import it.tidalwave.sony.CameraDevice.ApiService;
+import it.tidalwave.sony.CameraApi;
+import it.tidalwave.sony.CameraService;
+import it.tidalwave.sony.StatusCode;
 import it.tidalwave.bluebell.net.impl.DefaultHttpClient;
 import it.tidalwave.bluebell.net.HttpClient;
-import it.tidalwave.sony.CameraDevice.ApiService;
-import it.tidalwave.sony.CameraDevice;
-import it.tidalwave.sony.CameraApi;
-import it.tidalwave.sony.StatusCode;
-import java.net.MalformedURLException;
-import java.net.URL;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -61,8 +61,7 @@ import lombok.extern.slf4j.Slf4j;
   {
     private static final String CAMERA_SERVICE = "camera";
 
-    // API server device you want to send requests.
-    private final CameraDevice cameraDevice;
+    private final CameraService cameraService;
 
     // Request ID of API calling. This will be counted up by each API calling.
     private int requestId;
@@ -605,9 +604,9 @@ import lombok.extern.slf4j.Slf4j;
      * @param cameraDevice server device of Remote API
      *
      ******************************************************************************************************************/
-    public DefaultCameraApi (final @Nonnull CameraDevice cameraDevice)
+    public DefaultCameraApi (final @Nonnull CameraService cameraService)
       {
-        this.cameraDevice = cameraDevice;
+        this.cameraService = cameraService;
         requestId = 1;
       }
 
@@ -815,7 +814,7 @@ import lombok.extern.slf4j.Slf4j;
     @Nonnull
     private String findActionListUrl (final @Nonnull String service)
       {
-        final List<ApiService> services = cameraDevice.getApiServices();
+        final List<ApiService> services = cameraService.getApiServices();
 
         for (final ApiService apiService : services)
           {

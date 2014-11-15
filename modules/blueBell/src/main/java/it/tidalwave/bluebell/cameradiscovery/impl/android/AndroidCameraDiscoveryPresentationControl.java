@@ -114,7 +114,7 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
     @Override
     public void showCameraPresentation (final @Nonnull CameraDevice device)
       {
-        if (!device.hasApiService("camera"))
+        if (!device.createService().hasApiService("camera"))
           {
             presentation.notifySelectedDeviceNotSupported();
           }
