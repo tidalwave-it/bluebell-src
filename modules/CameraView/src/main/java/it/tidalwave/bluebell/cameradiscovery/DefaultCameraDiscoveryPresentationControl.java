@@ -46,7 +46,7 @@ public class DefaultCameraDiscoveryPresentationControl implements CameraDiscover
     @Nonnull
     protected final CameraDiscoveryPresentation presentation;
 
-    private SsdpDiscoverer ssdpClient = new DefaultSsdpDiscoverer();
+    private final SsdpDiscoverer ssdpClient = new DefaultSsdpDiscoverer();
 
     private boolean active;
 
