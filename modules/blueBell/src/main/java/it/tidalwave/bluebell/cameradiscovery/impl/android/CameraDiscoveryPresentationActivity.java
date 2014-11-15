@@ -43,6 +43,9 @@ import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 import it.tidalwave.bluebell.mobile.R;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecoratorFactory.*;
+import java.io.Serializable;
+import java.util.List;
+import javax.annotation.Nullable;
 
 /***********************************************************************************************************************
  *
@@ -55,6 +58,9 @@ import static it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecoratorFacto
 @Slf4j
 public class CameraDiscoveryPresentationActivity extends Activity implements CameraDiscoveryPresentation
   {
+    private static final String CAMERA_DEVICES = CameraDiscoveryPresentationActivity.class.getName() + ".devices";
+    
+    // FIXME: move to onCreate
     private final AndroidCameraDiscoveryPresentationControl control = 
             new AndroidCameraDiscoveryPresentationControl(createUIThreadDecorator(this, CameraDiscoveryPresentation.class), this);
 
@@ -217,7 +223,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
      *
      ******************************************************************************************************************/
     @Override
-    protected void onCreate (final @Nonnull Bundle savedInstanceState)
+    protected void onCreate (final @Nullable Bundle savedInstanceState)
       {
         log.info("onCreate({})", savedInstanceState);
         super.onCreate(savedInstanceState);
@@ -238,9 +244,30 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
           });
 
         listAdapter = new DeviceListAdapter(this);
+        
+        if (savedInstanceState != null)
+          {
+            final List<CameraDeviceDescriptor> cameraDeviceDescriptors = 
+                    (List<CameraDeviceDescriptor>) savedInstanceState.getSerializable(CAMERA_DEVICES);
+            listAdapter.setDevices(cameraDeviceDescriptors);
+          }
+        
         lvCameraDevices.setAdapter(listAdapter);
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    protected void onSaveInstanceState (final @Nonnull Bundle outState) 
+      {
+        super.onSaveInstanceState(outState); 
+        final List<CameraDeviceDescriptor> cameraDeviceDescriptors = listAdapter.getCameraDeviceDescriptors();
+        outState.putSerializable(CAMERA_DEVICES, (Serializable)cameraDeviceDescriptors);
+      }
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -252,6 +279,14 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
         log.info("onResume()");
         super.onResume();
         control.start();
+        
+        // FIXME: move to controller
+//        if (cameraDeviceDescriptors.isEmpty())
+        if (listAdapter.getCount() == 0)
+          {
+            control.startDiscovery();
+          }
+        
       }
 
     /*******************************************************************************************************************

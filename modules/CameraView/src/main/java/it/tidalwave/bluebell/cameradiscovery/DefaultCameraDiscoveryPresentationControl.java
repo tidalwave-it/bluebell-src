@@ -56,7 +56,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
     
     private String currentSsid = NO_SSID;
 
-    private final List<CameraDeviceDescriptor> cameraDeviceDescriptors = new ArrayList<>();
+//    private final List<CameraDeviceDescriptor> cameraDeviceDescriptors = new ArrayList<>();
 
     /*******************************************************************************************************************
      *
@@ -68,11 +68,6 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
       {
         checkWifiStatusChange();
         active = true;
-        
-        if (cameraDeviceDescriptors.isEmpty())
-          {
-            startDiscovery();
-          }
       }
 
     /*******************************************************************************************************************
@@ -101,7 +96,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
       {
         if (!ssdpDiscoverer.isSearching())
           {
-            cameraDeviceDescriptors.clear();
+//            cameraDeviceDescriptors.clear();
             presentation.disableSearchButton();
             presentation.clearDeviceList();
             presentation.notifySearchInProgress();
@@ -159,7 +154,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
             
             if (currentSsid.equals(NO_SSID))
               {
-                cameraDeviceDescriptors.clear();
+//                cameraDeviceDescriptors.clear();
                 presentation.clearDeviceList();
                 presentation.renderWiFiState("WiFi disconnected"); // R.string.msg_wifi_disconnect FIXME drop
               }
