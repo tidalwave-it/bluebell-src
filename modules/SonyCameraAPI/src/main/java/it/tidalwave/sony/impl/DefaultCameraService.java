@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import it.tidalwave.sony.CameraApi;
-import it.tidalwave.sony.CameraDeviceDescriptor.ApiService;
+import it.tidalwave.sony.CameraApiService;
 import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.sony.CameraService;
 import lombok.ToString;
@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j @ToString
 public class DefaultCameraService implements CameraService
   {
-    private final List<ApiService> apiServices = new ArrayList<>();
+    private final List<CameraApiService> apiServices = new ArrayList<>();
 
     private CameraApi api;
 
@@ -62,7 +62,7 @@ public class DefaultCameraService implements CameraService
      * 
      *
      ******************************************************************************************************************/
-    public DefaultCameraService (final List<ApiService> apiServices) 
+    public DefaultCameraService (final List<CameraApiService> apiServices) 
       {
         this.apiServices.addAll(apiServices);
       }
@@ -73,7 +73,7 @@ public class DefaultCameraService implements CameraService
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public List<ApiService> getApiServices()
+    public List<CameraApiService> getApiServices()
       {
         return Collections.unmodifiableList(apiServices);
       }
@@ -95,14 +95,14 @@ public class DefaultCameraService implements CameraService
      *
      ******************************************************************************************************************/
     @Override @CheckForNull
-    public ApiService getApiService (final @Nullable String serviceName)
+    public CameraApiService getApiService (final @Nullable String serviceName)
       {
         if (serviceName == null)
           {
             return null;
           }
 
-        for (final ApiService apiService : apiServices)
+        for (final CameraApiService apiService : apiServices)
           {
             if (serviceName.equals(apiService.getName()))
               {
@@ -143,54 +143,5 @@ public class DefaultCameraService implements CameraService
           }
 
         return observer;
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private static String toSchemeAndHost (final @Nonnull String url)
-      {
-        int i = url.indexOf("://"); // http:// or https://
-
-        if (i == -1)
-          {
-            return "";
-          }
-
-        int j = url.indexOf("/", i + 3);
-
-        if (j == -1)
-          {
-            return "";
-          }
-
-        return url.substring(0, j);
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    private static String toHost(String url)
-      {
-        int i = url.indexOf("://"); // http:// or https://
-
-        if (i == -1)
-          {
-            return "";
-          }
-
-        int j = url.indexOf(":", i + 3);
-
-        if (j == -1)
-          {
-            return "";
-          }
-
-        return url.substring(i + 3, j);
       }
   }

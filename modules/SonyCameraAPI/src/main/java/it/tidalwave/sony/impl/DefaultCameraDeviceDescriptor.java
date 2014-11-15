@@ -35,6 +35,7 @@ import java.util.List;
 import java.io.IOException;
 import it.tidalwave.bluebell.net.impl.DefaultHttpClient;
 import it.tidalwave.bluebell.net.impl.XmlElement;
+import it.tidalwave.sony.CameraApiService;
 import it.tidalwave.sony.CameraDeviceDescriptor;
 import it.tidalwave.sony.CameraService;
 import lombok.Getter;
@@ -69,7 +70,7 @@ public class DefaultCameraDeviceDescriptor implements CameraDeviceDescriptor
     @Getter
     private String iconUrl;
 
-    private final List<ApiService> apiServices = new ArrayList<>();
+    private final List<CameraApiService> apiServices = new ArrayList<>();
 
     /*******************************************************************************************************************
      *
@@ -179,7 +180,7 @@ public class DefaultCameraDeviceDescriptor implements CameraDeviceDescriptor
      ******************************************************************************************************************/
     private void addApiService (final @Nonnull String name, final @Nonnull String actionUrl)
       {
-        apiServices.add(new ApiService(name, actionUrl));
+        apiServices.add(new CameraApiService(name, actionUrl));
       }
 
     /*******************************************************************************************************************

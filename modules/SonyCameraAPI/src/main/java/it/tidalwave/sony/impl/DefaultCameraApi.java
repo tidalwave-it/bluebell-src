@@ -38,8 +38,8 @@ import java.net.URL;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import it.tidalwave.sony.CameraDeviceDescriptor.ApiService;
 import it.tidalwave.sony.CameraApi;
+import it.tidalwave.sony.CameraApiService;
 import it.tidalwave.sony.CameraService;
 import it.tidalwave.sony.StatusCode;
 import it.tidalwave.bluebell.net.impl.DefaultHttpClient;
@@ -814,9 +814,9 @@ import lombok.extern.slf4j.Slf4j;
     @Nonnull
     private String findActionListUrl (final @Nonnull String service)
       {
-        final List<ApiService> services = cameraService.getApiServices();
+        final List<CameraApiService> services = cameraService.getApiServices();
 
-        for (final ApiService apiService : services)
+        for (final CameraApiService apiService : services)
           {
             if (apiService.getName().equals(service))
               {

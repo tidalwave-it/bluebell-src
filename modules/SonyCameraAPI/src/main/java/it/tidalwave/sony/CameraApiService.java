@@ -27,61 +27,59 @@
  */
 package it.tidalwave.sony;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
+import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
+ * Camera Remote API service (category). For example, "camera", "guide" and
+ * so on. "Action List URL" is API request target URL of each service.
  * 
- *
- * @author  Fabrizio Giudici
+ * @author  fritz
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface CameraService
+@AllArgsConstructor @ToString
+public class CameraApiService implements Serializable
   {
+    private static final long serialVersionUID = 2342353456363463L;
+
+    @Getter @Setter @Nonnull
+    private String name;
+
+    @Getter @Setter @Nonnull
+    private String actionListUrl;
+
     /*******************************************************************************************************************
      *
+     * Returns the endpoint URL of the category.
+     *
+     * @return endpoint URL
      *
      ******************************************************************************************************************/
     @Nonnull
-    public CameraApi getApi();
+    public String getEndpointUrl()
+      {
+        String url = null;
 
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public CameraObserver getObserver();
+        if (actionListUrl == null || name == null)
+          {
+            url = null;
+          }
+        else if (actionListUrl.endsWith("/"))
+          {
+            url = actionListUrl + name;
+          }
+        else
+          {
+            url = actionListUrl + "/" + name;
+          }
 
-    /*******************************************************************************************************************
-     *
-     * Returns a CameraApiService object.
-     *
-     * @param serviceName category name
-     * @return CameraApiService object
-     *
-     ******************************************************************************************************************/
-    @CheckForNull
-    public CameraApiService getApiService (@Nullable String serviceName);
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public List<CameraApiService> getApiServices();
-
-    /*******************************************************************************************************************
-     *
-     * Checks to see whether the server supports the category.
-     *
-     * @param serviceName category name
-     * @return true if it's supported.
-     *
-     ******************************************************************************************************************/
-    public boolean hasApiService (@CheckForNull String serviceName);
+        return url;
+      }
   }
+

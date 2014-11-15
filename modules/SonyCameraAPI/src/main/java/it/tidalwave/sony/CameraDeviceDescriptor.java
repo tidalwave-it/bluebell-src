@@ -30,10 +30,6 @@ package it.tidalwave.sony;
 import java.io.Serializable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 /***********************************************************************************************************************
  *
@@ -45,52 +41,6 @@ import lombok.ToString;
  **********************************************************************************************************************/
 public interface CameraDeviceDescriptor extends Serializable
   {
-    /*******************************************************************************************************************
-     *
-     * Camera Remote API service (category). For example, "camera", "guide" and
-     * so on. "Action List URL" is API request target URL of each service.
-     *
-     ******************************************************************************************************************/
-    @AllArgsConstructor @ToString
-    public static class ApiService implements Serializable
-      {
-        private static final long serialVersionUID = 2342353456363463L;
-        
-        @Getter @Setter @Nonnull
-        private String name;
-
-        @Getter @Setter @Nonnull
-        private String actionListUrl;
-
-        /***************************************************************************************************************
-         *
-         * Returns the endpoint URL of the category.
-         *
-         * @return endpoint URL
-         *
-         **************************************************************************************************************/
-        @Nonnull
-        public String getEndpointUrl()
-          {
-            String url = null;
-
-            if (actionListUrl == null || name == null)
-              {
-                url = null;
-              }
-            else if (actionListUrl.endsWith("/"))
-              {
-                url = actionListUrl + name;
-              }
-            else
-              {
-                url = actionListUrl + "/" + name;
-              }
-
-            return url;
-          }
-      }
-
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
