@@ -29,12 +29,10 @@ package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.sony.CameraDevice;
-import it.tidalwave.bluebell.cameraview.impl.android.CameraPresentationActivity;
 import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentationControl;
 import it.tidalwave.bluebell.mobile.R;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
@@ -44,7 +42,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import it.tidalwave.bluebell.mobile.android.BlueBellApplication;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -58,7 +55,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CameraDiscoveryPresentationActivity extends Activity implements CameraDiscoveryPresentation
   {
-    private final CameraDiscoveryPresentationControl control = new AndroidCameraDiscoveryPresentationControl(this);
+    private final AndroidCameraDiscoveryPresentationControl control = new AndroidCameraDiscoveryPresentationControl(this);
 
     private Handler handler;
 
@@ -222,7 +219,43 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
               }
           });
       }
-
+                
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void notifyDeviceName (final @Nonnull String deviceName) 
+      {
+        handler.post(new Runnable()
+          {
+            public void run()
+              {
+                Toast.makeText(CameraDiscoveryPresentationActivity.this, deviceName, Toast.LENGTH_SHORT).show();
+              }
+          });
+      }
+                
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void notifyDeviceNotSupported() 
+      {
+        handler.post(new Runnable()
+          {
+            public void run()
+              {
+                Toast.makeText(CameraDiscoveryPresentationActivity.this, 
+                               R.string.msg_error_non_supported_device, 
+                               Toast.LENGTH_SHORT).show();
+              }
+          });
+      }
+    
     /*******************************************************************************************************************
      *
      *
@@ -245,7 +278,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
       {
         final ListView listView = (ListView) parent;
         final CameraDevice device = (CameraDevice) listView.getAdapter().getItem(position);
-        launchSampleActivity(device);
+        control.requestCameraPresentationActivity(device);
       }
     
     /*******************************************************************************************************************
@@ -270,7 +303,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
           {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
               {
-                  onDeviceClicked(parent, view, position, id);
+                onDeviceClicked(parent, view, position, id);
               }
           });
 
@@ -288,9 +321,8 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
       {
         log.info("onResume()");
         super.onResume();
-        control.activate();
+        control.start();
         lvDevices.setAdapter(listAdapter);
-        control.initialize();
         log.debug("onResume() completed.");
       }
 
@@ -306,26 +338,4 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
         super.onPause();
         control.stop();
       }
-
-    /*******************************************************************************************************************
-     *
-     * FIXME: move to controller
-     *
-     ******************************************************************************************************************/
-    private void launchSampleActivity (final @Nonnull CameraDevice device)
-      {
-        if (device.hasApiService("camera"))
-          {
-            Toast.makeText(CameraDiscoveryPresentationActivity.this, device.getFriendlyName(), Toast.LENGTH_SHORT).show();
-            final BlueBellApplication application = (BlueBellApplication) getApplication();
-            application.setCameraDevice(device);
-            final Intent intent = new Intent(this, CameraPresentationActivity.class);
-            // FIXME: pass the device as extra
-            startActivity(intent);
-          }
-        else
-          {
-            Toast.makeText(this, R.string.msg_error_non_supported_device, Toast.LENGTH_SHORT).show();
-          }
-      }
-  }
+ }

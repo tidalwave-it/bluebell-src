@@ -48,6 +48,10 @@ public interface CameraDiscoveryPresentation
 
     public void notifySearchFinishedWithError();
 
+    public void notifyDeviceName (@Nonnull String deviceName);
+    
+    public void notifyDeviceNotSupported();
+    
     public void renderOneMoreDevice (@Nonnull CameraDevice device);
 
     public void disableSearchButton();

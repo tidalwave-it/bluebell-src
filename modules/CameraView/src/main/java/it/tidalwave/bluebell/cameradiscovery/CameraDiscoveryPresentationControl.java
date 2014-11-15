@@ -35,11 +35,9 @@ package it.tidalwave.bluebell.cameradiscovery;
  **********************************************************************************************************************/
 public interface CameraDiscoveryPresentationControl
   {
-    public void initialize();
-
+    public void start();
+    
     public void stop();
 
     public void startDiscovery();
-
-    public void activate();
   }

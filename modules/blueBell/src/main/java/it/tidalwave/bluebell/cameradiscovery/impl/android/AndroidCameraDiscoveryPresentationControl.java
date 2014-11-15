@@ -28,11 +28,14 @@
 package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.sony.CameraDevice;
+import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryPresentationControl;
 import android.app.Activity;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
-import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryPresentationControl;
+import android.content.Intent;
+import it.tidalwave.bluebell.cameraview.impl.android.CameraPresentationActivity;
+import it.tidalwave.bluebell.mobile.android.BlueBellApplication;
 import static android.content.Context.WIFI_SERVICE;
 
 /***********************************************************************************************************************
@@ -45,19 +48,55 @@ import static android.content.Context.WIFI_SERVICE;
  **********************************************************************************************************************/
 public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDiscoveryPresentationControl
   {
-    @Nonnull
-    private WifiManager wifiManager;
-
-    public AndroidCameraDiscoveryPresentationControl (final @Nonnull CameraDiscoveryPresentation presentation)
+    private final Activity activity;
+    
+    /*******************************************************************************************************************
+     *
+     * Creates a new instance.
+     *
+     * @param presentation      the controlled presentation
+     * 
+     ******************************************************************************************************************/
+    public AndroidCameraDiscoveryPresentationControl (final @Nonnull CameraDiscoveryPresentationActivity presentation)
       {
         super(presentation);
+        this.activity = presentation;
         // TODO: poll and notify state changes
       }
 
+    /*******************************************************************************************************************
+     *
+     * Requests the activity for controlling a device.
+     *
+     * @param device    the device
+     * 
+     ******************************************************************************************************************/
+    public void requestCameraPresentationActivity (final @Nonnull CameraDevice device)
+      {
+        if (!device.hasApiService("camera"))
+          {
+            presentation.notifyDeviceNotSupported();
+          }
+        else
+          {
+            presentation.notifyDeviceName(device.getFriendlyName());
+            final BlueBellApplication application = (BlueBellApplication)activity.getApplication();
+            application.setCameraDevice(device);
+            final Intent intent = new Intent(activity, CameraPresentationActivity.class);
+            // FIXME: pass the device as extra
+            activity.startActivity(intent);
+          }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     @Override
     protected void populateWiFi()
       {
-        wifiManager = (WifiManager)((Activity)presentation).getSystemService(WIFI_SERVICE); // FIXME: getContext
+        final WifiManager wifiManager = (WifiManager)activity.getSystemService(WIFI_SERVICE); 
 
         if (wifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED)
           {

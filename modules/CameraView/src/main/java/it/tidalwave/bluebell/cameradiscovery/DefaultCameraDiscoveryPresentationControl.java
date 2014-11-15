@@ -56,19 +56,9 @@ public class DefaultCameraDiscoveryPresentationControl implements CameraDiscover
      *
      ******************************************************************************************************************/
     @Override
-    public void initialize()
+    public void start()
       {
         populateWiFi();
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void activate()
-      {
         active = true;
       }
 
