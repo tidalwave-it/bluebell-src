@@ -61,7 +61,7 @@ class DeviceListAdapter extends BaseAdapter
 
     public DeviceListAdapter (final @Nonnull Context context)
       {
-        devices = new ArrayList<CameraDevice>();
+        devices = new ArrayList<>();
         inflater = LayoutInflater.from(context);
       }
 
