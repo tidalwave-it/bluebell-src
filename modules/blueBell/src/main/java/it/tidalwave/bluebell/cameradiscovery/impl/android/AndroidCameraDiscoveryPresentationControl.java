@@ -94,6 +94,7 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
       {
         super.start(); 
         registerWiFiReceiver();
+          startDiscovery();
       }
     
     /*******************************************************************************************************************

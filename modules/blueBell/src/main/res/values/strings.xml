@@ -9,7 +9,7 @@
     <string name="button_take_picture">Take Picture</string>
     <string name="button_rec_start">Start movie\nrecording</string>
     <string name="button_rec_stop">Stop movie\nrecording</string>
-    <string name="button_start_search">Start device discovery</string>
+    <string name="button_start_search">Rescan</string>
     <string name="button_cancel_search">Cancel</string>
 
     <string name="msg_wifi_disconnect">(Wi-Fi disconnected)</string>
