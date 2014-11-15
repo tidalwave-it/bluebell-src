@@ -28,7 +28,6 @@
 package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
 import javax.annotation.Nonnull;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -38,7 +37,6 @@ import it.tidalwave.sony.CameraDeviceDescriptor;
 import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryPresentationControl;
 import it.tidalwave.bluebell.cameraview.impl.android.CameraPresentationActivity;
-import it.tidalwave.bluebell.mobile.android.BlueBellApplication;
 import static android.content.Context.WIFI_SERVICE;
 
 /***********************************************************************************************************************
@@ -121,12 +119,8 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
         else
           {
             presentation.notifySelectedDeviceName(cameraDeviceDescriptor.getFriendlyName());
-            final BlueBellApplication application = (BlueBellApplication)((Activity)context).getApplication();
-            application.setCameraDeviceDescriptor(cameraDeviceDescriptor);
-            // We can't pass the device as an Intent extra because CameraDeviceDescriptor is not Serializable (it contains
-            // references to other objects). 
-            // TODO: check whether CameraDeviceDescriptor can be refactored so it's Serializable
             final Intent intent = new Intent(context, CameraPresentationActivity.class);
+            intent.putExtra("cameraDeviceDescriptor", cameraDeviceDescriptor);
             context.startActivity(intent);
           }
       }

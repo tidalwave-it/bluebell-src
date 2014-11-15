@@ -27,10 +27,8 @@
  */
 package it.tidalwave.bluebell.mobile.android;
 
-import it.tidalwave.sony.CameraDeviceDescriptor;
+import android.app.Activity;
 import android.app.Application;
-import lombok.Getter;
-import lombok.Setter;
 
 /***********************************************************************************************************************
  *
@@ -48,6 +46,5 @@ import lombok.Setter;
  **********************************************************************************************************************/
 public class BlueBellApplication extends Application
   {
-    @Getter @Setter
-    private CameraDeviceDescriptor cameraDeviceDescriptor;
+    // currently no need for shared objects 
   }

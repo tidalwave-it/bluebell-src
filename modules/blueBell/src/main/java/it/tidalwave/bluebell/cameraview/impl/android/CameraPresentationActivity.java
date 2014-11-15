@@ -29,8 +29,6 @@ package it.tidalwave.bluebell.cameraview.impl.android;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import it.tidalwave.bluebell.cameraview.CameraPresentation;
-import it.tidalwave.bluebell.cameraview.DefaultCameraPresentationControl;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -43,8 +41,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import it.tidalwave.sony.CameraDeviceDescriptor;
+import it.tidalwave.bluebell.cameraview.CameraPresentation;
+import it.tidalwave.bluebell.cameraview.DefaultCameraPresentationControl;
 import it.tidalwave.bluebell.mobile.R;
-import it.tidalwave.bluebell.mobile.android.BlueBellApplication;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecoratorFactory.*;
 
@@ -361,11 +361,12 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
         tvCameraStatus = (TextView)findViewById(R.id.tv_camera_status);
         svLiveView = (LiveViewSurfaceView)findViewById(R.id.sv_live_view);
 
-        final BlueBellApplication application = (BlueBellApplication)getApplication();
+        final CameraDeviceDescriptor cameraDeviceDescriptor =
+                (CameraDeviceDescriptor)getIntent().getSerializableExtra("cameraDeviceDescriptor");
         control = new AndroidCameraPresentationControl(createUIThreadDecorator(this, CameraPresentation.class),
                                                        this,
                                                        svLiveView, 
-                                                       application.getCameraDeviceDescriptor());
+                                                       cameraDeviceDescriptor);
 
         log.info("onCreate() completed.");
       }
