@@ -27,6 +27,8 @@
  */
 package it.tidalwave.bluebell.cameraview;
 
+import javax.annotation.Nonnull;
+
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
@@ -54,7 +56,7 @@ public interface CameraPresentationControl
      *
      *
      ******************************************************************************************************************/
-    public void setShootMode (final String mode);
+    public void setShootMode (@Nonnull String mode);
 
     /*******************************************************************************************************************
      *
