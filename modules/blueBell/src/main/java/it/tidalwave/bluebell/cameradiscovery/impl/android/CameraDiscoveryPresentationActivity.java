@@ -28,24 +28,25 @@
 package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.sony.CameraDevice;
-import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import it.tidalwave.sony.CameraDevice;
+import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 import it.tidalwave.bluebell.mobile.R;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecoratorFactory.*;
 
 /***********************************************************************************************************************
  *
- * An Activity class of Device Discovery screen.
+ * An {@link Activity} that implements {@link CameraDiscoveryPresentation}.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -63,7 +64,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
 
     private TextView tvWifiStatus;
 
-    private View btSearch;
+    private Button btSearch;
 
     /*******************************************************************************************************************
      *
@@ -71,7 +72,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
      *
      ******************************************************************************************************************/
     @Override
-    public void populateWiFiState (final @Nonnull String wiFiState)
+    public void renderWiFiState (final @Nonnull String wiFiState)
       {
         tvWifiStatus.setText(Html.fromHtml(wiFiState));
       }
@@ -82,22 +83,11 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
      *
      ******************************************************************************************************************/
     @Override
-    public void hideProgressBar()
+    public void notifySearchInProgress()
       {
-        setProgressBarIndeterminateVisibility(false);
+        setProgressBarIndeterminateVisibility(true);
       }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void enableSearchButton()
-      {
-        btSearch.setEnabled(true);
-      }
-
+                
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -106,7 +96,10 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     @Override
     public void notifySearchFinished()
       {
-        Toast.makeText(CameraDiscoveryPresentationActivity.this, R.string.msg_device_search_finish, Toast.LENGTH_SHORT).show();
+        setProgressBarIndeterminateVisibility(false);
+        Toast.makeText(CameraDiscoveryPresentationActivity.this, 
+                       R.string.msg_device_search_finish, 
+                       Toast.LENGTH_SHORT).show();
       }
 
     /*******************************************************************************************************************
@@ -117,7 +110,46 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     @Override
     public void notifySearchFinishedWithError()
       {
-        Toast.makeText(CameraDiscoveryPresentationActivity.this, R.string.msg_error_device_searching, Toast.LENGTH_SHORT).show();
+        Toast.makeText(CameraDiscoveryPresentationActivity.this, 
+                       R.string.msg_error_device_searching, 
+                       Toast.LENGTH_SHORT).show();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void notifySelectedDeviceName (final @Nonnull String deviceName) 
+      {
+        Toast.makeText(CameraDiscoveryPresentationActivity.this,
+                       deviceName,
+                       Toast.LENGTH_SHORT).show();
+      }
+                
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void notifySelectedDeviceNotSupported() 
+      {
+        Toast.makeText(CameraDiscoveryPresentationActivity.this, 
+                       R.string.msg_error_non_supported_device, 
+                       Toast.LENGTH_SHORT).show();
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void clearDeviceList()
+      {
+        listAdapter.clearDevices();
       }
 
     /*******************************************************************************************************************
@@ -137,57 +169,22 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
      *
      ******************************************************************************************************************/
     @Override
+    public void enableSearchButton()
+      {
+        btSearch.setEnabled(true);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
     public void disableSearchButton()
       {
         btSearch.setEnabled(false);
       }
 
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void clearDevices()
-      {
-        listAdapter.clearDevices();
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void showProgressBar()
-      {
-        setProgressBarIndeterminateVisibility(true);
-      }
-                
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void notifyDeviceName (final @Nonnull String deviceName) 
-      {
-        Toast.makeText(CameraDiscoveryPresentationActivity.this, deviceName, Toast.LENGTH_SHORT).show();
-      }
-                
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void notifyDeviceNotSupported() 
-      {
-        Toast.makeText(CameraDiscoveryPresentationActivity.this, 
-                       R.string.msg_error_non_supported_device, 
-                       Toast.LENGTH_SHORT).show();
-      }
-    
     /*******************************************************************************************************************
      *
      *
@@ -229,7 +226,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
 
         lvDevices = (ListView)findViewById(R.id.list_device);
         tvWifiStatus = (TextView)findViewById(R.id.text_wifi_ssid);
-        btSearch = findViewById(R.id.button_search);
+        btSearch = (Button)findViewById(R.id.button_search);
         
         lvDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() 
           {

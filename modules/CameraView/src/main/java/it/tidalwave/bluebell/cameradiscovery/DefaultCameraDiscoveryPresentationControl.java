@@ -46,7 +46,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
     @Nonnull
     protected final CameraDiscoveryPresentation presentation;
 
-    private final SsdpDiscoverer ssdpClient = new DefaultSsdpDiscoverer();
+    private final SsdpDiscoverer ssdpDiscoverer = new DefaultSsdpDiscoverer();
 
     private boolean active;
 
@@ -58,7 +58,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
     @Override
     public void start()
       {
-        populateWiFi();
+        renderWiFiStatus();
         active = true;
       }
 
@@ -72,9 +72,9 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
       {
         active = false;
 
-        if (ssdpClient.isSearching())
+        if (ssdpDiscoverer.isSearching())
           {
-            ssdpClient.cancelSearching();
+            ssdpDiscoverer.cancelSearching();
           }
       }
 
@@ -86,13 +86,13 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
     @Override
     public void startDiscovery()
       {
-        if (!ssdpClient.isSearching())
+        if (!ssdpDiscoverer.isSearching())
           {
             presentation.disableSearchButton();
-            presentation.clearDevices();
-            presentation.showProgressBar();
+            presentation.clearDeviceList();
+            presentation.notifySearchInProgress();
 
-            ssdpClient.search(new SsdpDiscoverer.Callback()
+            ssdpDiscoverer.search(new SsdpDiscoverer.Callback()
               {
                 @Override
                 public void onDeviceFound(final CameraDevice device)
@@ -105,7 +105,6 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
                 public void onFinished()
                   {
                     log.info(">>>> Search finished.");
-                    presentation.hideProgressBar();
                     presentation.enableSearchButton();
 
                     if (active)
@@ -118,7 +117,6 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
                 public void onErrorFinished()
                   {
                     log.info(">>>> Search finished with error.");
-                    presentation.hideProgressBar();
                     presentation.enableSearchButton();
 
                     if (active)
@@ -132,9 +130,9 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
 
     /*******************************************************************************************************************
      *
+     * Renders the WiFi status. This method is abstract since its actual implementation depends on Android. It must be
+     * implemented in a subclass.
      *
      ******************************************************************************************************************/
-    protected void populateWiFi()
-      {
-      }
+    protected abstract void renderWiFiStatus();
   }

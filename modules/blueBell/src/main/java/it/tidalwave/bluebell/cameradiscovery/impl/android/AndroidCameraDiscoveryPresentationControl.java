@@ -29,20 +29,20 @@ package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
 import javax.annotation.Nonnull;
 import android.app.Activity;
-import it.tidalwave.sony.CameraDevice;
-import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
-import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryPresentationControl;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import it.tidalwave.sony.CameraDevice;
+import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
+import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryPresentationControl;
 import it.tidalwave.bluebell.cameraview.impl.android.CameraPresentationActivity;
 import it.tidalwave.bluebell.mobile.android.BlueBellApplication;
 import static android.content.Context.WIFI_SERVICE;
 
 /***********************************************************************************************************************
  *
- * The Android specialisation of {@link DefaultCameraDiscoveryViewControl}, which contains Android-specific code.
+ * The Android specialisation of {@link DefaultCameraDiscoveryViewControl} that contains Android-specific code.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -79,11 +79,11 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
       {
         if (!device.hasApiService("camera"))
           {
-            presentation.notifyDeviceNotSupported();
+            presentation.notifySelectedDeviceNotSupported();
           }
         else
           {
-            presentation.notifyDeviceName(device.getFriendlyName());
+            presentation.notifySelectedDeviceName(device.getFriendlyName());
             final BlueBellApplication application = (BlueBellApplication)((Activity)context).getApplication();
             application.setCameraDevice(device);
             // We can't pass the device as an Intent extra because CameraDevice is not Serializable (it contains
@@ -100,7 +100,7 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
      *
      ******************************************************************************************************************/
     @Override
-    protected void populateWiFi()
+    protected void renderWiFiStatus()
       {
         final WifiManager wifiManager = (WifiManager)context.getSystemService(WIFI_SERVICE); 
 
@@ -108,11 +108,11 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
           {
             final WifiInfo wifiInfo = wifiManager.getConnectionInfo();
             final String htmlLabel = String.format("SSID: <b>%s</b>", wifiInfo.getSSID());
-            presentation.populateWiFiState(htmlLabel);
+            presentation.renderWiFiState(htmlLabel);
           }
         else
           {
-            presentation.populateWiFiState("WiFi disconnected");
+            presentation.renderWiFiState("WiFi disconnected");
             // R.string.msg_wifi_disconnect FIXME drop
           }
       }
