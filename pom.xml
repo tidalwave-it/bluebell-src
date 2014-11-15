@@ -96,7 +96,7 @@
                         <resourceDirectory>${project.basedir}/src/main/res</resourceDirectory>
                         <nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory>
                         <sdk>
-                            <platform>15</platform>
+                            <platform>19</platform>
                         </sdk>
                         <deleteConflictingFiles>true</deleteConflictingFiles>
                         <undeployBeforeDeploy>true</undeployBeforeDeploy>
