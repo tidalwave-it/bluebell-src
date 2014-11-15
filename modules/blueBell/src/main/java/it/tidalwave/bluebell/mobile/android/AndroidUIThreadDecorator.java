@@ -33,6 +33,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import android.os.Handler;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -41,8 +43,8 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
-public class AndroidUIThreadDecorator
+@Slf4j @NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class AndroidUIThreadDecorator
   {
     public static <PRESENTATION> PRESENTATION createProxy (final @Nonnull PRESENTATION presentation,
                                                            final Class<PRESENTATION> interfaceClass) 
