@@ -37,7 +37,7 @@ import static android.content.Context.WIFI_SERVICE;
 
 /***********************************************************************************************************************
  *
- * The Android specialisation of {@link DefaultCameraDiscoveryViewControl} that is able to populate the WiFi state.
+ * The Android specialisation of {@link DefaultCameraDiscoveryViewControl}, which contains Android-specific code.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
