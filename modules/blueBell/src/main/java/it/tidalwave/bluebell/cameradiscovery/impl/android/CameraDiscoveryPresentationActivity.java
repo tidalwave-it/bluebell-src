@@ -212,7 +212,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
       {
         final ListView listView = (ListView) parent;
         final CameraDevice device = (CameraDevice) listView.getAdapter().getItem(position);
-        control.requestCameraPresentationActivity(device);
+        control.showCameraPresentation(device);
       }
     
     /*******************************************************************************************************************

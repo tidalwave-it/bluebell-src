@@ -29,6 +29,7 @@ package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.sony.CameraDevice;
+import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryPresentationControl;
 import android.app.Activity;
 import android.net.wifi.WifiInfo;
@@ -37,7 +38,6 @@ import android.content.Intent;
 import it.tidalwave.bluebell.cameraview.impl.android.CameraPresentationActivity;
 import it.tidalwave.bluebell.mobile.android.BlueBellApplication;
 import static android.content.Context.WIFI_SERVICE;
-import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 
 /***********************************************************************************************************************
  *
@@ -49,6 +49,7 @@ import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
  **********************************************************************************************************************/
 public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDiscoveryPresentationControl
   {
+    @Nonnull
     private final Activity activity;
     
     /*******************************************************************************************************************
@@ -69,12 +70,11 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
 
     /*******************************************************************************************************************
      *
-     * Requests the activity for controlling a device.
-     *
-     * @param device    the device
+     * {@inheritDoc} 
      * 
      ******************************************************************************************************************/
-    public void requestCameraPresentationActivity (final @Nonnull CameraDevice device)
+    @Override
+    public void showCameraPresentation (final @Nonnull CameraDevice device)
       {
         if (!device.hasApiService("camera"))
           {
@@ -95,7 +95,7 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
     
     /*******************************************************************************************************************
      *
-     * 
+     * {@inheritDoc} 
      *
      ******************************************************************************************************************/
     @Override

@@ -27,6 +27,9 @@
  */
 package it.tidalwave.bluebell.cameradiscovery;
 
+import it.tidalwave.sony.CameraDevice;
+import javax.annotation.Nonnull;
+
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
@@ -35,9 +38,34 @@ package it.tidalwave.bluebell.cameradiscovery;
  **********************************************************************************************************************/
 public interface CameraDiscoveryPresentationControl
   {
+    /*******************************************************************************************************************
+     *
+     * Start the controller.
+     * 
+     ******************************************************************************************************************/
     public void start();
     
+    /*******************************************************************************************************************
+     *
+     * Stop the controller.
+     * 
+     ******************************************************************************************************************/
     public void stop();
 
+    /*******************************************************************************************************************
+     *
+     * Starts the discovery of devices.
+     * 
+     ******************************************************************************************************************/
     public void startDiscovery();
+    
+    /*******************************************************************************************************************
+     *
+     * Shows the presentation for controlling the given {@link CameraDevice} if it exposes an API for remote control;
+     * otherwise notify that the device is not compatible.
+     *
+     * @param cameraDevice    the camera
+     * 
+     ******************************************************************************************************************/
+    public void showCameraPresentation (@Nonnull CameraDevice cameraDevice);
   }

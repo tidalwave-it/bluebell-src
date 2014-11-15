@@ -41,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
-public class DefaultCameraDiscoveryPresentationControl implements CameraDiscoveryPresentationControl
+public abstract class DefaultCameraDiscoveryPresentationControl implements CameraDiscoveryPresentationControl
   {
     @Nonnull
     protected final CameraDiscoveryPresentation presentation;
