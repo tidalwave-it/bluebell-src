@@ -58,7 +58,7 @@ public class LiveViewSurfaceView extends SurfaceView implements LiveViewPresenta
   {
     private volatile boolean running;
 
-    private final BlockingQueue<byte[]> imageQueue = new ArrayBlockingQueue<byte[]>(2);
+    private final BlockingQueue<byte[]> imageQueue = new ArrayBlockingQueue<>(2);
 
     private final boolean mInMutableAvailable = false;
 
@@ -164,7 +164,9 @@ public class LiveViewSurfaceView extends SurfaceView implements LiveViewPresenta
 
     /*******************************************************************************************************************
      *
-     * Start the consumer thread that refresh the view pulling images from the qeueu.
+     * Start the consumer thread that refresh the view pulling images from the queue.
+     * 
+     * FIXME: could be reimplemented with Handler?
      *
      ******************************************************************************************************************/
     @Override
