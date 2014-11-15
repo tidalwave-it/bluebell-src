@@ -32,7 +32,6 @@ import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Html;
 import android.view.View;
 import android.view.Window;
@@ -41,6 +40,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import it.tidalwave.bluebell.mobile.R;
+import it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecorator;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -54,9 +54,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CameraDiscoveryPresentationActivity extends Activity implements CameraDiscoveryPresentation
   {
-    private final AndroidCameraDiscoveryPresentationControl control = new AndroidCameraDiscoveryPresentationControl(this);
+    private final AndroidCameraDiscoveryPresentationControl control = 
+            new AndroidCameraDiscoveryPresentationControl(AndroidUIThreadDecorator.createProxy(this, CameraDiscoveryPresentation.class), this);
 
-    private Handler handler;
+//    private Handler handler;
 
     private DeviceListAdapter listAdapter;
 
@@ -74,13 +75,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     @Override
     public void populateWiFiState (final @Nonnull String wiFiState)
       {
-        handler.post(new Runnable()
-          {
-            public void run()
-              {
-                tvWifiStatus.setText(Html.fromHtml(wiFiState));
-              }
-          });
+        tvWifiStatus.setText(Html.fromHtml(wiFiState));
       }
 
     /*******************************************************************************************************************
@@ -91,13 +86,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     @Override
     public void hideProgressBar()
       {
-        handler.post(new Runnable()
-          {
-            public void run()
-              {
-                setProgressBarIndeterminateVisibility(false);
-              }
-          });
+        setProgressBarIndeterminateVisibility(false);
       }
 
     /*******************************************************************************************************************
@@ -108,13 +97,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     @Override
     public void enableSearchButton()
       {
-        handler.post(new Runnable()
-          {
-            public void run()
-              {
-                btSearch.setEnabled(true);
-              }
-          });
+        btSearch.setEnabled(true);
       }
 
     /*******************************************************************************************************************
@@ -125,13 +108,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     @Override
     public void notifySearchFinished()
       {
-        handler.post(new Runnable()
-          {
-            public void run()
-              {
-                Toast.makeText(CameraDiscoveryPresentationActivity.this, R.string.msg_device_search_finish, Toast.LENGTH_SHORT).show();
-              }
-          });
+        Toast.makeText(CameraDiscoveryPresentationActivity.this, R.string.msg_device_search_finish, Toast.LENGTH_SHORT).show();
       }
 
     /*******************************************************************************************************************
@@ -142,13 +119,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     @Override
     public void notifySearchFinishedWithError()
       {
-        handler.post(new Runnable()
-          {
-            public void run()
-              {
-                Toast.makeText(CameraDiscoveryPresentationActivity.this, R.string.msg_error_device_searching, Toast.LENGTH_SHORT).show();
-              }
-          });
+        Toast.makeText(CameraDiscoveryPresentationActivity.this, R.string.msg_error_device_searching, Toast.LENGTH_SHORT).show();
       }
 
     /*******************************************************************************************************************
@@ -159,13 +130,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     @Override
     public void renderOneMoreDevice (final @Nonnull CameraDevice device)
       {
-        handler.post(new Runnable()
-          {
-            public void run()
-              {
-                listAdapter.addDevice(device);
-              }
-          });
+        listAdapter.addDevice(device);
       }
 
     /*******************************************************************************************************************
@@ -176,13 +141,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     @Override
     public void disableSearchButton()
       {
-        handler.post(new Runnable()
-          {
-            public void run()
-              {
-                btSearch.setEnabled(false);
-              }
-          });
+        btSearch.setEnabled(false);
       }
 
     /*******************************************************************************************************************
@@ -193,13 +152,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     @Override
     public void clearDevices()
       {
-        handler.post(new Runnable()
-          {
-            public void run()
-              {
-                listAdapter.clearDevices();
-              }
-          });
+        listAdapter.clearDevices();
       }
 
     /*******************************************************************************************************************
@@ -210,13 +163,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     @Override
     public void showProgressBar()
       {
-        handler.post(new Runnable()
-          {
-            public void run()
-              {
-                setProgressBarIndeterminateVisibility(true);
-              }
-          });
+        setProgressBarIndeterminateVisibility(true);
       }
                 
     /*******************************************************************************************************************
@@ -227,13 +174,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     @Override
     public void notifyDeviceName (final @Nonnull String deviceName) 
       {
-        handler.post(new Runnable()
-          {
-            public void run()
-              {
-                Toast.makeText(CameraDiscoveryPresentationActivity.this, deviceName, Toast.LENGTH_SHORT).show();
-              }
-          });
+        Toast.makeText(CameraDiscoveryPresentationActivity.this, deviceName, Toast.LENGTH_SHORT).show();
       }
                 
     /*******************************************************************************************************************
@@ -244,15 +185,9 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     @Override
     public void notifyDeviceNotSupported() 
       {
-        handler.post(new Runnable()
-          {
-            public void run()
-              {
-                Toast.makeText(CameraDiscoveryPresentationActivity.this, 
-                               R.string.msg_error_non_supported_device, 
-                               Toast.LENGTH_SHORT).show();
-              }
-          });
+        Toast.makeText(CameraDiscoveryPresentationActivity.this, 
+                       R.string.msg_error_non_supported_device, 
+                       Toast.LENGTH_SHORT).show();
       }
     
     /*******************************************************************************************************************
@@ -306,7 +241,6 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
               }
           });
 
-        handler = new Handler();
         listAdapter = new DeviceListAdapter(this);
       }
 

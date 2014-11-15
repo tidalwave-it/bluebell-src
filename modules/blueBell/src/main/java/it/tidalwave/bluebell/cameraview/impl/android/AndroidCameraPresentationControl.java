@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import it.tidalwave.sony.CameraDevice;
+import it.tidalwave.bluebell.cameraview.CameraPresentation;
 import it.tidalwave.bluebell.cameraview.DefaultCameraPresentationControl;
 import it.tidalwave.bluebell.liveview.LiveViewPresentation;
 import android.app.Activity;
@@ -58,17 +59,18 @@ public class AndroidCameraPresentationControl extends DefaultCameraPresentationC
      *
      * Creates a new instance.
      *
-     * @param cameraPresentation    the controlled presentation
+     * @param presentation    the controlled presentation
      * @param liveView              the live view
      * @param cameraDevice          the current device
      * 
      ******************************************************************************************************************/
-    public AndroidCameraPresentationControl (final @Nonnull CameraPresentationActivity cameraPresentation,
+    public AndroidCameraPresentationControl (final @Nonnull CameraPresentation presentation,
+                                             final @Nonnull CameraPresentationActivity activity,
                                              final @Nonnull LiveViewPresentation liveView,
                                              final @Nonnull CameraDevice cameraDevice)
       {
-        super(cameraPresentation, liveView, cameraDevice);
-        this.activity = cameraPresentation;
+        super(presentation, liveView, cameraDevice);
+        this.activity = activity;
       }
 
     /*******************************************************************************************************************

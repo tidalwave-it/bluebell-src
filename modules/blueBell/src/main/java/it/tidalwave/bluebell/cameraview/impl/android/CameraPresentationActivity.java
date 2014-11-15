@@ -34,7 +34,6 @@ import it.tidalwave.bluebell.cameraview.DefaultCameraPresentationControl;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -46,6 +45,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import it.tidalwave.bluebell.mobile.R;
 import it.tidalwave.bluebell.mobile.android.BlueBellApplication;
+import it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecorator;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -57,8 +57,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CameraPresentationActivity extends Activity implements CameraPresentation
   {
-    private Handler handler;
-
     private ImageView ivPhotoBox;
 
     private RadioGroup rbShootModeSelector;
@@ -83,15 +81,8 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void notifyConnectionError()
       {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                Toast.makeText(CameraPresentationActivity.this, R.string.msg_error_connection, Toast.LENGTH_SHORT).show();
-                setProgressBarIndeterminateVisibility(false); // FIXME: split
-              }
-          });
+        Toast.makeText(CameraPresentationActivity.this, R.string.msg_error_connection, Toast.LENGTH_SHORT).show();
+        setProgressBarIndeterminateVisibility(false); // FIXME: split
       }
 
     /*******************************************************************************************************************
@@ -102,17 +93,10 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void notifyDeviceNotSupportedAndQuit()
       {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                Toast.makeText(CameraPresentationActivity.this, 
-                               R.string.msg_error_non_supported_device,
-                               Toast.LENGTH_SHORT).show();
-                CameraPresentationActivity.this.finish(); // FIXME: split
-              }
-          });
+        Toast.makeText(CameraPresentationActivity.this, 
+                       R.string.msg_error_non_supported_device,
+                       Toast.LENGTH_SHORT).show();
+        finish(); // FIXME: split
       }
 
     /*******************************************************************************************************************
@@ -123,15 +107,8 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void setShootModeControl (final @Nonnull List<String> availableModes, final @Nonnull String currentMode)
       {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                prepareShootModeRadioButtonsUi(availableModes.toArray(new String[0]), currentMode);
-                setProgressBarIndeterminateVisibility(false); // FIXME: split?
-              }
-          });
+        prepareShootModeRadioButtonsUi(availableModes.toArray(new String[0]), currentMode);
+        setProgressBarIndeterminateVisibility(false); // FIXME: split?
       }
 
     /*******************************************************************************************************************
@@ -142,14 +119,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void showProgressBar()
       {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                setProgressBarIndeterminateVisibility(true);
-              }
-          });
+        setProgressBarIndeterminateVisibility(true);
       }
 
     /*******************************************************************************************************************
@@ -160,14 +130,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void hideProgressBar()
       {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                setProgressBarIndeterminateVisibility(false);
-              }
-          });
+        setProgressBarIndeterminateVisibility(false);
       }
 
     /*******************************************************************************************************************
@@ -178,16 +141,9 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void notifyErrorWhileTakingPhoto()
       {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                Toast.makeText(CameraPresentationActivity.this,
-                               R.string.msg_error_take_picture, 
-                               Toast.LENGTH_SHORT).show();
-              }
-          });
+        Toast.makeText(CameraPresentationActivity.this,
+                       R.string.msg_error_take_picture, 
+                       Toast.LENGTH_SHORT).show();
       }
 
     /*******************************************************************************************************************
@@ -198,14 +154,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void renderCameraStatus (final @Nonnull String cameraStatus)
       {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                tvCameraStatus.setText(cameraStatus);
-              }
-          });
+        tvCameraStatus.setText(cameraStatus);
       }
 
     /*******************************************************************************************************************
@@ -216,15 +165,8 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void renderRecStartStopButtonAsStop()
       {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                btRecStartStop.setEnabled(true);
-                btRecStartStop.setText(R.string.button_rec_stop);
-              }
-          });
+        btRecStartStop.setEnabled(true);
+        btRecStartStop.setText(R.string.button_rec_stop);
       }
 
     /*******************************************************************************************************************
@@ -235,15 +177,8 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void renderRecStartStopButtonAsStart()
       {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                btRecStartStop.setEnabled(true);
-                btRecStartStop.setText(R.string.button_rec_start);
-              }
-          });
+        btRecStartStop.setEnabled(true);
+        btRecStartStop.setText(R.string.button_rec_start);
       }
 
     /*******************************************************************************************************************
@@ -254,14 +189,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void disableRecStartStopButton()
       {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                btRecStartStop.setEnabled(false);
-              }
-          });
+        btRecStartStop.setEnabled(false);
       }
 
     /*******************************************************************************************************************
@@ -272,14 +200,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void enableTakePhotoButton (final boolean enabled)
       {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                btTakePhoto.setEnabled(enabled);
-              }
-          });
+        btTakePhoto.setEnabled(enabled);
       }
 
     /*******************************************************************************************************************
@@ -290,14 +211,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void hidePhotoBox()
       {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                ivPhotoBox.setVisibility(View.INVISIBLE);
-              }
-          });
+        ivPhotoBox.setVisibility(View.INVISIBLE);
       }
 
     /*******************************************************************************************************************
@@ -308,28 +222,21 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void enableShootModeSelector (final @Nonnull String shootMode)
       {
-        handler.post(new Runnable()
+        for (int i = 0; i < rbShootModeSelector.getChildCount(); i++)
           {
-            @Override
-            public void run()
-              {
-                for (int i = 0; i < rbShootModeSelector.getChildCount(); i++)
-                  {
-                    rbShootModeSelector.getChildAt(i).setEnabled(true);
-                  }
+            rbShootModeSelector.getChildAt(i).setEnabled(true);
+          }
 
-                View radioButton = rbShootModeSelector.findViewWithTag(shootMode);
+        View radioButton = rbShootModeSelector.findViewWithTag(shootMode);
 
-                if (radioButton != null)
-                  {
-                    rbShootModeSelector.check(radioButton.getId());
-                  }
-                else
-                  {
-                    rbShootModeSelector.clearCheck();
-                  }
-              }
-          });
+        if (radioButton != null)
+          {
+            rbShootModeSelector.check(radioButton.getId());
+          }
+        else
+          {
+            rbShootModeSelector.clearCheck();
+          }
       }
 
     /*******************************************************************************************************************
@@ -340,17 +247,10 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void disableShootModeSelector()
       {
-        handler.post(new Runnable()
+        for (int i = 0; i < rbShootModeSelector.getChildCount(); i++)
           {
-            @Override
-            public void run()
-              {
-                for (int i = 0; i < rbShootModeSelector.getChildCount(); i++)
-                  {
-                    rbShootModeSelector.getChildAt(i).setEnabled(false);
-                  }
-              }
-          });
+            rbShootModeSelector.getChildAt(i).setEnabled(false);
+          }
       }
 
     /*******************************************************************************************************************
@@ -361,15 +261,8 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void showPhoto (final @Nonnull Object picture)
       {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                ivPhotoBox.setVisibility(View.VISIBLE);
-                ivPhotoBox.setImageDrawable((Drawable)picture);
-              }
-          });
+        ivPhotoBox.setVisibility(View.VISIBLE);
+        ivPhotoBox.setImageDrawable((Drawable)picture);
       }
 
     /*******************************************************************************************************************
@@ -380,14 +273,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void notifyRecStart()
       {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                Toast.makeText(CameraPresentationActivity.this, R.string.msg_rec_start, Toast.LENGTH_SHORT).show();
-              }
-          });
+        Toast.makeText(CameraPresentationActivity.this, R.string.msg_rec_start, Toast.LENGTH_SHORT).show();
       }
 
     /*******************************************************************************************************************
@@ -398,14 +284,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void notifyRecStop()
       {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                Toast.makeText(CameraPresentationActivity.this, R.string.msg_rec_stop, Toast.LENGTH_SHORT).show();
-              }
-          });
+        Toast.makeText(CameraPresentationActivity.this, R.string.msg_rec_stop, Toast.LENGTH_SHORT).show();
       }
 
     /*******************************************************************************************************************
@@ -416,16 +295,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void notifyErrorWhileRecordingMovie()
       {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                Toast.makeText(CameraPresentationActivity.this,
-                               R.string.msg_error_api_calling,
-                               Toast.LENGTH_SHORT).show();
-              }
-          });
+        Toast.makeText(CameraPresentationActivity.this, R.string.msg_error_api_calling, Toast.LENGTH_SHORT).show();
       }
 
     /*******************************************************************************************************************
@@ -436,16 +306,9 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void notifyGenericError()
       {
-        handler.post(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                Toast.makeText(CameraPresentationActivity.this,
-                               R.string.msg_error_api_calling,
-                               Toast.LENGTH_SHORT).show();
-              }
-          });
+        Toast.makeText(CameraPresentationActivity.this,
+                       R.string.msg_error_api_calling,
+                       Toast.LENGTH_SHORT).show();
       }
     
     /*******************************************************************************************************************
@@ -498,9 +361,11 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
         tvCameraStatus = (TextView)findViewById(R.id.text_camera_status);
         liveviewSurface = (LiveViewSurfaceView)findViewById(R.id.surfaceview_liveview);
 
-        handler = new Handler();
         final BlueBellApplication application = (BlueBellApplication)getApplication();
-        control = new AndroidCameraPresentationControl(this, liveviewSurface, application.getCameraDevice());
+        control = new AndroidCameraPresentationControl(AndroidUIThreadDecorator.createProxy(this, CameraPresentation.class),
+                                                       this,
+                                                       liveviewSurface, 
+                                                       application.getCameraDevice());
 
         log.info("onCreate() completed.");
       }

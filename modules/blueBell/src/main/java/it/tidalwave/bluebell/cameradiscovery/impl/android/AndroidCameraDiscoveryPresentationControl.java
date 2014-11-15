@@ -37,6 +37,7 @@ import android.content.Intent;
 import it.tidalwave.bluebell.cameraview.impl.android.CameraPresentationActivity;
 import it.tidalwave.bluebell.mobile.android.BlueBellApplication;
 import static android.content.Context.WIFI_SERVICE;
+import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 
 /***********************************************************************************************************************
  *
@@ -55,12 +56,14 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
      * Creates a new instance.
      *
      * @param presentation      the controlled presentation
+     * @param activity          the controlled activity
      * 
      ******************************************************************************************************************/
-    public AndroidCameraDiscoveryPresentationControl (final @Nonnull CameraDiscoveryPresentationActivity presentation)
+    public AndroidCameraDiscoveryPresentationControl (final @Nonnull CameraDiscoveryPresentation presentation,
+                                                      final @Nonnull CameraDiscoveryPresentationActivity activity)
       {
         super(presentation);
-        this.activity = presentation;
+        this.activity = activity;
         // TODO: poll and notify state changes
       }
 
