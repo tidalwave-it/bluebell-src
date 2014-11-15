@@ -39,6 +39,67 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * This is a facility to simplify code in an {@link Activity}, for what concerns methods that are invoked from a 
+ * controller to its controlled {@code Activity}.
+ * 
+ * Supposing we have an interface
+ * 
+ * <pre>
+ * public interface MyPresentation
+ *   {
+ *     public void myMethod (String text);
+ *   }
+ * </pre>
+ * 
+ * and an {@code Activity} implementing the interface. If the method touches a UI widget, Android requires that this
+ * operation is performed in the same thread that created the {@code Activity}. In order to decouple the controllers 
+ * and have them to depend in a minimal way on Android (or not to depend on it at all), the UI threading logic must be
+ * implemented in the {@code Activity} as follows:
+ * 
+ * <pre>
+ * public class MyActivity extends Activity implements MyPresentation
+ *   {
+ *     private final Handler handler = new Handler();
+ * 
+ *     ...
+ * 
+ *     @Override
+ *     public void myMethod (final String text)
+ *       {
+ *         handler.post(new Runnable()
+ *          {
+ *            public void run()
+ *              {
+ *                // e.g. textView.setText(text);
+ *              }
+ *          });
+ *       }
+ *   }
+ * </pre>
+ * 
+ * The wrapping code is cumbersome. By means of this facility, it can be simplified to:
+ * 
+ * <pre>
+ * public class MyActivity extends Activity implements MyInterface
+ *   {
+ *     ...
+ * 
+ *     @Override
+ *     public void myMethod (final String text)
+ *       {
+ *         // e.g. textView.setText(text);
+ *       }  
+ *   }
+ * </pre>
+ * 
+ * In order to have this simplification, each controller having a reference to the {@link Activity} must access it by
+ * means of a decorator created by the method {@link #createUIThreadDecorator(java.lang.Object, java.lang.Class)}:
+ * 
+ * <pre>
+ *   MyActivity activity = ...;
+ *   MyPresentation decoratedPresentation = createUIThreadDecorator(myActivity, MyPresentation.class);
+ * </pre>
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -48,6 +109,12 @@ public final class AndroidUIThreadDecoratorFactory
   {
     /*******************************************************************************************************************
      *
+     * Creates a new decorator which executes methods in the proper Android UI thread. Please look at the javadoc of
+     * this class for further information.
+     * 
+     * @param       the presentation to decorate
+     * @param       the metaclass of the presentation interface
+     * @return      the decorator
      *
      ******************************************************************************************************************/
     public static <PRESENTATION> PRESENTATION createUIThreadDecorator (final @Nonnull PRESENTATION presentation,
