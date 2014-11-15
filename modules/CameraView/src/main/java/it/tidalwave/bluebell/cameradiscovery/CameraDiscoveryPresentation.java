@@ -70,6 +70,8 @@ public interface CameraDiscoveryPresentation
     /*******************************************************************************************************************
      *
      * Notifies the selected device name.
+     * 
+     * @param   deviceName  the device name
      *
      ******************************************************************************************************************/
     public void notifySelectedDeviceName (@Nonnull String deviceName);

@@ -44,14 +44,14 @@ public interface CameraDiscoveryPresentationControl
   {
     /*******************************************************************************************************************
      *
-     * Start the controller.
+     * Starts the controller.
      * 
      ******************************************************************************************************************/
     public void start();
     
     /*******************************************************************************************************************
      *
-     * Stop the controller.
+     * Stops the controller.
      * 
      ******************************************************************************************************************/
     public void stop();
@@ -85,12 +85,12 @@ public interface CameraDiscoveryPresentationControl
     
     /*******************************************************************************************************************
      *
-     * Notifies that the presentation has selected a {@link it.tidalwave.sony.CameraDescriptor}. if it exposes an API 
+     * Notifies that the presentation has selected a {@link it.tidalwave.sony.CameraDescriptor}. If it exposes an API 
      * for remote control, a presentation for controlling it will be shown. Otherwise a notification that the device 
      * is not compatible will be rendered.
      * 
-     * @param index    the index of the selected camera
+     * @param       selectedCameraIndex    the index of the selected camera
      * 
      ******************************************************************************************************************/
-    public void notifyCameraDeviceSelected (@Nonnegative int index);
+    public void notifyCameraDeviceSelected (@Nonnegative int selectedCameraIndex);
   }

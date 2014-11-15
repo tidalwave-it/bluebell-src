@@ -62,6 +62,7 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
     
     /*******************************************************************************************************************
      *
+     * Receiver of Wifi state change notifications.
      *
      ******************************************************************************************************************/
     private final BroadcastReceiver wiFiReceiver = new BroadcastReceiver()

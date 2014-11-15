@@ -35,6 +35,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import it.tidalwave.bluebell.mobile.R;
 import it.tidalwave.sony.CameraDescriptor;
@@ -42,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * Adapter class for DeviceList
+ * An adapter for {@link ListView} that contains the discovered devices.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -83,12 +84,7 @@ class DeviceListAdapter extends BaseAdapter
     @Override
     public View getView (final int position, final @CheckForNull View convertView, final @Nonnull ViewGroup parent)
       {
-        ViewGroup layout = (ViewGroup)convertView;
-
-        if (layout == null)
-          {
-            layout = (ViewGroup)inflater.inflate(R.layout.device_list_item, null);
-          }
+        final ViewGroup layout = createLayoutIfItDoesntExist(convertView);
 
         final CameraDescriptor cameraDescriptor = cameraDescriptors.get(position);
         final String mainLabel = String.format("%s %s", cameraDescriptor.getModelName(),
@@ -100,4 +96,11 @@ class DeviceListAdapter extends BaseAdapter
 
         return layout;
       }
+
+    @Nonnull
+    protected ViewGroup createLayoutIfItDoesntExist (final @CheckForNull View convertView) 
+      {
+        return (convertView != null) ? (ViewGroup)convertView 
+                                     : (ViewGroup)inflater.inflate(R.layout.device_list_item, null);
+    }
   }

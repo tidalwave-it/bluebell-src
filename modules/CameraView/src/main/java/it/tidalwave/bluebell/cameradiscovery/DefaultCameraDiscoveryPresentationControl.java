@@ -50,18 +50,29 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
   {
     protected final static String NO_SSID = "";
     
+    /** The presentation that this controller is managing. */
     @Nonnull
     protected final CameraDiscoveryPresentation presentation;
 
+    /** The facility for discovering devices. */
     private final SsdpDiscoverer ssdpDiscoverer = new DefaultSsdpDiscoverer();
 
+    /** Whether this controller is active. */
     private boolean active;
     
+    /** The SSID of the current Wifi. */
     private String currentSsid = NO_SSID;
 
+    /** The list of discovered devices. */
     protected final List<CameraDescriptor> cameraDescriptors =
             Collections.synchronizedList(new ArrayList<CameraDescriptor>());
     
+    /*******************************************************************************************************************
+     *
+     * An opaque object representing the internal status of this controller. 
+     * See the GoF Memento Pattern: http://en.wikipedia.org/wiki/Memento_pattern
+     *
+     ******************************************************************************************************************/
     @RequiredArgsConstructor
     static class Memento implements Serializable
       {
@@ -125,19 +136,21 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
                 @Override
                 public void onDeviceFound (final CameraDescriptor cameraDescriptor)
                   {
-                    log.info(">>>> Search found device: {}", cameraDescriptor.getFriendlyName());
-                    cameraDescriptors.add(cameraDescriptor);
-                    notifyDevicesChanged();
+                    if (active)
+                      {
+                        log.info(">>>> Search found device: {}", cameraDescriptor.getFriendlyName());
+                        cameraDescriptors.add(cameraDescriptor);
+                        notifyDevicesChanged();
+                      }
                   }
 
                 @Override
                 public void onFinished()
                   {
-                    log.info(">>>> Search finished.");
-                    presentation.enableSearchButton();
-
                     if (active)
                       {
+                        log.info(">>>> Search finished.");
+                        presentation.enableSearchButton();
                         presentation.notifySearchFinished();
                       }
                   }
@@ -145,11 +158,10 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
                 @Override
                 public void onErrorFinished()
                   {
-                    log.info(">>>> Search finished with error.");
-                    presentation.enableSearchButton();
-
                     if (active)
                       {
+                        log.warn(">>>> Search finished with error.");
+                        presentation.enableSearchButton();
                         presentation.notifySearchFinishedWithError();
                       }
                   }
@@ -196,7 +208,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
      ******************************************************************************************************************/
     protected void setWifiSsid (final @Nonnull String ssid)
       {
-        log.info("setWifiSsid({})", ssid);
+        log.debug("setWifiSsid({})", ssid);
         
         if (!ssid.equals(currentSsid))
           {
@@ -226,7 +238,9 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
     
     /*******************************************************************************************************************
      *
-     * Sends a notification that the device list has been changed.
+     * Sends a notification that the device list has been changed. It is called each time the field 
+     * {@code cameraDescriptors} is modified. It could be dropped if {@code cameraDescriptors} supported binding - but
+     * at the moment there's no simple solution for this in Android.
      *
      ******************************************************************************************************************/
     protected abstract void notifyDevicesChanged();

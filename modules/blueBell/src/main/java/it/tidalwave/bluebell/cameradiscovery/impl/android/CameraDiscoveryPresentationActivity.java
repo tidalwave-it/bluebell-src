@@ -57,6 +57,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
   {
     private static final String MEMENTO = CameraDiscoveryPresentationActivity.class.getName() + ".memento";
     
+    /** The controller of this presentation. */
     private AndroidCameraDiscoveryPresentationControl control;
 
     private ListView lvCameraDevices;
