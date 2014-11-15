@@ -34,7 +34,7 @@ import java.util.List;
 
 /***********************************************************************************************************************
  *
- * 
+ * This class models the dynamic behaviour of the device and allows it to be controlled.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -44,6 +44,9 @@ public interface CameraDevice
   {
     /*******************************************************************************************************************
      *
+     * Returns a reference to the camera API.
+     * 
+     * @return      the camera API
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -51,25 +54,9 @@ public interface CameraDevice
 
     /*******************************************************************************************************************
      *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public CameraObserver getObserver();
-
-    /*******************************************************************************************************************
-     *
-     * Returns a CameraApiService object.
-     *
-     * @param serviceName category name
-     * @return CameraApiService object
-     *
-     ******************************************************************************************************************/
-    @CheckForNull
-    public CameraApiService getApiService (@Nullable String serviceName);
-
-    /*******************************************************************************************************************
-     *
-     *
+     * Returns a list of available {@link CameraApiService}.
+     * 
+     * @return      the available camera devices
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -77,11 +64,32 @@ public interface CameraDevice
 
     /*******************************************************************************************************************
      *
-     * Checks to see whether the server supports the category.
+     * Returns a {@link CameraApiService} given its name.
      *
-     * @param serviceName category name
-     * @return true if it's supported.
+     * @param   serviceName     the service name
+     * @return                  the service
+     *
+     ******************************************************************************************************************/
+    @CheckForNull
+    public CameraApiService getApiService (@Nullable String serviceName);
+
+    /*******************************************************************************************************************
+     *
+     * Checks whether a {@link CameraApiService} with a given name is available.
+     *
+     * @param   serviceName     the service name
+     * @return                  {@code true} if the service is supported.
      *
      ******************************************************************************************************************/
     public boolean hasApiService (@CheckForNull String serviceName);
+
+    /*******************************************************************************************************************
+     *
+     * Returns an observer of this camera that allows the status to be read and a state listener to be registered.
+     * 
+     * @return      the {@link CameraObserver}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public CameraObserver getObserver();
   }

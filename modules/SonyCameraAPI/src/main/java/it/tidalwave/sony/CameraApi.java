@@ -38,6 +38,8 @@ import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
+ * This class exposes methods that allow to query and control the device.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
