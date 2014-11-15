@@ -85,8 +85,10 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
             presentation.notifyDeviceName(device.getFriendlyName());
             final BlueBellApplication application = (BlueBellApplication)activity.getApplication();
             application.setCameraDevice(device);
+            // We can't pass the device as an Intent extra because CameraDevice is not Serializable (it contains
+            // references to other objects). 
+            // TODO: check whether CameraDevice can be refactored so it's Serializable
             final Intent intent = new Intent(activity, CameraPresentationActivity.class);
-            // FIXME: pass the device as extra
             activity.startActivity(intent);
           }
       }
