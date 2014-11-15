@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
  * This is a facility to simplify code in an {@link Activity}, for what concerns methods that are invoked from a 
  * controller to its controlled {@code Activity}.
  * 
- * Supposing we have an interface
+ * Supposing we have an interface:
  * 
  * <pre>
  * public interface MyPresentation
@@ -63,7 +63,6 @@ import lombok.extern.slf4j.Slf4j;
  * 
  *     ...
  * 
- *     @Override
  *     public void myMethod (final String text)
  *       {
  *         handler.post(new Runnable()
@@ -84,7 +83,6 @@ import lombok.extern.slf4j.Slf4j;
  *   {
  *     ...
  * 
- *     @Override
  *     public void myMethod (final String text)
  *       {
  *         // e.g. textView.setText(text);
