@@ -38,6 +38,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * A default implementation of {@link LiveViewPresentationControl}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -55,75 +57,112 @@ public class DefaultLiveViewPresentationControl implements LiveViewPresentationC
 
     @Getter
     private volatile boolean running;
+    
+    private Thread liveViewThread;
 
+    /*******************************************************************************************************************
+     * 
+     * This Runnable consumes incoming images to be rendered in the live view.
+     * In Android, it could be implemented by means of Handler, since it's basically a message-consuming loop. It's 
+     * implemented like this to be independent of Android.
+     * 
+     ******************************************************************************************************************/
+    private final Runnable liveViewConsumer = new Runnable()
+      {
+        @Override
+        public void run()
+          {
+            log.info("Starting liveView producer thread...");
+
+            try
+              {
+                slicer.open(cameraApi.startLiveview().getUrl());
+
+                while (running)
+                  {
+                    final Payload payload = slicer.readNextPayload();
+
+                    if (!payload.isEmpty())
+                      {
+                        presentation.postPayload(payload);
+                      }
+                  }
+              }
+            catch (Exception e)
+              {
+                log.warn("While reading liveView", e);
+              }
+            finally
+              {
+                running = false;
+
+                try
+                  {
+                    slicer.close();
+                  }
+                catch (IOException e)
+                  {
+                    log.warn("While closing slicer", e);
+                  }
+
+                try
+                  {
+                    cameraApi.stopLiveview();
+                  }
+                catch (IOException e)
+                  {
+                    log.warn("While stopping liveView", e);
+                  }
+
+                presentation.stop();
+              }
+          }
+      };
+
+    /*******************************************************************************************************************
+     * 
+     * {@inheritDoc}
+     * 
+     ******************************************************************************************************************/
     @Override
     public void start()
       {
         log.info("start()");
         presentation.start();
 
-        // A thread for retrieving liveview data from server.
-        final Runnable runnable = new Runnable()
+        if (liveViewThread != null) 
           {
-            @Override
-            public void run()
-              {
-                log.info("Starting liveView producer thread...");
-
-                try
-                  {
-                    slicer.open(cameraApi.startLiveview().getUrl());
-                    running = true;
-
-                    while (running)
-                      {
-                        final Payload payload = slicer.readNextPayload();
-
-                        if (!payload.isEmpty())
-                          {
-                            presentation.postPayload(payload);
-                          }
-                      }
-                  }
-                catch (Exception e)
-                  {
-                    log.warn("While reading liveView", e);
-                  }
-                finally
-                  {
-                    running = false;
-
-                    try
-                      {
-                        slicer.close();
-                      }
-                    catch (IOException e)
-                      {
-                        log.warn("While closing slicer", e);
-                      }
-
-                    try
-                      {
-                        cameraApi.stopLiveview();
-                      }
-                    catch (IOException e)
-                      {
-                        log.warn("While stopping liveView", e);
-                      }
-
-                    presentation.stop();
-                  }
-              }
-          };
-
-          new Thread(runnable).start();
+            running = true;
+            liveViewThread = new Thread(liveViewConsumer);
+            liveViewThread.start();
+          }
       }
 
+    /*******************************************************************************************************************
+     * 
+     * {@inheritDoc}
+     * 
+     ******************************************************************************************************************/
     @Override
     public void stop()
       {
         log.info("stop()");
-        running = false; // let the view be terminated by the thread
-        // FIXME: wait for the thread? interrupt?
+        
+        if (liveViewThread != null)
+          {
+            running = false; 
+            liveViewThread.interrupt();
+            
+            try
+              {
+                liveViewThread.join();
+              } 
+            catch (InterruptedException e) 
+              {
+                log.warn("", e);
+              }
+            
+            liveViewThread = null;
+          }
       }
   }
