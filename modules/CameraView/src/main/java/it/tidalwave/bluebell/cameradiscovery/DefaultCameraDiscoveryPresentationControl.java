@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.io.Serializable;
-import it.tidalwave.sony.CameraDeviceDescriptor;
+import it.tidalwave.sony.CameraDescriptor;
 import it.tidalwave.sony.SsdpDiscoverer;
 import it.tidalwave.sony.impl.DefaultSsdpDiscoverer;
 import lombok.RequiredArgsConstructor;
@@ -59,14 +59,14 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
     
     private String currentSsid = NO_SSID;
 
-    protected final List<CameraDeviceDescriptor> cameraDeviceDescriptors =
-            Collections.synchronizedList(new ArrayList<CameraDeviceDescriptor>());
+    protected final List<CameraDescriptor> cameraDescriptors =
+            Collections.synchronizedList(new ArrayList<CameraDescriptor>());
     
     @RequiredArgsConstructor
     static class Memento implements Serializable
       {
         private static final long serialVersionUID = 56546340987457L;
-        final List<CameraDeviceDescriptor> cameraDeviceDescriptors;
+        final List<CameraDescriptor> cameraDescriptors;
         final String currentSsid;
       }
 
@@ -82,7 +82,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
         checkWifiStatusChange();
         active = true;
         
-        if (cameraDeviceDescriptors.isEmpty() && !ssdpDiscoverer.isSearching())
+        if (cameraDescriptors.isEmpty() && !ssdpDiscoverer.isSearching())
           {
             startDiscovery();
           }
@@ -115,7 +115,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
       {
         if (!ssdpDiscoverer.isSearching())
           {
-            cameraDeviceDescriptors.clear();
+            cameraDescriptors.clear();
             notifyDevicesChanged();
             presentation.disableSearchButton();
             presentation.notifySearchInProgress();
@@ -123,10 +123,10 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
             ssdpDiscoverer.search(new SsdpDiscoverer.Callback()
               {
                 @Override
-                public void onDeviceFound (final CameraDeviceDescriptor cameraDeviceDescriptor)
+                public void onDeviceFound (final CameraDescriptor cameraDescriptor)
                   {
-                    log.info(">>>> Search found device: {}", cameraDeviceDescriptor.getFriendlyName());
-                    cameraDeviceDescriptors.add(cameraDeviceDescriptor);
+                    log.info(">>>> Search found device: {}", cameraDescriptor.getFriendlyName());
+                    cameraDescriptors.add(cameraDescriptor);
                     notifyDevicesChanged();
                   }
 
@@ -165,7 +165,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
     @Override @Nonnull
     public Serializable getMemento() 
       {
-        return new Memento(cameraDeviceDescriptors, currentSsid);
+        return new Memento(cameraDescriptors, currentSsid);
       }
 
     /*******************************************************************************************************************
@@ -181,8 +181,8 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
         if (memento != null)
           {
             final Memento m = (Memento)memento;
-            cameraDeviceDescriptors.clear();
-            cameraDeviceDescriptors.addAll(m.cameraDeviceDescriptors);
+            cameraDescriptors.clear();
+            cameraDescriptors.addAll(m.cameraDescriptors);
             currentSsid = m.currentSsid;
           }
       }
@@ -204,7 +204,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
             
             if (currentSsid.equals(NO_SSID))
               {
-                cameraDeviceDescriptors.clear();
+                cameraDescriptors.clear();
                 notifyDevicesChanged();
                 presentation.renderWiFiState("WiFi disconnected"); // R.string.msg_wifi_disconnect FIXME drop
               }

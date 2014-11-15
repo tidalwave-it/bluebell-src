@@ -31,7 +31,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
 import java.io.Serializable;
-import it.tidalwave.sony.CameraDeviceDescriptor;
 
 /***********************************************************************************************************************
  *
@@ -86,9 +85,9 @@ public interface CameraDiscoveryPresentationControl
     
     /*******************************************************************************************************************
      *
-     * Notifies that the presentation has selected a {@link CameraDeviceDescriptor}. if it exposes an API for remote 
-     * control, a presentation for controlling it will be shown. Otherwise a notification that the device is not 
-     * compatible will be rendered.
+     * Notifies that the presentation has selected a {@link it.tidalwave.sony.CameraDescriptor}. if it exposes an API 
+     * for remote control, a presentation for controlling it will be shown. Otherwise a notification that the device 
+     * is not compatible will be rendered.
      * 
      * @param index    the index of the selected camera
      * 

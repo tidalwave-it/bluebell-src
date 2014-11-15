@@ -36,7 +36,7 @@ import java.io.IOException;
 import it.tidalwave.bluebell.net.impl.DefaultHttpClient;
 import it.tidalwave.bluebell.net.impl.XmlElement;
 import it.tidalwave.sony.CameraApiService;
-import it.tidalwave.sony.CameraDeviceDescriptor;
+import it.tidalwave.sony.CameraDescriptor;
 import it.tidalwave.sony.CameraDevice;
 import lombok.Getter;
 import lombok.ToString;
@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j @ToString
-public class DefaultCameraDeviceDescriptor implements CameraDeviceDescriptor
+public class DefaultCameraDescriptor implements CameraDescriptor
   {
     private static final long serialVersionUID = 56546340987457L;
         
@@ -107,7 +107,7 @@ public class DefaultCameraDeviceDescriptor implements CameraDeviceDescriptor
      *
      ******************************************************************************************************************/
     @CheckForNull
-    public static DefaultCameraDeviceDescriptor fetch (@Nonnull String ddUrl)
+    public static DefaultCameraDescriptor fetch (@Nonnull String ddUrl)
       {
         String ddXml = "";
         try
@@ -128,11 +128,11 @@ public class DefaultCameraDeviceDescriptor implements CameraDeviceDescriptor
 
         log.info("response XLM element: {}", rootElement);
         // "root"
-        DefaultCameraDeviceDescriptor deviceDescriptor = null;
+        DefaultCameraDescriptor deviceDescriptor = null;
 
         if ("root".equals(rootElement.getTagName()))
           {
-            deviceDescriptor = new DefaultCameraDeviceDescriptor();
+            deviceDescriptor = new DefaultCameraDescriptor();
             deviceDescriptor.ddUrl = ddUrl;
 
             // "device"

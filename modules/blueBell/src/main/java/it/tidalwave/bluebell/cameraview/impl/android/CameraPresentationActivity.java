@@ -28,6 +28,7 @@
 package it.tidalwave.bluebell.cameraview.impl.android;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
@@ -41,13 +42,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import it.tidalwave.sony.CameraDeviceDescriptor;
+import it.tidalwave.sony.CameraDescriptor;
 import it.tidalwave.bluebell.cameraview.CameraPresentation;
 import it.tidalwave.bluebell.cameraview.DefaultCameraPresentationControl;
 import it.tidalwave.bluebell.mobile.R;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecoratorFactory.*;
-import javax.annotation.Nullable;
 
 /***********************************************************************************************************************
  *
@@ -360,14 +360,12 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
         tvCameraStatus = (TextView)findViewById(R.id.tv_camera_status);
         svLiveView = (LiveViewSurfaceView)findViewById(R.id.sv_live_view);
 
-        final CameraDeviceDescriptor cameraDeviceDescriptor =
-                (CameraDeviceDescriptor)getIntent().getSerializableExtra("cameraDeviceDescriptor");
+        final CameraDescriptor cameraDescriptor =
+                (CameraDescriptor)getIntent().getSerializableExtra("cameraDescriptor");
         control = new AndroidCameraPresentationControl(createUIThreadDecorator(this, CameraPresentation.class),
                                                        this,
-                                                       svLiveView, 
-                                                       cameraDeviceDescriptor);
-
-        log.info("onCreate() completed.");
+                                                       svLiveView,
+                                                       cameraDescriptor);
       }
 
     /*******************************************************************************************************************

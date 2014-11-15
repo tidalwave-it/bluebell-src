@@ -39,7 +39,7 @@ import javax.annotation.Nullable;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface CameraDeviceDescriptor extends Serializable
+public interface CameraDescriptor extends Serializable
   {
     /*******************************************************************************************************************
      *

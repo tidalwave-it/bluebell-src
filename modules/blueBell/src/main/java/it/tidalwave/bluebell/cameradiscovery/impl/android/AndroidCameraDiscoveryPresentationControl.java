@@ -30,17 +30,17 @@ package it.tidalwave.bluebell.cameradiscovery.impl.android;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import it.tidalwave.sony.CameraDeviceDescriptor;
+import it.tidalwave.sony.CameraDescriptor;
 import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryPresentationControl;
 import it.tidalwave.bluebell.cameraview.impl.android.CameraPresentationActivity;
 import lombok.Getter;
 import static android.content.Context.WIFI_SERVICE;
-import android.os.Handler;
 
 /***********************************************************************************************************************
  *
@@ -86,7 +86,7 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
       {
         super(presentation);
         this.context = context;
-        deviceListAdapter = new DeviceListAdapter(context, cameraDeviceDescriptors);
+        deviceListAdapter = new DeviceListAdapter(context, cameraDescriptors);
       }
 
     /*******************************************************************************************************************
@@ -121,17 +121,17 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
     @Override
     public void notifyCameraDeviceSelected (final @Nonnegative int index)
       {
-        final CameraDeviceDescriptor cameraDeviceDescriptor = cameraDeviceDescriptors.get(index);
+        final CameraDescriptor cameraDescriptor = cameraDescriptors.get(index);
         
-        if (!cameraDeviceDescriptor.createDevice().hasApiService("camera"))
+        if (!cameraDescriptor.createDevice().hasApiService("camera"))
           {
             presentation.notifySelectedDeviceNotSupported();
           }
         else
           {
-            presentation.notifySelectedDeviceName(cameraDeviceDescriptor.getFriendlyName());
+            presentation.notifySelectedDeviceName(cameraDescriptor.getFriendlyName());
             final Intent intent = new Intent(context, CameraPresentationActivity.class);
-            intent.putExtra("cameraDeviceDescriptor", cameraDeviceDescriptor);
+            intent.putExtra("cameraDescriptor", cameraDescriptor);
             context.startActivity(intent);
           }
       }

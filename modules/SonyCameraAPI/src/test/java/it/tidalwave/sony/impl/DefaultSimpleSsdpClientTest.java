@@ -32,7 +32,7 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 import java.net.URL;
-import it.tidalwave.sony.CameraDeviceDescriptor;
+import it.tidalwave.sony.CameraDescriptor;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.sony.CameraDevice;
@@ -66,23 +66,26 @@ public class DefaultSimpleSsdpClientTest
       throws Exception
       {
         final CountDownLatch latch = new CountDownLatch(1);
-        final AtomicReference<CameraDeviceDescriptor> deviceHolder = new AtomicReference<CameraDeviceDescriptor>();
+        final AtomicReference<CameraDescriptor> deviceHolder = new AtomicReference<>();
 
         fixture.search(new SsdpDiscoverer.Callback()
           {
-            public void onDeviceFound (final @Nonnull CameraDeviceDescriptor device)
+            @Override
+            public void onDeviceFound (final @Nonnull CameraDescriptor device)
               {
                 log.info("onDeviceFound({})", device);
                 deviceHolder.set(device);
                 latch.countDown();
               }
 
+            @Override
             public void onFinished()
               {
                 log.info("onFinished()");
                 latch.countDown();
               }
 
+            @Override
             public void onErrorFinished()
               {
                 log.info("onErrorFinished()");
@@ -91,24 +94,27 @@ public class DefaultSimpleSsdpClientTest
           });
 
         latch.await();
-        final CameraDeviceDescriptor cameraDeviceDescriptor = deviceHolder.get();
-        assertThat(cameraDeviceDescriptor, is(notNullValue()));
-        final CameraDevice service = cameraDeviceDescriptor.createDevice();
+        final CameraDescriptor cameraDescriptor = deviceHolder.get();
+        assertThat(cameraDescriptor, is(notNullValue()));
+        final CameraDevice service = cameraDescriptor.createDevice();
         assertThat(service, is(notNullValue()));
         final CameraApi cameraApi = service.getApi();
         final CameraObserver observer = service.getObserver();
         observer.setListener(new CameraObserver.ChangeListener()
           {
+            @Override
             public void onApisChanged (final @Nonnull Set<String> apis)
               {
                 log.info("APIs changed: {}", apis);
               }
 
+            @Override
             public void onStatusChanged (final @Nonnull String status)
               {
                 log.info("status changed: {}", status);
               }
 
+            @Override
             public void onShootModeChanged (final @Nonnull String shootMode)
               {
                 log.info("shoot mode changed: {}", shootMode);

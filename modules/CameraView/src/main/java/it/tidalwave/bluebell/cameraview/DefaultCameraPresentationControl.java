@@ -37,7 +37,7 @@ import java.util.TreeSet;
 import java.io.IOException;
 import java.net.URL;
 import it.tidalwave.sony.CameraApi;
-import it.tidalwave.sony.CameraDeviceDescriptor;
+import it.tidalwave.sony.CameraDescriptor;
 import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.bluebell.liveview.DefaultLiveViewPresentationControl;
 import it.tidalwave.bluebell.liveview.LiveViewPresentation;
@@ -75,15 +75,15 @@ public class DefaultCameraPresentationControl implements CameraPresentationContr
      *
      * @param presentation              the controlled presentation
      * @param liveViewPresentation      the controller of the live view
-     * @param cameraDeviceDescriptor    the current device
+     * @param cameraDescriptor          the current camera
      * 
      ******************************************************************************************************************/
     public DefaultCameraPresentationControl (final @Nonnull CameraPresentation presentation,
                                              final @Nonnull LiveViewPresentation liveViewPresentation,
-                                             final @Nonnull CameraDeviceDescriptor cameraDeviceDescriptor)
+                                             final @Nonnull CameraDescriptor cameraDescriptor)
       {
         this.presentation = presentation;
-        final CameraDevice cameraDevice = cameraDeviceDescriptor.createDevice();
+        final CameraDevice cameraDevice = cameraDescriptor.createDevice();
         cameraApi = cameraDevice.getApi();
         cameraObserver = cameraDevice.getObserver();
         liveViewPresentationControl = new DefaultLiveViewPresentationControl(cameraApi, liveViewPresentation);

@@ -49,12 +49,12 @@ public interface SsdpDiscoverer
       {
         /***************************************************************************************************************
          * 
-         * Called when API server device is found.
+         * Called when a camera is found.
          * 
-         * @param device API server device that is found by searching
+         * @param cameraDescriptor      the descriptor of the camera
          * 
          **************************************************************************************************************/
-        public void onDeviceFound (@Nonnull CameraDeviceDescriptor device);
+        public void onDeviceFound (@Nonnull CameraDescriptor cameraDescriptor);
 
         /***************************************************************************************************************
          * 
@@ -75,8 +75,6 @@ public interface SsdpDiscoverer
      * 
      * Cancels searching. Note that it cannot stop the operation immediately.
      *
-     * @return true: now searching, false: otherwise
-     * 
      ******************************************************************************************************************/
     public void cancelSearching();
 
