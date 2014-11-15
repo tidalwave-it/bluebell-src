@@ -85,6 +85,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     public void notifySearchInProgress()
       {
         setProgressBarIndeterminateVisibility(true);
+        Toast.makeText(this, R.string.msg_device_search_started, Toast.LENGTH_SHORT).show();
       }
                 
     /*******************************************************************************************************************
