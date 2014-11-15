@@ -46,6 +46,8 @@ import static it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecoratorFacto
 
 /***********************************************************************************************************************
  *
+ * @stereotype  presentation
+ * 
  * An {@link Activity} that implements {@link CameraDiscoveryPresentation}.
  *
  * @author  Fabrizio Giudici

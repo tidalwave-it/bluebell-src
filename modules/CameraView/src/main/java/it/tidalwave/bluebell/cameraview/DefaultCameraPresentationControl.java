@@ -53,20 +53,25 @@ import it.tidalwave.sony.CameraDevice;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class DefaultCameraPresentationControl implements CameraPresentationControl
+public abstract class DefaultCameraPresentationControl implements CameraPresentationControl
   {
+    /** The presentation managed by this controller. */
     @Nonnull
     private final CameraPresentation presentation;
 
+    /** The API of the current camera. */
     @Nonnull
     private final CameraApi cameraApi;
 
+    /** An observer of the current camera. */
     @Nonnull
     private final CameraObserver cameraObserver;
 
+    /** The controller for the live view. */
     @Nonnull
     private final LiveViewPresentationControl liveViewPresentationControl;
 
+    /** The set of available APIs. */
     private final Set<String> availableApis = Collections.synchronizedSet(new TreeSet<String>());
 
     /*******************************************************************************************************************
@@ -136,16 +141,16 @@ public class DefaultCameraPresentationControl implements CameraPresentationContr
 
                     if (isApiAvailable(API_GET_APPLICATION_INFO))
                       {
-                        log.info("openConnection(): getApplicationInfo()");
-
                         if (cameraApi.getApplicationInfo().getVersion() < 2)
                           {
+                            log.warn("Camera API version < 2, not supported");
                             presentation.notifyDeviceNotSupportedAndQuit();
                             return;
                           }
                       }
                     else // never happens
                       {
+                        log.warn("Camera API not found");
                         presentation.notifyDeviceNotSupportedAndQuit();
                         return;
                       }
@@ -272,7 +277,7 @@ public class DefaultCameraPresentationControl implements CameraPresentationContr
                 try
                   {
                     cameraApi.setShootMode(mode);
-                    // Don't refresh the UI now, the events will
+                    // Don't refresh the UI now, the events will do
                   }
                 catch (IOException e)
                   {
@@ -329,11 +334,8 @@ public class DefaultCameraPresentationControl implements CameraPresentationContr
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected Object loadPicture (final @Nonnull URL url)
-      throws IOException
-      {
-        return null; // to be overridden
-      }
+    protected abstract Object loadPicture (final @Nonnull URL url)
+      throws IOException;
 
     /*******************************************************************************************************************
      *
@@ -360,7 +362,8 @@ public class DefaultCameraPresentationControl implements CameraPresentationContr
             presentation.disableRecStartStopButton();
           }
 
-        presentation.enableTakePhotoButton(SHOOT_MODE_STILL.equals(shootMode) && CAMERA_STATUS_IDLE.equals(cameraStatus));
+        presentation.enableTakePhotoButton(SHOOT_MODE_STILL.equals(shootMode)
+                                        && CAMERA_STATUS_IDLE.equals(cameraStatus));
 
         if (!SHOOT_MODE_STILL.equals(shootMode))
           {

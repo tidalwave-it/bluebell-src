@@ -51,6 +51,10 @@ import static it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecoratorFacto
 
 /***********************************************************************************************************************
  *
+ * @stereotype  presentation
+ * 
+ * An {@link Activity} that implements {@link CameraPresentation}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -58,6 +62,9 @@ import static it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecoratorFacto
 @Slf4j
 public class CameraPresentationActivity extends Activity implements CameraPresentation
   {
+    /** The controller of this presentation. */
+    private DefaultCameraPresentationControl control;
+
     private ImageView ivPhotoBox;
 
     private RadioGroup rbShootMode;
@@ -70,9 +77,62 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
 
     private LiveViewSurfaceView svLiveView;
 
-    private DefaultCameraPresentationControl control;
-
     private boolean radioInitialChecked;
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void notifyErrorWhileTakingPhoto()
+      {
+        Toast.makeText(this, R.string.msg_error_take_picture, Toast.LENGTH_SHORT).show();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void notifyRecStart()
+      {
+        Toast.makeText(this, R.string.msg_rec_start, Toast.LENGTH_SHORT).show();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void notifyRecStop()
+      {
+        Toast.makeText(this, R.string.msg_rec_stop, Toast.LENGTH_SHORT).show();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void notifyErrorWhileRecordingMovie()
+      {
+        Toast.makeText(this, R.string.msg_error_api_calling, Toast.LENGTH_SHORT).show();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void notifyGenericError()
+      {
+        Toast.makeText(this, R.string.msg_error_api_calling, Toast.LENGTH_SHORT).show();
+      }
 
     /*******************************************************************************************************************
      *
@@ -82,7 +142,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void notifyConnectionError()
       {
-        Toast.makeText(CameraPresentationActivity.this, R.string.msg_error_connection, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.msg_error_connection, Toast.LENGTH_SHORT).show();
         setProgressBarIndeterminateVisibility(false); // FIXME: split
       }
 
@@ -94,10 +154,8 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void notifyDeviceNotSupportedAndQuit()
       {
-        Toast.makeText(CameraPresentationActivity.this, 
-                       R.string.msg_error_non_supported_device,
-                       Toast.LENGTH_SHORT).show();
-        finish(); // FIXME: split
+        Toast.makeText(this, R.string.msg_error_non_supported_device, Toast.LENGTH_SHORT).show();
+        finish(); 
       }
 
     /*******************************************************************************************************************
@@ -133,20 +191,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
       {
         setProgressBarIndeterminateVisibility(false);
       }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void notifyErrorWhileTakingPhoto()
-      {
-        Toast.makeText(CameraPresentationActivity.this,
-                       R.string.msg_error_take_picture, 
-                       Toast.LENGTH_SHORT).show();
-      }
-
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -268,51 +313,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void notifyRecStart()
-      {
-        Toast.makeText(CameraPresentationActivity.this, R.string.msg_rec_start, Toast.LENGTH_SHORT).show();
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void notifyRecStop()
-      {
-        Toast.makeText(CameraPresentationActivity.this, R.string.msg_rec_stop, Toast.LENGTH_SHORT).show();
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void notifyErrorWhileRecordingMovie()
-      {
-        Toast.makeText(CameraPresentationActivity.this, R.string.msg_error_api_calling, Toast.LENGTH_SHORT).show();
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void notifyGenericError()
-      {
-        Toast.makeText(CameraPresentationActivity.this, R.string.msg_error_api_calling, Toast.LENGTH_SHORT).show();
-      }
-    
-    /*******************************************************************************************************************
-     *
-     * 
+     * Button callback.
      *
      ******************************************************************************************************************/
     public void onTakePhotoClickedClick (final @Nonnull View view)
@@ -322,7 +323,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
 
     /*******************************************************************************************************************
      *
-     * 
+     * Button callback.
      *
      ******************************************************************************************************************/
     public void onRecStartStopClicked (final @Nonnull View view)
@@ -332,7 +333,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     
     /*******************************************************************************************************************
      *
-     * 
+     * Button callback.
      *
      ******************************************************************************************************************/
     public void onPhotoViewClicked (final @Nonnull View view)
