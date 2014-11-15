@@ -56,7 +56,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
     
     private String currentSsid = NO_SSID;
 
-//    private final List<CameraDeviceDescriptor> cameraDeviceDescriptors = new ArrayList<>();
+    protected final List<CameraDeviceDescriptor> cameraDeviceDescriptors = new ArrayList<>();
 
     /*******************************************************************************************************************
      *
@@ -68,6 +68,11 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
       {
         checkWifiStatusChange();
         active = true;
+        
+        if (cameraDeviceDescriptors.isEmpty())
+          {
+            startDiscovery();
+          }
       }
 
     /*******************************************************************************************************************
@@ -96,9 +101,9 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
       {
         if (!ssdpDiscoverer.isSearching())
           {
-//            cameraDeviceDescriptors.clear();
+            cameraDeviceDescriptors.clear();
+            notifyDevicesChanged();
             presentation.disableSearchButton();
-            presentation.clearDeviceList();
             presentation.notifySearchInProgress();
 
             ssdpDiscoverer.search(new SsdpDiscoverer.Callback()
@@ -107,7 +112,8 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
                 public void onDeviceFound (final CameraDeviceDescriptor cameraDeviceDescriptor)
                   {
                     log.info(">>>> Search found device: {}", cameraDeviceDescriptor.getFriendlyName());
-                    presentation.renderOneMoreDevice(cameraDeviceDescriptor);
+                    cameraDeviceDescriptors.add(cameraDeviceDescriptor);
+                    notifyDevicesChanged();
                   }
 
                 @Override
@@ -154,8 +160,8 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
             
             if (currentSsid.equals(NO_SSID))
               {
-//                cameraDeviceDescriptors.clear();
-                presentation.clearDeviceList();
+                cameraDeviceDescriptors.clear();
+                notifyDevicesChanged();
                 presentation.renderWiFiState("WiFi disconnected"); // R.string.msg_wifi_disconnect FIXME drop
               }
             else
@@ -173,4 +179,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
      *
      ******************************************************************************************************************/
     protected abstract void checkWifiStatusChange();
+    
+
+    protected abstract void notifyDevicesChanged();
   }

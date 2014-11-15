@@ -28,6 +28,8 @@
 package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
 import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -37,6 +39,7 @@ import it.tidalwave.sony.CameraDeviceDescriptor;
 import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryPresentationControl;
 import it.tidalwave.bluebell.cameraview.impl.android.CameraPresentationActivity;
+import lombok.Getter;
 import static android.content.Context.WIFI_SERVICE;
 
 /***********************************************************************************************************************
@@ -51,6 +54,9 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
   {
     @Nonnull
     private final Context context;
+    
+    @Getter
+    private final DeviceListAdapter deviceListAdapter;
     
     /*******************************************************************************************************************
      *
@@ -78,6 +84,7 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
       {
         super(presentation);
         this.context = context;
+        deviceListAdapter = new DeviceListAdapter(context, cameraDeviceDescriptors);
       }
 
     /*******************************************************************************************************************
@@ -110,7 +117,7 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
      * 
      ******************************************************************************************************************/
     @Override
-    public void showCameraPresentation (final @Nonnull CameraDeviceDescriptor cameraDeviceDescriptor)
+    public void notifyCameraDeviceSelected (final @Nonnull CameraDeviceDescriptor cameraDeviceDescriptor)
       {
         if (!cameraDeviceDescriptor.createDevice().hasApiService("camera"))
           {
@@ -141,6 +148,17 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
     
     /*******************************************************************************************************************
      *
+     * {@inheritDoc} 
+     *
+     ******************************************************************************************************************/
+    @Override
+    protected void notifyDevicesChanged() 
+      {
+        deviceListAdapter.notifyDataSetChanged();
+      }
+    
+    /*******************************************************************************************************************
+     *
      * 
      *
      ******************************************************************************************************************/
@@ -158,5 +176,17 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
     private void unregisterWiFiReceiver() 
       {
         context.unregisterReceiver(wiFiReceiver);
+      }
+
+    void setCameraDeviceDescriptors (final @Nonnull List<CameraDeviceDescriptor> cameraDeviceDescriptors) 
+      {
+        cameraDeviceDescriptors.clear();
+        cameraDeviceDescriptors.addAll(cameraDeviceDescriptors);
+        // FIXNE: notify?
+      }
+
+    List<CameraDeviceDescriptor> getCameraDeviceDescriptors() 
+      {
+        return new CopyOnWriteArrayList<>(cameraDeviceDescriptors);
       }
   }

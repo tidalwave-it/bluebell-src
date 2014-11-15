@@ -29,7 +29,6 @@ package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.List;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -39,7 +38,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import it.tidalwave.bluebell.mobile.R;
 import it.tidalwave.sony.CameraDeviceDescriptor;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -50,37 +48,18 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-
 @Slf4j
 class DeviceListAdapter extends BaseAdapter
   {
-    @Getter // FIXME: use CopyOnWrite
-    private final List<CameraDeviceDescriptor> cameraDeviceDescriptors = new ArrayList<>();
+    private final List<CameraDeviceDescriptor> cameraDeviceDescriptors;
 
     private final LayoutInflater inflater;
 
-    public DeviceListAdapter (final @Nonnull Context context)
+    public DeviceListAdapter (final @Nonnull Context context,
+                              final @Nonnull List<CameraDeviceDescriptor> cameraDeviceDescriptors)
       {
+        this.cameraDeviceDescriptors = cameraDeviceDescriptors;
         inflater = LayoutInflater.from(context);
-      }
-
-    public void setDevices (final List<CameraDeviceDescriptor> cameraDeviceDescriptors)
-      {
-        this.cameraDeviceDescriptors.clear();
-        this.cameraDeviceDescriptors.addAll(cameraDeviceDescriptors);
-        notifyDataSetChanged();
-      }
-    
-    public void addDevice (final @Nonnull CameraDeviceDescriptor cameraDeviceDescriptor)
-      {
-        cameraDeviceDescriptors.add(cameraDeviceDescriptor);
-        notifyDataSetChanged();
-      }
-
-    public void clearDevices()
-      {
-        cameraDeviceDescriptors.clear();
-        notifyDataSetChanged();
       }
 
     @Override

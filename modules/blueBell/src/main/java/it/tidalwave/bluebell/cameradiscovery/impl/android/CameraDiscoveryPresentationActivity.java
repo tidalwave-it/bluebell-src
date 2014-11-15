@@ -28,6 +28,9 @@
 package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.io.Serializable;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Html;
@@ -43,9 +46,6 @@ import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 import it.tidalwave.bluebell.mobile.R;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecoratorFactory.*;
-import java.io.Serializable;
-import java.util.List;
-import javax.annotation.Nullable;
 
 /***********************************************************************************************************************
  *
@@ -60,9 +60,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
   {
     private static final String CAMERA_DEVICES = CameraDiscoveryPresentationActivity.class.getName() + ".devices";
     
-    // FIXME: move to onCreate
-    private final AndroidCameraDiscoveryPresentationControl control = 
-            new AndroidCameraDiscoveryPresentationControl(createUIThreadDecorator(this, CameraDiscoveryPresentation.class), this);
+    private AndroidCameraDiscoveryPresentationControl control;
 
     private DeviceListAdapter listAdapter;
 
@@ -153,28 +151,6 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
      *
      ******************************************************************************************************************/
     @Override
-    public void clearDeviceList()
-      {
-        listAdapter.clearDevices();
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void renderOneMoreDevice (final @Nonnull CameraDeviceDescriptor device)
-      {
-        listAdapter.addDevice(device);
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
     public void enableSearchButton()
       {
         btSearch.setEnabled(true);
@@ -203,22 +179,6 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     
     /*******************************************************************************************************************
      *
-     *
-     *
-     ******************************************************************************************************************/
-    private void onDeviceClicked (final @Nonnull AdapterView<?> parent,
-                                  final @Nonnull View view, 
-                                  final int position, 
-                                  final long id)
-      {
-        final ListView listView = (ListView)parent;
-        final CameraDeviceDescriptor cameraDeviceDescriptor = 
-                (CameraDeviceDescriptor) listView.getAdapter().getItem(position);
-        control.showCameraPresentation(cameraDeviceDescriptor);
-      }
-    
-    /*******************************************************************************************************************
-     *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
@@ -230,7 +190,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_camera_discovery_presentation);
         setProgressBarIndeterminateVisibility(false);
-
+        
         lvCameraDevices = (ListView)findViewById(R.id.lv_camera_devices);
         tvWifiStatus = (TextView)findViewById(R.id.tv_wifi_status);
         btSearch = (Button)findViewById(R.id.bt_search);
@@ -239,20 +199,20 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
           {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
               {
-                onDeviceClicked(parent, view, position, id);
+                control.notifyCameraDeviceSelected(control.getCameraDeviceDescriptors().get(position));
               }
           });
 
-        listAdapter = new DeviceListAdapter(this);
-        
+        control = new AndroidCameraDiscoveryPresentationControl(createUIThreadDecorator(this, 
+                                                                CameraDiscoveryPresentation.class), this);
         if (savedInstanceState != null)
           {
             final List<CameraDeviceDescriptor> cameraDeviceDescriptors = 
                     (List<CameraDeviceDescriptor>) savedInstanceState.getSerializable(CAMERA_DEVICES);
-            listAdapter.setDevices(cameraDeviceDescriptors);
+            control.setCameraDeviceDescriptors(cameraDeviceDescriptors);
           }
         
-        lvCameraDevices.setAdapter(listAdapter);
+        lvCameraDevices.setAdapter(control.getDeviceListAdapter());
       }
 
     /*******************************************************************************************************************
@@ -264,7 +224,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     protected void onSaveInstanceState (final @Nonnull Bundle outState) 
       {
         super.onSaveInstanceState(outState); 
-        final List<CameraDeviceDescriptor> cameraDeviceDescriptors = listAdapter.getCameraDeviceDescriptors();
+        final List<CameraDeviceDescriptor> cameraDeviceDescriptors = control.getCameraDeviceDescriptors();
         outState.putSerializable(CAMERA_DEVICES, (Serializable)cameraDeviceDescriptors);
       }
     
@@ -279,14 +239,6 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
         log.info("onResume()");
         super.onResume();
         control.start();
-        
-        // FIXME: move to controller
-//        if (cameraDeviceDescriptors.isEmpty())
-        if (listAdapter.getCount() == 0)
-          {
-            control.startDiscovery();
-          }
-        
       }
 
     /*******************************************************************************************************************

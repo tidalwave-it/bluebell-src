@@ -71,5 +71,5 @@ public interface CameraDiscoveryPresentationControl
      * @param cameraDeviceDescriptor    the camera
      * 
      ******************************************************************************************************************/
-    public void showCameraPresentation (@Nonnull CameraDeviceDescriptor cameraDeviceDescriptor);
+    public void notifyCameraDeviceSelected (@Nonnull CameraDeviceDescriptor cameraDeviceDescriptor);
   }
