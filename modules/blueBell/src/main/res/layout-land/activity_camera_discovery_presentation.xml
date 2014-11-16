@@ -1,0 +1,65 @@
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="fill_parent"
+    android:padding="20dp"
+    android:columnCount="2"
+    android:rowCount="1">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/msg_search_devices"
+            android:id="@+id/tv_help"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/msg_wifi_disconnect"
+            android:id="@+id/tv_wifi_status"
+            android:onClick="onWifiClicked"
+            android:clickable="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <ListView
+            android:id="@+id/lv_camera_devices"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_toEndOf="@+id/bt_search"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_above="@+id/bt_search"
+            android:background="@color/list_background">
+        </ListView>
+
+        <Button
+            android:id="@+id/bt_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/button_start_search"
+            android:onClick="onSearchButtonClicked"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+
+</GridLayout>
