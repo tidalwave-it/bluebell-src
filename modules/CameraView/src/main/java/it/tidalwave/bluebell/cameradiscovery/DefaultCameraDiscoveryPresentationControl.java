@@ -32,6 +32,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.io.Serializable;
 import it.tidalwave.sony.CameraDescriptor;
 import it.tidalwave.sony.SsdpDiscoverer;
@@ -45,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Slf4j
+@Slf4j
 public abstract class DefaultCameraDiscoveryPresentationControl implements CameraDiscoveryPresentationControl
   {
     protected final static String NO_SSID = "";
@@ -55,7 +56,7 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
     protected final CameraDiscoveryPresentation presentation;
 
     /** The facility for discovering devices. */
-    private final SsdpDiscoverer ssdpDiscoverer = new DefaultSsdpDiscoverer();
+    private final SsdpDiscoverer ssdpDiscoverer;
 
     /** Whether this controller is active. */
     private boolean active;
@@ -79,6 +80,21 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
         private static final long serialVersionUID = 56546340987457L;
         final List<CameraDescriptor> cameraDescriptors;
         final String currentSsid;
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Creates a new instance.
+     *
+     * @param   presentation            the controlled presentation
+     * @param   executorService         an {@link ExecutorService} for running background jobs
+     * 
+     ******************************************************************************************************************/
+    public DefaultCameraDiscoveryPresentationControl (final @Nonnull CameraDiscoveryPresentation presentation,
+                                                      final @Nonnull ExecutorService executorService)
+      {
+        this.presentation = presentation;
+        this.ssdpDiscoverer = new DefaultSsdpDiscoverer(executorService);
       }
 
     /*******************************************************************************************************************

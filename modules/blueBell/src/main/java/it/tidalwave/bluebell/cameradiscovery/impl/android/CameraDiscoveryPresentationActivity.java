@@ -41,6 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 import it.tidalwave.bluebell.mobile.R;
+import it.tidalwave.bluebell.mobile.android.ThreadPools;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecoratorFactory.*;
 
@@ -206,8 +207,9 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
               }
           });
 
-        control = new AndroidCameraDiscoveryPresentationControl(createUIThreadDecorator(this, 
-                                                                CameraDiscoveryPresentation.class), this);
+        control = new AndroidCameraDiscoveryPresentationControl(createUIThreadDecorator(this, CameraDiscoveryPresentation.class), 
+                                                                this,
+                                                                ThreadPools.getInstance());
         if (savedInstanceState != null)
           {
             control.setMemento(savedInstanceState.getSerializable(KEY_MEMENTO));

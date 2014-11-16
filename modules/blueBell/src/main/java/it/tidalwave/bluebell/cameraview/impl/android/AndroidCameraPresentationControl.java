@@ -40,6 +40,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import java.util.concurrent.ExecutorService;
 import lombok.Cleanup;
 
 /***********************************************************************************************************************
@@ -63,14 +64,16 @@ public class AndroidCameraPresentationControl extends DefaultCameraPresentationC
      * @param context             the Android {@link Context}
      * @param liveView            the live view
      * @param cameraDescriptor    the descriptor of the current device
+     * @param   executorService         an {@link ExecutorService} for running background jobs
      * 
      ******************************************************************************************************************/
     public AndroidCameraPresentationControl (final @Nonnull CameraPresentation presentation,
                                              final @Nonnull Context context,
                                              final @Nonnull LiveViewPresentation liveView,
-                                             final @Nonnull CameraDescriptor cameraDescriptor)
+                                             final @Nonnull CameraDescriptor cameraDescriptor,
+                                             final @Nonnull ExecutorService executorService)
       {
-        super(presentation, liveView, cameraDescriptor);
+        super(presentation, liveView, cameraDescriptor, executorService);
         this.context = context;
       }
 

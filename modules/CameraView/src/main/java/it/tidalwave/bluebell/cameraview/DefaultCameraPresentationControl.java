@@ -27,8 +27,8 @@
  */
 package it.tidalwave.bluebell.cameraview;
 
-import it.tidalwave.bluebell.cameraview.CameraPresentation.EditCallback;
 import javax.annotation.Nonnull;
+import java.util.concurrent.ExecutorService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,6 +45,7 @@ import it.tidalwave.sony.CameraObserver.Property;
 import it.tidalwave.bluebell.liveview.DefaultLiveViewPresentationControl;
 import it.tidalwave.bluebell.liveview.LiveViewPresentation;
 import it.tidalwave.bluebell.liveview.LiveViewPresentationControl;
+import it.tidalwave.bluebell.cameraview.CameraPresentation.EditCallback;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.sony.CameraApi.*;
 
@@ -75,21 +76,28 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
 
     /** The set of available APIs. */
     private final Set<String> availableApis = Collections.synchronizedSet(new TreeSet<String>());
+    
+    /** To run background jobs. */
+    @Nonnull
+    private final ExecutorService executorService;
 
     /*******************************************************************************************************************
      *
      * Creates a new instance.
      *
-     * @param presentation              the controlled presentation
-     * @param liveViewPresentation      the controller of the live view
-     * @param cameraDescriptor          the current camera
+     * @param   presentation            the controlled presentation
+     * @param   liveViewPresentation    the controller of the live view
+     * @param   cameraDescriptor        the current camera
+     * @param   executorService         an {@link ExecutorService} for running background jobs
      * 
      ******************************************************************************************************************/
     public DefaultCameraPresentationControl (final @Nonnull CameraPresentation presentation,
                                              final @Nonnull LiveViewPresentation liveViewPresentation,
-                                             final @Nonnull CameraDescriptor cameraDescriptor)
+                                             final @Nonnull CameraDescriptor cameraDescriptor,
+                                             final @Nonnull ExecutorService executorService)
       {
         this.presentation = presentation;
+        this.executorService = executorService;
         final CameraDevice cameraDevice = cameraDescriptor.createDevice();
         cameraApi = cameraDevice.getApi();
         cameraObserver = cameraDevice.getObserver();
@@ -142,7 +150,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
               }
           });
 
-        new Thread()
+        executorService.submit(new Runnable()
           {
             @Override
             public void run()
@@ -202,7 +210,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
                     presentation.notifyConnectionError();
                   }
               }
-          }.start();
+          });
       }
 
     /*******************************************************************************************************************
@@ -213,7 +221,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
     @Override
     public void stop()
       {
-        new Thread()
+        executorService.submit(new Runnable()
           {
             @Override
             public void run()
@@ -235,7 +243,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
                       }
                   }
               }
-          }.start();
+          });
       }
 
     /*******************************************************************************************************************
@@ -246,7 +254,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
     @Override
     public void takeAndFetchPicture()
       {
-        new Thread()
+        executorService.submit(new Runnable()
           {
             @Override
             public void run()
@@ -272,7 +280,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
                     presentation.hideProgressBar();
                   }
               }
-          }.start();
+          });
       }
 
     /*******************************************************************************************************************
@@ -283,7 +291,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
     @Override
     public void setShootMode (final @Nonnull String mode)
       {
-        new Thread()
+        executorService.submit(new Runnable()
           {
             @Override
             public void run()
@@ -299,7 +307,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
                     presentation.notifyGenericError();
                   }
               }
-          }.start();
+          });
       }
 
     /*******************************************************************************************************************
@@ -310,7 +318,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
     @Override
     public void startOrStopMovieRecording()
       {
-        new Thread()
+        executorService.submit(new Runnable()
           {
             @Override
             public void run()
@@ -338,7 +346,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
                     presentation.notifyErrorWhileRecordingMovie();
                   }
               }
-          }.start();
+          });
       }
 
     /*******************************************************************************************************************
@@ -368,7 +376,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
      ******************************************************************************************************************/
     private void setProperty (final @Nonnull CameraObserver.Property property, final @Nonnull String value)
       {
-        new Thread()
+        executorService.submit(new Runnable()
           {
             @Override
             public void run()
@@ -384,7 +392,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
                     presentation.notifyErrorWhileSettingProperty();
                   }
               }
-          }.start();
+          });
       }
     
     /*******************************************************************************************************************

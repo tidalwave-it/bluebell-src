@@ -53,6 +53,7 @@ import it.tidalwave.bluebell.cameraview.CameraPresentation;
 import it.tidalwave.bluebell.cameraview.DefaultCameraPresentationControl;
 import it.tidalwave.bluebell.mobile.R;
 import it.tidalwave.bluebell.mobile.android.CameraDescriptorIntentHelper;
+import it.tidalwave.bluebell.mobile.android.ThreadPools;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecoratorFactory.*;
 
@@ -563,7 +564,8 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
         control = new AndroidCameraPresentationControl(createUIThreadDecorator(this, CameraPresentation.class),
                                                        this,
                                                        svLiveView,
-                                                       cameraDescriptor);
+                                                       cameraDescriptor,
+                                                       ThreadPools.getInstance());
       }
 
     /*******************************************************************************************************************

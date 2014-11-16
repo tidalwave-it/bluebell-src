@@ -29,6 +29,7 @@ package it.tidalwave.sony.impl;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
+import java.util.concurrent.Executors;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 import java.net.URL;
@@ -58,7 +59,7 @@ public class DefaultSimpleSsdpClientTest
     @BeforeMethod
     public void setupFixture()
       {
-        fixture = new DefaultSsdpDiscoverer();
+        fixture = new DefaultSsdpDiscoverer(Executors.newFixedThreadPool(4));
       }
 
     @Test(timeOut = 60000)

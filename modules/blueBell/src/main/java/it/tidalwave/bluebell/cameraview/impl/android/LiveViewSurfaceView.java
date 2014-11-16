@@ -180,7 +180,7 @@ public class LiveViewSurfaceView extends SurfaceView implements LiveViewPresenta
 
         running = true;
 
-        consumerThread = new Thread()
+        consumerThread = new Thread() // FIXME: use an ExecutorService
           {
             @Override
             public void run()

@@ -44,6 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.sony.CameraApi.Polling.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 /***********************************************************************************************************************
  *
@@ -74,6 +75,15 @@ import java.util.List;
     
     private final Map<Property, String> valueMap = new HashMap<>();
 
+    /** To run background jobs. */
+    @Nonnull
+    private final ExecutorService executorService;
+    
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     // FIXME: should also make the Camera API dynamic, so we don't need those adapters
     @RequiredArgsConstructor
     enum PropertyFetcher
@@ -127,7 +137,7 @@ import java.util.List;
 
         running = true;
 
-        new Thread("CameraObserver")
+        executorService.submit(new Runnable()
           {
             @Override
             public void run()
@@ -219,7 +229,7 @@ import java.util.List;
 
                 running = false;
               }
-          }.start();
+          });
 
         return true;
       }

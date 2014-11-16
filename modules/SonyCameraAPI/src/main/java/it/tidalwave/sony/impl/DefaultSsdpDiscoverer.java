@@ -30,6 +30,7 @@ package it.tidalwave.sony.impl;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.DatagramPacket;
@@ -38,6 +39,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketException;
 import it.tidalwave.sony.CameraDescriptor;
 import it.tidalwave.sony.SsdpDiscoverer;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -49,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
+@RequiredArgsConstructor @Slf4j
 public class DefaultSsdpDiscoverer implements SsdpDiscoverer
   {
     private final static int SSDP_RECEIVE_TIMEOUT = 10000; // msec
@@ -65,6 +67,9 @@ public class DefaultSsdpDiscoverer implements SsdpDiscoverer
     private final static String SSDP_ST = "urn:schemas-sony-com:service:ScalarWebAPI:1";
 
     private boolean searching = false;
+    
+    @Nonnull
+    private final ExecutorService executorService;
 
     /*******************************************************************************************************************
      *
@@ -95,7 +100,7 @@ public class DefaultSsdpDiscoverer implements SsdpDiscoverer
                 + String.format("ST: %s\r\n", SSDP_ST) + "\r\n";
         final byte[] sendData = ssdpRequest.getBytes();
 
-        new Thread("Discoverer")
+        executorService.submit(new Runnable()
           {
             @Override
             public void run()
@@ -197,7 +202,7 @@ public class DefaultSsdpDiscoverer implements SsdpDiscoverer
 
                 handler.onFinished();
               };
-          }.start();
+          });
 
         return true;
       }

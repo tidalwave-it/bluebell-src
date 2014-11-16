@@ -133,7 +133,7 @@ public class DefaultLiveViewPresentationControl implements LiveViewPresentationC
         if (liveViewThread == null) 
           {
             running = true;
-            liveViewThread = new Thread(liveViewConsumer);
+            liveViewThread = new Thread(liveViewConsumer); // FIXME: use an ExecutorService
             liveViewThread.start();
           }
       }

@@ -30,6 +30,8 @@ package it.tidalwave.sony.impl;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +53,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j @ToString
 public class DefaultCameraDevice implements CameraDevice
   {
+    private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(4); // FIXME
+    
     private final List<CameraApiService> apiServices = new ArrayList<>();
 
     private CameraApi api;
@@ -139,7 +143,7 @@ public class DefaultCameraDevice implements CameraDevice
       {
         if (observer == null)
           {
-            observer = new DefaultCameraObserver(getApi());
+            observer = new DefaultCameraObserver(getApi(), EXECUTOR_SERVICE);
           }
 
         return observer;

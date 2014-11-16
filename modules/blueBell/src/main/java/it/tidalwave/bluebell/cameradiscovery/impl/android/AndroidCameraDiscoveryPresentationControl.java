@@ -29,6 +29,7 @@ package it.tidalwave.bluebell.cameradiscovery.impl.android;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import java.util.concurrent.ExecutorService;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.content.BroadcastReceiver;
@@ -40,9 +41,9 @@ import it.tidalwave.sony.CameraDescriptor;
 import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryPresentationControl;
 import it.tidalwave.bluebell.cameraview.impl.android.CameraPresentationActivity;
+import it.tidalwave.bluebell.mobile.android.CameraDescriptorIntentHelper;
 import lombok.Getter;
 import static android.content.Context.WIFI_SERVICE;
-import it.tidalwave.bluebell.mobile.android.CameraDescriptorIntentHelper;
 
 /***********************************************************************************************************************
  *
@@ -80,14 +81,16 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
      *
      * Creates a new instance.
      *
-     * @param presentation      the controlled presentation
-     * @param context           the Android {@link Context}
+     * @param   presentation        the controlled presentation
+     * @param   context             the Android {@link Context}
+     * @param   executorService     an {@link ExecutorService} for running background jobs
      * 
      ******************************************************************************************************************/
     public AndroidCameraDiscoveryPresentationControl (final @Nonnull CameraDiscoveryPresentation presentation,
-                                                      final @Nonnull Context context)
+                                                      final @Nonnull Context context,
+                                                      final @Nonnull ExecutorService executorService)
       {
-        super(presentation);
+        super(presentation, executorService);
         this.context = context;
         deviceListAdapter = new DeviceListAdapter(context, cameraDescriptors);
       }
