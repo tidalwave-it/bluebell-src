@@ -26,9 +26,10 @@ The application is composed by two Activites:
 * The **CameraDiscoveryPresentationActivity** makes it possible to pick a Wifi network and scans for the presence of Sony
   camera devices. This activity demonstrates:
     * how to interact with the Wifi system service;
+    * how to interact with an Android activity (the Wifi configuration panel);
     * how to receive Broadcast Notification;
     * how to keep the state of an Activity;
-    * how to write a simple adapter to populate a ListView;
+    * how to write a simple adapter to populate a ``ListView``;
     * how to use an Intent to pass the control (with parameters) to another Activity.
 
 * The **CameraViewPresentationActivity** connects to a camera device and, if it supports the "live view" feature, it 
@@ -38,7 +39,6 @@ The application is composed by two Activites:
     * how to create a custom Android UI component;
     * how to manage a Dialog;
     * how to customise an Activity so it runs at full screen
-
 
 In general, the app is loosely designed after the Presentation Abstraction Control (PAC) architectural pattern:
 
@@ -51,10 +51,21 @@ Controls are split in two parts:
 
   * a superclass which contains all the code that can be written without depending on Android.
   * a specialised class which extends the abstract controller with the required Android-specific code.
+
+The following points are likely to require specific Android code:
+
+  * the use of ``Intent``s;
+  * the use of string resources (``R.value.foobar``);
+  * the use of system specific infrastructures, such as the ``BroadcastReceiver``;
+  * the use of system services, such as ``WifiManager``;
  
 Both Presentations and Controls are also described by interfaces to allow the creation of mocks that can be used in
 automated testing. While at the present time there are no valid tests in this project, most of the presentation logic
 can be automatically tested by means of pure Java classes, avoiding the cumbersome Android approach to tests.
+
+Presentation interfaces contains one method for each interaction.
+
+TODO: Activity is used only as a life-cycle controller.
 
 
 # Remarks
