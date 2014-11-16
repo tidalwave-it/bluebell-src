@@ -73,7 +73,8 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
 
     /** The controlled camera. */
     private CameraDevice cameraDevice;
-    
+
+    // Below are widget references
     private ImageView ivPhotoBox;
 
     private RadioGroup rbShootMode;
@@ -403,7 +404,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     
     /*******************************************************************************************************************
      *
-     * Button callback.
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
@@ -446,6 +447,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
                 callback.setValue(currentValue);
               }
           });
+
         tvValue.setOnClickListener(new View.OnClickListener() 
           {
             @Override
@@ -593,7 +595,10 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     /*******************************************************************************************************************
      *
      * Creates the selector for the shoot modes.
-     *
+     * 
+     * FIXME: this code has been inherited from the original Sony example, but I frankly don't understand completely
+     * what's its meaning - it should be used to enable movie recording, but it doesn't work on my NEX-6 camera.
+     * 
      ******************************************************************************************************************/
     private void prepareShootModeRadioButtonsUi (final @Nonnull String[] availableShootModes,
                                                  final @Nonnull String currentMode)

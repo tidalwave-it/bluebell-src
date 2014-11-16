@@ -103,5 +103,5 @@ class DeviceListAdapter extends BaseAdapter
       {
         return (convertView != null) ? (ViewGroup)convertView 
                                      : (ViewGroup)inflater.inflate(R.layout.device_list_item, null);
-    }
+      }
   }

@@ -62,6 +62,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
     /** The controller of this presentation. */
     private AndroidCameraDiscoveryPresentationControl control;
 
+    // Below are widget references
     private ListView lvCameraDevices;
 
     private TextView tvWifiStatus;

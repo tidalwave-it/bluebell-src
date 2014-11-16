@@ -62,7 +62,7 @@ public class AndroidCameraPresentationControl extends DefaultCameraPresentationC
      * @param presentation        the controlled presentation
      * @param context             the Android {@link Context}
      * @param liveView            the live view
-     * @param cameraDescriptor    the current device
+     * @param cameraDescriptor    the descriptor of the current device
      * 
      ******************************************************************************************************************/
     public AndroidCameraPresentationControl (final @Nonnull CameraPresentation presentation,

@@ -45,7 +45,7 @@ import static android.content.Context.WIFI_SERVICE;
 
 /***********************************************************************************************************************
  *
- * The Android specialisation of {@link DefaultCameraDiscoveryViewControl} that contains Android-specific code.
+ * The Android specialisation of {@link DefaultCameraDiscoveryPresentationControl} that contains Android-specific code.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -183,8 +183,6 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
     
     /*******************************************************************************************************************
      *
-     * 
-     *
      ******************************************************************************************************************/
     private void registerWiFiReceiver() 
       {
@@ -194,7 +192,6 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
       }
 
     /*******************************************************************************************************************
-     *
      *
      ******************************************************************************************************************/
     private void unregisterWiFiReceiver() 
