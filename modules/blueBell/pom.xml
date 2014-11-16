@@ -74,10 +74,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>de.akquinet.android.androlog</groupId>
-            <artifactId>androlog</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-android</artifactId>
         </dependency>
