@@ -31,6 +31,10 @@ import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
  *
+ * @stereotype Presentation
+ * 
+ * The user interface for discovering and picking a camera device..
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
