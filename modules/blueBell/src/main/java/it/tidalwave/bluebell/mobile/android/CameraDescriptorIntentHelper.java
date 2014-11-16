@@ -32,7 +32,6 @@ import android.content.Context;
 import android.content.Intent;
 import it.tidalwave.sony.CameraDescriptor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -42,7 +41,6 @@ import lombok.RequiredArgsConstructor;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
 public class CameraDescriptorIntentHelper 
   {
     private static final String KEY_CAMERA_DESCRIPTOR = "cameraDescriptor";
@@ -52,6 +50,13 @@ public class CameraDescriptorIntentHelper
     @Getter @Nonnull
     private final CameraDescriptor cameraDescriptor;
 
+    public CameraDescriptorIntentHelper (final @Nonnull Class<?> explicitTopic, 
+                                         final @Nonnull CameraDescriptor cameraDescriptor) 
+      {
+        this.explicitTopic = explicitTopic;
+        this.cameraDescriptor = cameraDescriptor;
+      }
+    
     public CameraDescriptorIntentHelper (final @Nonnull Intent intent) 
       {
         explicitTopic = null;
