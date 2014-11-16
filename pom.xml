@@ -48,6 +48,7 @@
         
         <tft.javac.source>1.7</tft.javac.source>
         <tft.javac.target>1.7</tft.javac.target>
+        <tft.maven-android-plugin.version>3.8.2</tft.maven-android-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -88,7 +89,7 @@
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>android-maven-plugin</artifactId>
-                    <version>3.6.1</version>
+                    <version>${tft.maven-android-plugin.version}</version>
                     <inherited>true</inherited>
                     <configuration>
                         <androidManifestFile>${project.basedir}/src/main/AndroidManifest.xml</androidManifestFile>

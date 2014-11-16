@@ -77,6 +77,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-android</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.edmodo</groupId>
+            <artifactId>rangebar</artifactId>
+            <type>aar</type>
+        </dependency>
     </dependencies>
 
     <build>

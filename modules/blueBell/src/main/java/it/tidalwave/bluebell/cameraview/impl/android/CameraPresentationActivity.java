@@ -46,6 +46,7 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.edmodo.rangebar.RangeBar;
 import it.tidalwave.sony.CameraDescriptor;
 import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraObserver;
@@ -423,9 +424,11 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
         dialog.setContentView(layout);        
         final SeekBar sbValue = (SeekBar)dialog.findViewById(R.id.sl_value);
         final TextView tvValue = (TextView)dialog.findViewById(R.id.tvValue);
+        final RangeBar rbValue = (RangeBar)dialog.findViewById(R.id.rb_value);
         tvValue.setText(value);
         sbValue.setMax(values.size() - 1);
         sbValue.setProgress(index);
+        rbValue.setTickCount(values.size());
         
         sbValue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() 
           {

@@ -35,6 +35,7 @@ dependencies {
 
     compile 'org.slf4j:slf4j-android:1.6.1-RC1'
     compile 'com.google.code.findbugs:jsr305:3.0.0'
+    compile 'com.edmodo:rangebar:1.0.0'
 
     provided 'org.projectlombok:lombok:1.14.8'
     apt 'org.projectlombok:lombok:1.14.8'
