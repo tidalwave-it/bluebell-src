@@ -294,8 +294,11 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
             if (p.getProperty().equals(property))
               {
                 cameraApi.setProperty(p.getApiProperty(), value);
+                break;
               }
           }
+        
+        throw new IllegalArgumentException("Cannot set property " + property);
       }
     
     /*******************************************************************************************************************
