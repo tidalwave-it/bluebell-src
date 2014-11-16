@@ -57,7 +57,7 @@ import static it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecoratorFacto
 @Slf4j
 public class CameraDiscoveryPresentationActivity extends Activity implements CameraDiscoveryPresentation
   {
-    private static final String MEMENTO = CameraDiscoveryPresentationActivity.class.getName() + ".memento";
+    private static final String KEY_MEMENTO = CameraDiscoveryPresentationActivity.class.getName() + ".memento";
     
     /** The controller of this presentation. */
     private AndroidCameraDiscoveryPresentationControl control;
@@ -209,7 +209,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
                                                                 CameraDiscoveryPresentation.class), this);
         if (savedInstanceState != null)
           {
-            control.setMemento(savedInstanceState.getSerializable(MEMENTO));
+            control.setMemento(savedInstanceState.getSerializable(KEY_MEMENTO));
           }
         
         lvCameraDevices.setAdapter(control.getDeviceListAdapter());
@@ -225,7 +225,7 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
       {
         log.info("onSaveInstanceState({})", outState);
         super.onSaveInstanceState(outState); 
-        outState.putSerializable(MEMENTO, control.getMemento());
+        outState.putSerializable(KEY_MEMENTO, control.getMemento());
       }
     
     /*******************************************************************************************************************
