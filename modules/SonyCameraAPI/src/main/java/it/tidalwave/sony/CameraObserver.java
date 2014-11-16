@@ -30,6 +30,7 @@ package it.tidalwave.sony;
 import javax.annotation.Nonnull;
 import java.util.Set;
 import java.io.IOException;
+import java.util.List;
 
 /***********************************************************************************************************************
  *
@@ -139,6 +140,17 @@ public interface CameraObserver
      ******************************************************************************************************************/
     public void setProperty (@Nonnull Property property, @Nonnull String value)
       throws IOException;
+    
+    /*******************************************************************************************************************
+     *
+     * Returns the feasible values for the given property.
+     *
+     * @param   property    the property
+     * @return              the values
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public List<String> getPropertyValues (final @Nonnull Property property);
     
     /*******************************************************************************************************************
      *
