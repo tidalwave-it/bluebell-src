@@ -34,7 +34,7 @@
                 android:layout_marginRight="20dp"
                 android:gravity="center"
                 android:clickable="true"
-                android:onClick="onShutterSpeedClicked" />
+                android:onClick="onFocusModeClicked" />
 
             <TextView
                 android:layout_width="60dp"
@@ -144,7 +144,9 @@
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center"
                 android:background="#ffffffff"
-                android:padding="2dp" />
+                android:padding="2dp"
+                android:onClick="onFocusModeClicked"
+                android:clickable="true" />
         </LinearLayout>
 
         <LinearLayout

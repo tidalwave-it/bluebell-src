@@ -308,6 +308,7 @@ import java.util.concurrent.ExecutorService;
         final List<String> fValues = Arrays.asList("4.0","4.5","5.0","5.6","6.3","7.1","8.0","9.0","10","11","13","14","16","18","20","22");
         final List<String> shutterValues = Arrays.asList("30\"","25\"","20\"","15\"","13\"","10\"","8\"","6\"","5\"","4\"","3.2\"","2.5\"","2\"","1.6\"","1.3\"","1\"","0.8\"","0.6\"","0.5\"","0.4\"","1/3","1/4","1/5","1/6","1/8","1/10","1/13","1/15","1/20","1/25","1/30","1/40","1/50","1/60","1/80","1/100","1/125","1/160","1/200","1/250","1/320","1/400","1/500","1/640","1/800","1/1000","1/1250","1/1600","1/2000","1/2500","1/3200","1/4000");
         final List<String> isoValues = Arrays.asList("100","200","400","800","1600","3200","6400","12800","25600");
+        final List<String> focusModeValues = Arrays.asList("AF-S","AF-C","DMF","MF");
         
         switch (property)
           {
@@ -320,8 +321,11 @@ import java.util.concurrent.ExecutorService;
             case ISO_SPEED_RATE:
                 return isoValues;
                 
+            case FOCUS_MODE:
+                return focusModeValues;
+                
             default:
-                throw new IllegalArgumentException("Cannot change " + property);
+                throw new IllegalArgumentException("Cannot get feasible values for " + property);
           }
         // END FIXME
       }
