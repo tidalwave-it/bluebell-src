@@ -66,7 +66,7 @@ public class LiveViewSurfaceView extends SurfaceView implements LiveViewPresenta
 
     private Thread consumerThread;
 
-    private int prevoiusWidth = 0;
+    private int previousWidth = 0;
 
     private int previousHeight = 0;
 
@@ -291,7 +291,7 @@ public class LiveViewSurfaceView extends SurfaceView implements LiveViewPresenta
      ******************************************************************************************************************/
     private void drawFrame (final @Nonnull Bitmap frame)
       {
-        if ((frame.getWidth() != prevoiusWidth) || (frame.getHeight() != previousHeight))
+        if ((frame.getWidth() != previousWidth) || (frame.getHeight() != previousHeight))
           {
             onDetectedFrameSizeChanged(frame.getWidth(), frame.getHeight());
           }
@@ -321,7 +321,7 @@ public class LiveViewSurfaceView extends SurfaceView implements LiveViewPresenta
     private void onDetectedFrameSizeChanged (final int width, final int height)
       {
         log.debug("Change of aspect ratio detected");
-        prevoiusWidth = width;
+        previousWidth = width;
         previousHeight = height;
         drawBlackFrame();
         drawBlackFrame();
