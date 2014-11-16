@@ -413,7 +413,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
       {
         final int index = values.indexOf(value);
         // TODO: sanity check
-        final Dialog dialog = new Dialog(this);
+        final Dialog dialog = new Dialog(this, android.R.style.Theme_Holo_Light_Panel);
         final LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
         final View layout = inflater.inflate(R.layout.dialog_edit_property_with_slider, 
                                              (ViewGroup)findViewById(R.id.la_root));
