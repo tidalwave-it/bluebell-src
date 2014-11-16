@@ -36,6 +36,8 @@ import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
+ * An {@code IntentHelper} is a wrapper around an {@link Intent} that allows to set and get parameters.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
