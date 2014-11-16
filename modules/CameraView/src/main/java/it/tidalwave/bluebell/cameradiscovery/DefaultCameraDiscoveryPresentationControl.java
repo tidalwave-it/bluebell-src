@@ -174,6 +174,16 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    public void setupWiFi() 
+      {
+        openWifiSettings();
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
     public Serializable getMemento() 
       {
@@ -244,4 +254,11 @@ public abstract class DefaultCameraDiscoveryPresentationControl implements Camer
      *
      ******************************************************************************************************************/
     protected abstract void notifyDevicesChanged();
+    
+    /*******************************************************************************************************************
+     *
+     * Opens the UI for setting up the WiFi.
+     *
+     ******************************************************************************************************************/
+    protected abstract void openWifiSettings();
   }

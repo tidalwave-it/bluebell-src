@@ -35,6 +35,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.provider.Settings;
 import it.tidalwave.sony.CameraDescriptor;
 import it.tidalwave.bluebell.cameradiscovery.CameraDiscoveryPresentation;
 import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryPresentationControl;
@@ -167,6 +168,17 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
                 deviceListAdapter.notifyDataSetChanged();
               }
           });
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc} 
+     *
+     ******************************************************************************************************************/
+    @Override
+    protected void openWifiSettings() 
+      {
+        context.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
       }
     
     /*******************************************************************************************************************

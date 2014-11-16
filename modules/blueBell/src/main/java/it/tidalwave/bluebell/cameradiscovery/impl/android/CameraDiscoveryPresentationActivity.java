@@ -30,7 +30,9 @@ package it.tidalwave.bluebell.cameradiscovery.impl.android;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Html;
 import android.view.View;
 import android.view.Window;
@@ -160,12 +162,24 @@ public class CameraDiscoveryPresentationActivity extends Activity implements Cam
 
     /*******************************************************************************************************************
      *
-     *
+     * Button callback.
      *
      ******************************************************************************************************************/
     public void onSearchButtonClicked (final @Nonnull View view)
       {
         control.startDiscovery();
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Button callback.
+     *
+     ******************************************************************************************************************/
+    public void onWifiClicked (final @Nonnull View view)
+      {
+        control.setupWiFi();
+        // FIXME: move to the controller
+        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
       }
     
     /*******************************************************************************************************************

@@ -65,6 +65,13 @@ public interface CameraDiscoveryPresentationControl
     
     /*******************************************************************************************************************
      *
+     * Sets up the Wifi.
+     * 
+     ******************************************************************************************************************/
+    public void setupWiFi();
+    
+    /*******************************************************************************************************************
+     *
      * Returns a {@link Serializable} object that represents the internal status of the controller.
      * 
      * @return      the memento

@@ -13,7 +13,10 @@
     <string name="button_cancel_search">Cancel</string>
 
     <string name="msg_wifi_disconnect">Wi-Fi disconnected</string>
-    <string name="msg_search_devices">Connect to compatible camera via Wi-Fi settings before device discovery.</string>
+    <string name="msg_search_devices">If you don\'t see your camera listed below, please Set up
+        so it can be remotely controlled by means of WiFi, then make sure that this device is
+        connected to the same WiFi network of your camera. Click on the WiFi label below to open
+        the WiFi settings panel.</string>
     <string name="msg_device_search_started">Searching for devices...</string>
     <string name="msg_device_search_finish">Device search completed.</string>
     <string name="msg_rec_start">Recording started.</string>
