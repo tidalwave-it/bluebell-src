@@ -27,6 +27,7 @@
  */
 package it.tidalwave.sony;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -66,13 +67,14 @@ public interface CameraApi
     @RequiredArgsConstructor @Getter
     public static enum Property
       {
-        EXPOSURE_COMPENSATION("currentExposureCompensation", 25, "exposureCompensation"),
-        FLASH_MODE("currentFlashMode", 26, "flashMode"),
-        F_NUMBER("currentFNumber", 27, "fNumber"),
-        FOCUS_MODE("currentFocusMode", 28, "focusMode"),
-        ISO_SPEED_RATE("currentIsoSpeedRate", 29, "isoSpeedRate"),
-        SHUTTER_SPEED("currentShutterSpeed", 32, "shutterSpeed"),
-        WHITE_BALANCE("currentWhiteBalanceMode", 33, "whiteBalance");
+        // TODO: remove internal API bindings from public visibility
+        EXPOSURE_COMPENSATION("currentExposureCompensation", 25, "exposureCompensation", "setExposureCompensation"),
+        FLASH_MODE(           "currentFlashMode",            26, "flashMode",            "setFlashMode"),
+        F_NUMBER(             "currentFNumber",              27, "fNumber",              "setFNumber"),
+        FOCUS_MODE(           "currentFocusMode",            28, "focusMode",            "setFocusMode"),
+        ISO_SPEED_RATE(       "currentIsoSpeedRate",         29, "isoSpeedRate",         "setIsoSpeedRate"),
+        SHUTTER_SPEED(        "currentShutterSpeed",         32, "shutterSpeed",         "setShutterSpeed"),
+        WHITE_BALANCE(        "currentWhiteBalanceMode",     33, "whiteBalance",         "setWhiteBalance");
         
         @Nonnull
         private final String name;
@@ -81,6 +83,9 @@ public interface CameraApi
         
         @Nonnull
         private final String type;
+        
+        @CheckForNull
+        private final String setterMethodName;
       }
         
     /*******************************************************************************************************************
@@ -533,5 +538,17 @@ public interface CameraApi
      ******************************************************************************************************************/
     @Nonnull
     public RecModeResponse stopRecMode()
+      throws IOException;
+    
+    /*******************************************************************************************************************
+     *
+     * Sets a property to the camera.
+     * 
+     * @param   property    the property
+     * @param   value       the value
+     * @throws  IOException in case of error
+     *
+     ******************************************************************************************************************/
+    public void setProperty (@Nonnull Property property, @Nonnull String value)
       throws IOException;
   }
