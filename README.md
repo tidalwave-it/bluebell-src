@@ -9,35 +9,35 @@ remotely control a Sony Camera, connected through a Wifi connection, by means of
 
 The project is composed of three separate modules:
 
-* Sony Camera API. It is code (heavily) refactored from a Sony example and wraps the Sony Camera API. It is interesting
+* **Sony Camera API**. It is code (heavily) refactored from a Sony example and wraps the Sony Camera API. It is interesting
   as an example on how to deal with a REST API (JSON and XML based) in an Android application. It also contains a simple
   client implementation of the SSDP protocol. This module is a plain Java 7 set of files, which demonstrates how part of
   the code of an Android application can be written in a reusable fashion.
-* Camera View. It contains the basic abstractions of the blueBell application, in form of Presentation and Control 
+* **Camera View**. It contains the basic abstractions of the blueBell application, in form of Presentation and Control 
   objects. It's again a plain Java 7 set of files, which demonstrates how part of an Android application can be written
   in a way so that they can be tested without resorting to the Android platform.
-* Application APK. This module contains Android specific code and generates the final APK bundle.
+* **Application APK**. This module contains Android specific code and generates the final APK bundle.
 
 
 ## Structure of the application
 
 The application is composed by two Activites:
 
-* The CameraDiscoveryPresentationActivity makes it possible to pick a Wifi network and scans for the presence of Sony
+* The **CameraDiscoveryPresentationActivity** makes it possible to pick a Wifi network and scans for the presence of Sony
   camera devices. This activity demonstrates:
-  * how to interact with the Wifi system service;
-  * how to receive Broadcast Notification;
-  * how to keep the state of an Activity;
-  * how to write a simple adapter to populate a ListView;
-  * how to use an Intent to pass the control (with parameters) to another Activity.
+    * how to interact with the Wifi system service;
+    * how to receive Broadcast Notification;
+    * how to keep the state of an Activity;
+    * how to write a simple adapter to populate a ListView;
+    * how to use an Intent to pass the control (with parameters) to another Activity.
 
-* The CameraViewPresentationActivity connects to a camera device and, if it supports the "live view" feature, it 
+* The **CameraViewPresentationActivity** connects to a camera device and, if it supports the "live view" feature, it 
   continuously displays the contents of the Electronic Viewfinder (EVF). It also shows the values of some camera 
   settings such as the F number, the shutter speed, the ISO speed rating and others; some of the settings can be also
   changed. It also allow to shoot a photo or to record a movie. This activity demonstrates:
-  * how to create a custom Android UI component;
-  * how to manage a Dialog;
-  * how to customise an Activity so it runs at full screen
+    * how to create a custom Android UI component;
+    * how to manage a Dialog;
+    * how to customise an Activity so it runs at full screen
 
 
 In general, the app is loosely designed after the Presentation Abstraction Control (PAC) architectural pattern:
