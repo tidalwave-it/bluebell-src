@@ -94,6 +94,7 @@ class DeviceListAdapter extends BaseAdapter
         tvDeviceName.setText(mainLabel);
         tvDeviceAddress.setText(cameraDescriptor.getIpAddress());
 
+        // at the next round layout will be passed as convertView, so it is created only once.
         return layout;
       }
 
