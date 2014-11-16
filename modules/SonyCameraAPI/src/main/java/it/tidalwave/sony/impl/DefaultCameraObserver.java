@@ -29,9 +29,13 @@ package it.tidalwave.sony.impl;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 import java.io.IOException;
 import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraApi.EventResponse;
@@ -42,10 +46,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.sony.CameraApi.Polling.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 /***********************************************************************************************************************
  *
