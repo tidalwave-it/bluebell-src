@@ -36,7 +36,8 @@
         android:layout_above="@+id/bt_search"
         android:layout_marginBottom="20dp"
         android:layout_below="@+id/tv_wifi_status"
-        android:background="@color/list_background">
+        android:background="@color/list_background"
+        android:padding="4dp">
     </ListView>
 
     <Button
