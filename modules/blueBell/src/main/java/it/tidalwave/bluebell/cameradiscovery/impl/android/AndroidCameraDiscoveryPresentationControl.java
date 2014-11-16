@@ -42,6 +42,7 @@ import it.tidalwave.bluebell.cameradiscovery.DefaultCameraDiscoveryPresentationC
 import it.tidalwave.bluebell.cameraview.impl.android.CameraPresentationActivity;
 import lombok.Getter;
 import static android.content.Context.WIFI_SERVICE;
+import it.tidalwave.bluebell.mobile.android.CameraDescriptorIntentHelper;
 
 /***********************************************************************************************************************
  *
@@ -132,9 +133,9 @@ public class AndroidCameraDiscoveryPresentationControl extends DefaultCameraDisc
         else
           {
             presentation.notifySelectedDeviceName(cameraDescriptor.getFriendlyName());
-            final Intent intent = new Intent(context, CameraPresentationActivity.class);
-            intent.putExtra("cameraDescriptor", cameraDescriptor);
-            context.startActivity(intent);
+            final CameraDescriptorIntentHelper intentHelper = 
+                    new CameraDescriptorIntentHelper(CameraPresentationActivity.class, cameraDescriptor);
+            context.startActivity(intentHelper.createIntent(context));
           }
       }
     

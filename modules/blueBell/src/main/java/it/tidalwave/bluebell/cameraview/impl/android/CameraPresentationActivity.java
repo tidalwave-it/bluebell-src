@@ -52,6 +52,7 @@ import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.bluebell.cameraview.CameraPresentation;
 import it.tidalwave.bluebell.cameraview.DefaultCameraPresentationControl;
 import it.tidalwave.bluebell.mobile.R;
+import it.tidalwave.bluebell.mobile.android.CameraDescriptorIntentHelper;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.bluebell.mobile.android.AndroidUIThreadDecoratorFactory.*;
 
@@ -556,8 +557,8 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
         tvWhiteBalance = (TextView)findViewById(R.id.tv_white_balance);
         pbWait = (ProgressBar)findViewById(R.id.pb_wait);
 
-        final CameraDescriptor cameraDescriptor =
-                (CameraDescriptor)getIntent().getSerializableExtra("cameraDescriptor");
+        final CameraDescriptorIntentHelper intentHelper = new CameraDescriptorIntentHelper(getIntent());
+        final CameraDescriptor cameraDescriptor = intentHelper.getCameraDescriptor();
         cameraDevice = cameraDescriptor.createDevice();
         control = new AndroidCameraPresentationControl(createUIThreadDecorator(this, CameraPresentation.class),
                                                        this,
