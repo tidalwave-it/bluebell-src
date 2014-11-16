@@ -350,7 +350,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
                 break;
                 
             case EXPOSURE_COMPENSATION:
-                tvExposureCompensation.setText(value);
+                tvExposureCompensation.setText("\u00B1" + value);
                 break;
                 
             case ISO_SPEED_RATE:
