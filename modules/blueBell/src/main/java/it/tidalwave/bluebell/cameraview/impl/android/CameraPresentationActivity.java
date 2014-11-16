@@ -337,6 +337,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     public void renderProperty (final @Nonnull CameraObserver.Property property, final @Nonnull String value) 
       {
         log.info("renderProperty({}, {})", property, value);
+        // FIXME: formattation should be done by the controller
         
         switch (property) // FIXME: get rid of this switch
           {
@@ -361,11 +362,11 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
                 break;
                 
             case FLASH_MODE:
-                tvFlashMode.setText(value);
+                tvFlashMode.setText("flash " + value);
                 break;
                 
             case WHITE_BALANCE:
-                tvWhiteBalance.setText(value);
+                tvWhiteBalance.setText(value.equals("Auto WB") ? "AWB" : value);
                 break;                
           }
       }
