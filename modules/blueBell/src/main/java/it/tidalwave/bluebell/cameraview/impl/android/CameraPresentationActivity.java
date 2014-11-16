@@ -34,10 +34,10 @@ import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -93,6 +93,8 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     private TextView tvFlashMode;
     
     private TextView tvWhiteBalance;
+    
+    private ProgressBar pbWait;
     
     /*******************************************************************************************************************
      *
@@ -193,7 +195,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void showProgressBar()
       {
-        setProgressBarIndeterminateVisibility(true);
+        pbWait.setVisibility(View.VISIBLE);
       }
 
     /*******************************************************************************************************************
@@ -204,7 +206,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     @Override
     public void hideProgressBar()
       {
-        setProgressBarIndeterminateVisibility(false);
+        pbWait.setVisibility(View.INVISIBLE);
       }
     
     /*******************************************************************************************************************
@@ -408,7 +410,6 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
       {
         log.info("onCreate({})", savedInstanceState);
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_camera_presentation);
 
         ivPhotoBox = (ImageView)findViewById(R.id.iv_photo_box);
@@ -424,6 +425,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
         tvFocusMode = (TextView)findViewById(R.id.tv_focus_mode);
         tvFlashMode = (TextView)findViewById(R.id.tv_flash_mode);
         tvWhiteBalance = (TextView)findViewById(R.id.tv_white_balance);
+        pbWait = (ProgressBar)findViewById(R.id.pb_wait);
 
         final CameraDescriptor cameraDescriptor =
                 (CameraDescriptor)getIntent().getSerializableExtra("cameraDescriptor");
@@ -443,7 +445,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
       {
         log.info("onResume()");
         super.onResume();
-        setProgressBarIndeterminateVisibility(true);
+        pbWait.setVisibility(View.INVISIBLE);
         control.start();
       }
 

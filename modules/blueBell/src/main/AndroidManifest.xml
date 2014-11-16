@@ -31,6 +31,7 @@
         <activity
             android:name="it.tidalwave.bluebell.cameraview.impl.android.CameraPresentationActivity"
             android:label="@string/activity_camera_label"
+            android:theme="@android:style/Theme.Black.NoTitleBar"
             android:screenOrientation="landscape" />
 
     </application>

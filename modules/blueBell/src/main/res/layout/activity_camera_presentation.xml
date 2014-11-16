@@ -82,6 +82,7 @@
                 android:id="@+id/tv_flash_mode"
                 android:textColor="#ffffffff"
                 android:layout_gravity="center" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -151,6 +152,18 @@
                 android:textColor="#ffffffff"
                 android:layout_gravity="center" />
         </LinearLayout>
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pb_wait"
+            android:indeterminate="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@+id/la_right"
+            android:layout_alignEnd="@+id/la_right"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp" />
 
     </RelativeLayout>
 
