@@ -136,7 +136,8 @@
                 android:id="@+id/tv_focus_mode"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center"
-                android:background="#ffffffff" />
+                android:background="#ffffffff"
+                android:padding="2dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -162,7 +163,6 @@
         </LinearLayout>
 
         <ProgressBar
-            style="?android:attr/progressBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/pb_wait"
