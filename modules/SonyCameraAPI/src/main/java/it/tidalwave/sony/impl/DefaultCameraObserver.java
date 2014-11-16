@@ -43,6 +43,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.sony.CameraApi.Polling.*;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
@@ -73,7 +74,7 @@ import java.util.concurrent.ExecutorService;
     @Getter @Nonnull
     private String shootMode = "";
     
-    private final Map<Property, String> valueMap = new HashMap<>();
+    private final Map<Property, String> valueMap = Collections.synchronizedMap(new HashMap<Property, String>());
 
     /** To run background jobs. */
     @Nonnull
