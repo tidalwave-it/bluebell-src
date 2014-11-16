@@ -128,6 +128,7 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
+     * This interface declares the common methods available to all kinds of responses.
      *
      ******************************************************************************************************************/
     public static interface Response
@@ -141,6 +142,7 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
+     * This interface declares the additional methods available to the 'RecMode' operation response.
      *
      ******************************************************************************************************************/
     public static interface RecModeResponse extends Response
@@ -149,6 +151,7 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
+     * This interface declares the additional methods available to the 'Event' response.
      *
      ******************************************************************************************************************/
     public static interface EventResponse extends Response
@@ -169,6 +172,7 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
+     * This interface declares the additional methods available to the 'AvailableApisResponse' response.
      *
      ******************************************************************************************************************/
     public static interface AvailableApisResponse extends Response
@@ -179,6 +183,7 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
+     * This interface declares the additional methods available to the 'ApplicationInfo' response.
      *
      ******************************************************************************************************************/
     public static interface ApplicationInfoResponse extends Response
@@ -189,6 +194,7 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
+     * This interface declares the additional methods available to the 'AvailableShootMode' response.
      *
      ******************************************************************************************************************/
     public static interface AvailableShootModeResponse extends Response
@@ -202,6 +208,7 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
+     * This interface declares the additional methods available to the 'TakePicture' response.
      *
      ******************************************************************************************************************/
     public static interface TakePictureResponse extends Response
@@ -212,6 +219,7 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
+     * This interface declares the additional methods available to the 'StopMovieRec' response.
      *
      ******************************************************************************************************************/
     public static interface StopMovieRecResponse extends Response
@@ -222,6 +230,7 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
+     * This interface declares the additional methods available to the 'StartLiveView' response.
      *
      ******************************************************************************************************************/
     public static interface StartLiveViewUrlResponse extends Response
@@ -232,20 +241,10 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
-     * Calls actTakePicture API to the target server. Request JSON data is such
-     * like as below.
-     *
-     * <pre>
-     * {
-     *   "method": "actTakePicture",
-     *   "params": [],
-     *   "id": 2,
-     *   "version": "1.0"
-     * }
-     * </pre>
-     *
-     * @throws IOException  in case of error
-     * @return              the JSON response
+     * Takes a picture.
+     * 
+     * @throws  IOException     in case of error
+     * @return                  a response object with available information
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -254,20 +253,10 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
-     * Calls getApplicationInfo API to the target server. Request JSON data is
-     * such like as below.
-     *
-     * <pre>
-     * {
-     *   "method": "getApplicationInfo",
-     *   "params": [""],
-     *   "id": 2,
-     *   "version": "1.0"
-     * }
-     * </pre>
-     *
-     * @throws IOException  in case of error
-     * @return              the JSON response
+     * Retrieves the application info.
+     * 
+     * @throws  IOException     in case of error
+     * @return                  a response object with available information
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -276,20 +265,10 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
-     * Calls getAvailableApiList API to the target server. Request JSON data is
-     * such like as below.
-     *
-     * <pre>
-     * {
-     *   "method": "getAvailableApiList",
-     *   "params": [""],
-     *   "id": 2,
-     *   "version": "1.0"
-     * }
-     * </pre>
-     *
-     * @throws IOException  in case of error
-     * @return              the JSON response
+     * Retrieves the available APIs.
+     * 
+     * @throws  IOException     in case of error
+     * @return                  a response object with available information
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -298,20 +277,10 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
-     * Calls getAvailableShootMode API to the target server. Request JSON data
-     * is such like as below.
-     *
-     * <pre>
-     * {
-     *   "method": "getAvailableShootMode",
-     *   "params": [],
-     *   "id": 2,
-     *   "version": "1.0"
-     * }
-     * </pre>
-     *
-     * @throws IOException  in case of error
-     * @return              the JSON response
+     * Retrieves the available shoot modes.
+     * 
+     * @throws  IOException     in case of error
+     * @return                  a response object with available information
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -320,21 +289,11 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
-     * Calls getEvent API to the target server. Request JSON data is such like
-     * as below.
-     *
-     * <pre>
-     * {
-     *   "method": "getEvent",
-     *   "params": [true],
-     *   "id": 2,
-     *   "version": "1.0"
-     * }
-     * </pre>
-     *
-     * @param               polling     long or short polling
-     * @throws IOException  in case of error
-     * @return              the JSON response
+     * Polls for the next update event from the camera.
+     * 
+     * @param   polling         long or short polling
+     * @throws  IOException     in case of error
+     * @return                  a response object with available information
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -343,20 +302,10 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
-     * Calls getShootMode API to the target server. Request JSON data is such
-     * like as below.
-     *
-     * <pre>
-     * {
-     *   "method": "getShootMode",
-     *   "params": [],
-     *   "id": 2,
-     *   "version": "1.0"
-     * }
-     * </pre>
-     *
-     * @throws IOException  in case of error
-     * @return              the JSON response
+     * Retrieves the current shoot mode.
+     * 
+     * @throws  IOException     in case of error
+     * @return                  a response object with available information
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -365,20 +314,10 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
-     * Calls getSupportedShootMode API to the target server. Request JSON data
-     * is such like as below.
-     *
-     * <pre>
-     * {
-     *   "method": "getSupportedShootMode",
-     *   "params": [],
-     *   "id": 2,
-     *   "version": "1.0"
-     * }
-     * </pre>
-     *
-     * @throws IOException  in case of error
-     * @return              the JSON response
+     * Retrieves the supported shoot modes.
+     * 
+     * @throws  IOException     in case of error
+     * @return                  a response object with available information
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -387,21 +326,10 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
-     * Calls setShootMode API to the target server. Request JSON data is such
-     * like as below.
-     *
-     * <pre>
-     * {
-     *   "method": "setShootMode",
-     *   "params": ["still"],
-     *   "id": 2,
-     *   "version": "1.0"
-     * }
-     * </pre>
-     *
-     * @param shootMode shoot mode (ex. "still")
-     * @throws IOException  in case of error
-     * @return              the JSON response
+     * Sets the shoot mode.
+     * 
+     * @throws  IOException     in case of error
+     * @return                  a response object with available information
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -410,20 +338,10 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
-     * Calls startLiveview API to the target server. Request JSON data is such
-     * like as below.
-     *
-     * <pre>
-     * {
-     *   "method": "startLiveview",
-     *   "params": [],
-     *   "id": 2,
-     *   "version": "1.0"
-     * }
-     * </pre>
-     *
-     * @throws IOException  in case of error
-     * @return              the JSON response
+     * Starts the live view.
+     * 
+     * @throws  IOException     in case of error
+     * @return                  a response object with available information
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -432,64 +350,10 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
-     * Calls startMovieRec API to the target server. Request JSON data is such
-     * like as below.
-     *
-     * <pre>
-     * {
-     *   "method": "startMovieRec",
-     *   "params": [],
-     *   "id": 2,
-     *   "version": "1.0"
-     * }
-     * </pre>
-     *
-     * @throws IOException  in case of error
-     * @return              the JSON response
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public Response startMovieRec()
-      throws IOException;
-
-    /*******************************************************************************************************************
-     *
-     * Calls startRecMode API to the target server. Request JSON data is such
-     * like as below.
-     *
-     * <pre>
-     * {
-     *   "method": "startRecMode",
-     *   "params": [],
-     *   "id": 2,
-     *   "version": "1.0"
-     * }
-     * </pre>
-     *
-     * @throws IOException  in case of error
-     * @return              the JSON response
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public RecModeResponse startRecMode()
-      throws IOException;
-
-    /*******************************************************************************************************************
-     *
-     * Calls stopLiveview API to the target server. Request JSON data is such
-     * like as below.
-     *
-     * <pre>
-     * {
-     *   "method": "stopLiveview",
-     *   "params": [],
-     *   "id": 2,
-     *   "version": "1.0"
-     * }
-     * </pre>
-     *
-     * @throws IOException  in case of error
-     * @return              the JSON response
+     * Stops the live view.
+     * 
+     * @throws  IOException     in case of error
+     * @return                  a response object with available information
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -498,20 +362,22 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
-     * Calls stopMovieRec API to the target server. Request JSON data is such
-     * like as below.
+     * Starts movie recording.
+     * 
+     * @throws  IOException     in case of error
+     * @return                  a response object with available information
      *
-     * <pre>
-     * {
-     *   "method": "stopMovieRec",
-     *   "params": [],
-     *   "id": 2,
-     *   "version": "1.0"
-     * }
-     * </pre>
+     ******************************************************************************************************************/
+    @Nonnull
+    public Response startMovieRec()
+      throws IOException;
+
+    /*******************************************************************************************************************
      *
-     * @throws IOException  in case of error
-     * @return              the JSON response
+     * Starts movie recording.
+     * 
+     * @throws  IOException     in case of error
+     * @return                  a response object with available information
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -520,20 +386,22 @@ public interface CameraApi
 
     /*******************************************************************************************************************
      *
-     * Calls stopRecMode API to the target server. Request JSON data is such
-     * like as below.
+     * Starts rec mode.
+     * 
+     * @throws  IOException     in case of error
+     * @return                  a response object with available information
      *
-     * <pre>
-     * {
-     *   "method": "stopRecMode",
-     *   "params": [],
-     *   "id": 2,
-     *   "version": "1.0"
-     * }
-     * </pre>
+     ******************************************************************************************************************/
+    @Nonnull
+    public RecModeResponse startRecMode()
+      throws IOException;
+
+    /*******************************************************************************************************************
      *
-     * @throws IOException  in case of error
-     * @return              the JSON response
+     * Stops rec mode.
+     * 
+     * @throws  IOException     in case of error
+     * @return                  a response object with available information
      *
      ******************************************************************************************************************/
     @Nonnull
