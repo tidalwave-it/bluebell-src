@@ -243,8 +243,8 @@ public interface CameraApi
      *
      * Takes a picture.
      * 
-     * @throws  IOException     in case of error
      * @return                  a response object with available information
+     * @throws  IOException     in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -255,8 +255,8 @@ public interface CameraApi
      *
      * Retrieves the application info.
      * 
-     * @throws  IOException     in case of error
      * @return                  a response object with available information
+     * @throws  IOException     in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -267,8 +267,8 @@ public interface CameraApi
      *
      * Retrieves the available APIs.
      * 
-     * @throws  IOException     in case of error
      * @return                  a response object with available information
+     * @throws  IOException     in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -279,8 +279,8 @@ public interface CameraApi
      *
      * Retrieves the available shoot modes.
      * 
-     * @throws  IOException     in case of error
      * @return                  a response object with available information
+     * @throws  IOException     in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -292,8 +292,8 @@ public interface CameraApi
      * Polls for the next update event from the camera.
      * 
      * @param   polling         long or short polling
-     * @throws  IOException     in case of error
      * @return                  a response object with available information
+     * @throws  IOException     in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -304,8 +304,8 @@ public interface CameraApi
      *
      * Retrieves the current shoot mode.
      * 
-     * @throws  IOException     in case of error
      * @return                  a response object with available information
+     * @throws  IOException     in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -316,8 +316,8 @@ public interface CameraApi
      *
      * Retrieves the supported shoot modes.
      * 
-     * @throws  IOException     in case of error
      * @return                  a response object with available information
+     * @throws  IOException     in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -328,8 +328,8 @@ public interface CameraApi
      *
      * Sets the shoot mode.
      * 
-     * @throws  IOException     in case of error
      * @return                  a response object with available information
+     * @throws  IOException     in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -340,8 +340,8 @@ public interface CameraApi
      *
      * Starts the live view.
      * 
-     * @throws  IOException     in case of error
      * @return                  a response object with available information
+     * @throws  IOException     in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -352,8 +352,8 @@ public interface CameraApi
      *
      * Stops the live view.
      * 
-     * @throws  IOException     in case of error
      * @return                  a response object with available information
+     * @throws  IOException     in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -364,8 +364,8 @@ public interface CameraApi
      *
      * Starts movie recording.
      * 
-     * @throws  IOException     in case of error
      * @return                  a response object with available information
+     * @throws  IOException     in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -376,8 +376,8 @@ public interface CameraApi
      *
      * Starts movie recording.
      * 
-     * @throws  IOException     in case of error
      * @return                  a response object with available information
+     * @throws  IOException     in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -388,8 +388,8 @@ public interface CameraApi
      *
      * Starts rec mode.
      * 
-     * @throws  IOException     in case of error
      * @return                  a response object with available information
+     * @throws  IOException     in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -400,8 +400,8 @@ public interface CameraApi
      *
      * Stops rec mode.
      * 
-     * @throws  IOException     in case of error
      * @return                  a response object with available information
+     * @throws  IOException     in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -414,9 +414,10 @@ public interface CameraApi
      * 
      * @param   property    the property
      * @param   value       the value
+     * @return                  a response object with available information
      * @throws  IOException in case of error
      *
      ******************************************************************************************************************/
-    public void setProperty (@Nonnull Property property, @Nonnull String value)
+    public Response setProperty (@Nonnull Property property, @Nonnull String value)
       throws IOException;
   }

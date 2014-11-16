@@ -823,7 +823,7 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Override
-    public void setProperty (final @Nonnull Property property, final @Nonnull String value) 
+    public ErrorCheckingResponse setProperty (final @Nonnull Property property, final @Nonnull String value) 
       throws IOException
       {
         log.info("setProperty({}, {})", property, value);
@@ -834,8 +834,8 @@ import lombok.extern.slf4j.Slf4j;
             throw new IllegalArgumentException("Setting property not supported: " + property);  
           }
           
-        final Call call = createCall(CAMERA_SERVICE).withMethod(setterMethodName).withParam(value); // FIXME
-        new ErrorCheckingResponse(call.post()); // this validates response
+        final Call call = createCall(CAMERA_SERVICE).withMethod(setterMethodName).withParam(value);
+        return new ErrorCheckingResponse(call.post());
       }
 
     /*******************************************************************************************************************
