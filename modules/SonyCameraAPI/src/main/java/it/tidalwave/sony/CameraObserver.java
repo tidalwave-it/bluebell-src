@@ -46,7 +46,10 @@ public interface CameraObserver
         F_NUMBER,
         SHUTTER_SPEED,
         ISO_SPEED_RATE,
-        EXPOSURE_COMPENSATION
+        EXPOSURE_COMPENSATION,
+        FLASH_MODE,
+        FOCUS_MODE,
+        WHITE_BALANCE;
       }
 
     /*******************************************************************************************************************

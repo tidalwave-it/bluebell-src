@@ -88,6 +88,12 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
 
     private TextView tvIsoSpeedRate;
     
+    private TextView tvFocusMode;
+    
+    private TextView tvFlashMode;
+    
+    private TextView tvWhiteBalance;
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -347,6 +353,18 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
             case ISO_SPEED_RATE:
                 tvIsoSpeedRate.setText("ISO " + value);
                 break;
+
+            case FOCUS_MODE:
+                tvFocusMode.setText(value);
+                break;
+                
+            case FLASH_MODE:
+                tvFlashMode.setText(value);
+                break;
+                
+            case WHITE_BALANCE:
+                tvWhiteBalance.setText(value);
+                break;                
           }
       }
     
@@ -403,6 +421,9 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
         tvShutterSpeed = (TextView)findViewById(R.id.tv_shutter_speed);
         tvExposureCompensation = (TextView)findViewById(R.id.tv_exposure_compensation);
         tvIsoSpeedRate = (TextView)findViewById(R.id.tv_iso_speed_rate);
+        tvFocusMode = (TextView)findViewById(R.id.tv_focus_mode);
+        tvFlashMode = (TextView)findViewById(R.id.tv_flash_mode);
+        tvWhiteBalance = (TextView)findViewById(R.id.tv_white_balance);
 
         final CameraDescriptor cameraDescriptor =
                 (CameraDescriptor)getIntent().getSerializableExtra("cameraDescriptor");

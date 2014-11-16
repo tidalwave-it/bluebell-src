@@ -67,14 +67,19 @@ public interface CameraApi
     public static enum Property
       {
         EXPOSURE_COMPENSATION("currentExposureCompensation", 25, "exposureCompensation"),
+        FLASH_MODE("currentFlashMode", 26, "flashMode"),
         F_NUMBER("currentFNumber", 27, "fNumber"),
+        FOCUS_MODE("currentFocusMode", 28, "focusMode"),
         ISO_SPEED_RATE("currentIsoSpeedRate", 29, "isoSpeedRate"),
-        SHUTTER_SPEED("currentShutterSpeed", 32, "shutterSpeed");
+        SHUTTER_SPEED("currentShutterSpeed", 32, "shutterSpeed"),
+        WHITE_BALANCE("currentWhiteBalanceMode", 33, "whiteBalance");
         
+        @Nonnull
         private final String name;
         
         private final int index;
         
+        @Nonnull
         private final String type;
       }
         

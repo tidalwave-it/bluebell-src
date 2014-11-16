@@ -79,7 +79,10 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
         FETCHER_F_NUMBER(Property.F_NUMBER, CameraApi.Property.F_NUMBER),
         FETCHER_SHUTTER(Property.SHUTTER_SPEED, CameraApi.Property.SHUTTER_SPEED),
         FETCHER_ISO(Property.ISO_SPEED_RATE, CameraApi.Property.ISO_SPEED_RATE),
-        FETCHER_EXPOSURE_COMPENSATION(Property.EXPOSURE_COMPENSATION, CameraApi.Property.EXPOSURE_COMPENSATION);
+        FETCHER_EXPOSURE_COMPENSATION(Property.EXPOSURE_COMPENSATION, CameraApi.Property.EXPOSURE_COMPENSATION),
+        FETCHER_FLASH_MODE(Property.FLASH_MODE, CameraApi.Property.FLASH_MODE),
+        FETCHER_FOCUS_MODE(Property.FOCUS_MODE, CameraApi.Property.FOCUS_MODE),
+        FETCHER_WHITE_BALANCE(Property.WHITE_BALANCE, CameraApi.Property.WHITE_BALANCE);
         
         @Nonnull
         public String fetch (final @Nonnull EventResponse response)
