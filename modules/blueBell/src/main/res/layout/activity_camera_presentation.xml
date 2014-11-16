@@ -120,6 +120,14 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:onClick="onRecStartStopClicked" />
 
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Exit"
+                android:id="@+id/bt_exit"
+                android:onClick="onExitButtonClicked" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

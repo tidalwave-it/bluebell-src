@@ -395,6 +395,16 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      * Button callback.
      *
      ******************************************************************************************************************/
+    public void onExitButtonClicked (final @Nonnull View view)
+      {
+        finish(); // TODO: should pass through the controller
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Button callback.
+     *
+     ******************************************************************************************************************/
     public void onPhotoViewClicked (final @Nonnull View view)
       {
         ivPhotoBox.setVisibility(View.INVISIBLE);
