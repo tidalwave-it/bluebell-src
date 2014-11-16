@@ -32,7 +32,6 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -171,6 +170,7 @@ import java.util.EnumMap;
                             case ALREADY_POLLING:
                                 try
                                   {
+                                    log.warn("ALREADY_POLLING received - sleeping for 5 sec");
                                     Thread.sleep(5000);
                                   }
                                 catch (InterruptedException e)
@@ -180,7 +180,7 @@ import java.util.EnumMap;
                                 continue MONITORLOOP;
 
                             default:
-                                log.warn("SimpleCameraEventObserver: Unexpected error: {}", statusCode);
+                                log.warn("Unexpected error: {}", statusCode);
                                 break MONITORLOOP;
                           }
 
