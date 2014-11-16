@@ -46,6 +46,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.sony.CameraApi.Polling.*;
+import java.util.EnumMap;
 
 /***********************************************************************************************************************
  *
@@ -74,7 +75,7 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
     @Getter @Nonnull
     private String shootMode = "";
     
-    private final Map<Property, String> valueMap = Collections.synchronizedMap(new HashMap<Property, String>());
+    private final Map<Property, String> valueMap = Collections.synchronizedMap(new EnumMap<Property, String>(Property.class));
 
     /** To run background jobs. */
     @Nonnull
