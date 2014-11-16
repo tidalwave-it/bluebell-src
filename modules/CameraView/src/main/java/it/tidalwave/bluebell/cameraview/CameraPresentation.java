@@ -150,6 +150,13 @@ public interface CameraPresentation
 
     /*******************************************************************************************************************
      *
+     * Notifies that a property has been changed.
+     *
+     ******************************************************************************************************************/
+    public void notifyPropertyChanged (@Nonnull String message);
+    
+    /*******************************************************************************************************************
+     *
      * Notifies that there has been a connection error.
      *
      ******************************************************************************************************************/
@@ -178,6 +185,13 @@ public interface CameraPresentation
 
     /*******************************************************************************************************************
      *
+     * Notifies that there has been an error while setting a property.
+     *
+     ******************************************************************************************************************/
+    public void notifyErrorWhileSettingProperty();
+
+    /*******************************************************************************************************************
+     *
      * Notifies that there has been a generic error.
      *
      ******************************************************************************************************************/
@@ -192,4 +206,30 @@ public interface CameraPresentation
      *
      ******************************************************************************************************************/
     public void renderProperty (@Nonnull CameraObserver.Property property, @Nonnull String value);
+
+    // FIXME: unsure whether this should go in a different presentation
+    
+    /*******************************************************************************************************************
+     *
+     * A callback for the {@link #editProperty(java.lang.String, java.util.List, it.tidalwave.bluebell.cameraview.CameraPresentation.EditCallback)}
+     * method for setting the edited value.
+     *
+     ******************************************************************************************************************/
+    public static interface EditCallback
+      {
+        public void setValue (@Nonnull String value);  
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Opens a UI facility for editing a property.
+     *
+     * @param value     the initial value
+     * @param values    the feasible values
+     * @param callback  the callback for setting the value
+     * 
+     ******************************************************************************************************************/
+    public void editProperty (final @Nonnull String value,
+                              final @Nonnull List<String> values,
+                              final @Nonnull EditCallback callback);
   }

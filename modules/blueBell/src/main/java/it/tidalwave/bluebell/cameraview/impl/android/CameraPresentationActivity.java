@@ -31,18 +31,23 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import android.app.Activity;
+import android.app.Dialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import it.tidalwave.sony.CameraDescriptor;
+import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.bluebell.cameraview.CameraPresentation;
 import it.tidalwave.bluebell.cameraview.DefaultCameraPresentationControl;
@@ -66,6 +71,9 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     /** The controller of this presentation. */
     private DefaultCameraPresentationControl control;
 
+    /** The controlled camera. */
+    private CameraDevice cameraDevice;
+    
     private ImageView ivPhotoBox;
 
     private RadioGroup rbShootMode;
@@ -95,7 +103,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     private TextView tvWhiteBalance;
     
     private ProgressBar pbWait;
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -135,11 +143,33 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      *
      ******************************************************************************************************************/
     @Override
+    public void notifyPropertyChanged (final @Nonnull String message) 
+      {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
     public void notifyErrorWhileRecordingMovie()
       {
         Toast.makeText(this, R.string.msg_error_api_calling, Toast.LENGTH_SHORT).show();
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void notifyErrorWhileSettingProperty() 
+      {
+        Toast.makeText(this, "Could not set property", Toast.LENGTH_LONG); // FIXME: use a resource
+      }
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -376,6 +406,62 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      * Button callback.
      *
      ******************************************************************************************************************/
+    @Override
+    public void editProperty (final @Nonnull String value,
+                              final @Nonnull List<String> values,
+                              final EditCallback callback)
+      {
+        final int index = values.indexOf(value);
+        // TODO: sanity check
+        final Dialog dialog = new Dialog(this);
+        final LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View layout = inflater.inflate(R.layout.dialog_edit_property_with_slider, 
+                                             (ViewGroup)findViewById(R.id.la_root));
+        dialog.setContentView(layout);        
+        final SeekBar sbValue = (SeekBar)dialog.findViewById(R.id.sl_value);
+        final TextView tvValue = (TextView)dialog.findViewById(R.id.tvValue);
+        tvValue.setText(value);
+        sbValue.setMax(values.size() - 1);
+        sbValue.setProgress(index);
+        
+        sbValue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() 
+          {
+            private String currentValue = "";
+            
+            @Override
+            public void onProgressChanged (final @Nonnull SeekBar seekBar, int progress, boolean fromUser)
+              {
+                currentValue = values.get(progress);
+                tvValue.setText(currentValue);
+              }
+
+            @Override
+            public void onStartTrackingTouch (final @Nonnull SeekBar seekBar) 
+              {
+              }
+
+            @Override
+            public void onStopTrackingTouch (final @Nonnull SeekBar seekBar) 
+              {
+                callback.setValue(currentValue);
+              }
+          });
+        tvValue.setOnClickListener(new View.OnClickListener() 
+          {
+            @Override
+            public void onClick (final @Nonnull View view) 
+              {
+                dialog.hide();
+              }
+          });
+        dialog.show();
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Button callback.
+     *
+     ******************************************************************************************************************/
     public void onTakePhotoClickedClick (final @Nonnull View view)
       {
         control.takeAndFetchPicture();
@@ -413,6 +499,54 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
             
     /*******************************************************************************************************************
      *
+     * Button callback.
+     *
+     ******************************************************************************************************************/
+    public void onFNumberClicked (final @Nonnull View view)
+      {
+        control.changeProperty(CameraObserver.Property.F_NUMBER);
+        
+        
+//        final String value = tvFNumber.getText().toString().replaceAll("F", "");
+//        // FIXME: retrieve valid values from the camera
+//        final List<String> values = Arrays.asList("4.0","4.5","5.0","5.6","6.3","7.1","8.0","9.0","10","11","13","14","16","18","20","22");
+//        setProperty(CameraApi.Property.F_NUMBER, value, values);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Button callback.
+     *
+     ******************************************************************************************************************/
+    public void onShutterSpeedClicked (final @Nonnull View view)
+      {
+        control.changeProperty(CameraObserver.Property.SHUTTER_SPEED);
+        
+        
+//        final String value = tvShutterSpeed.getText().toString();
+//        // FIXME: retrieve valid values from the camera
+//        final List<String> values = Arrays.asList("30\"","25\"","20\"","15\"","13\"","10\"","8\"","6\"","5\"","4\"","3.2\"","2.5\"","2\"","1.6\"","1.3\"","1\"","0.8\"","0.6\"","0.5\"","0.4\"","1/3","1/4","1/5","1/6","1/8","1/10","1/13","1/15","1/20","1/25","1/30","1/40","1/50","1/60","1/80","1/100","1/125","1/160","1/200","1/250","1/320","1/400","1/500","1/640","1/800","1/1000","1/1250","1/1600","1/2000","1/2500","1/3200","1/4000");
+//        setProperty(CameraApi.Property.SHUTTER_SPEED, value, values);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Button callback.
+     *
+     ******************************************************************************************************************/
+    public void onIsoSpeedRateClicked (final @Nonnull View view)
+      {
+        control.changeProperty(CameraObserver.Property.ISO_SPEED_RATE);
+        
+        
+//        final String value = tvIsoSpeedRate.getText().toString().replaceAll("ISO ", "");
+//        // FIXME: retrieve valid values from the camera
+//        final List<String> values = Arrays.asList("100","200","400","800","1600","3200","6400","12800","25600");
+//        setProperty(CameraApi.Property.ISO_SPEED_RATE, value, values);
+      }
+    
+    /*******************************************************************************************************************
+     *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
@@ -440,6 +574,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
 
         final CameraDescriptor cameraDescriptor =
                 (CameraDescriptor)getIntent().getSerializableExtra("cameraDescriptor");
+        cameraDevice = cameraDescriptor.createDevice();
         control = new AndroidCameraPresentationControl(createUIThreadDecorator(this, CameraPresentation.class),
                                                        this,
                                                        svLiveView,

@@ -32,7 +32,9 @@
                 android:id="@+id/tv_shutter_speed"
                 android:textColor="#ffffffff"
                 android:layout_marginRight="20dp"
-                android:gravity="center" />
+                android:gravity="center"
+                android:clickable="true"
+                android:onClick="onShutterSpeedClicked" />
 
             <TextView
                 android:layout_width="60dp"
@@ -42,7 +44,9 @@
                 android:id="@+id/tv_f_number"
                 android:layout_marginRight="20dp"
                 android:textColor="#ffffffff"
-                android:gravity="center" />
+                android:gravity="center"
+                android:onClick="onFNumberClicked"
+                android:clickable="true" />
 
             <TextView
                 android:layout_width="60dp"
@@ -52,7 +56,8 @@
                 android:id="@+id/tv_exposure_compensation"
                 android:textColor="#ffffffff"
                 android:gravity="center"
-                android:layout_marginRight="20dp" />
+                android:layout_marginRight="20dp"
+                android:clickable="true" />
 
             <TextView
                 android:layout_width="100dp"
@@ -61,7 +66,9 @@
                 android:text="ISO 100"
                 android:id="@+id/tv_iso_speed_rate"
                 android:textColor="#ffffffff"
-                android:gravity="center" />
+                android:gravity="center"
+                android:clickable="true"
+                android:onClick="onIsoSpeedRateClicked" />
         </LinearLayout>
 
         <LinearLayout

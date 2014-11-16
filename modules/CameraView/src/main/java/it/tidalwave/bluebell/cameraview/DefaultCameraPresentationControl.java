@@ -27,6 +27,7 @@
  */
 package it.tidalwave.bluebell.cameraview;
 
+import it.tidalwave.bluebell.cameraview.CameraPresentation.EditCallback;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -92,7 +93,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
         final CameraDevice cameraDevice = cameraDescriptor.createDevice();
         cameraApi = cameraDevice.getApi();
         cameraObserver = cameraDevice.getObserver();
-        liveViewPresentationControl = new DefaultLiveViewPresentationControl(cameraApi, liveViewPresentation);
+        liveViewPresentationControl = new DefaultLiveViewPresentationControl(cameraDevice.getApi(), liveViewPresentation);
       }
 
     /*******************************************************************************************************************
@@ -301,7 +302,6 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
           }.start();
       }
 
-
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -341,6 +341,77 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
           }.start();
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void changeProperty (final @Nonnull CameraObserver.Property property)
+      {
+        // FIXME: retrieve valid values from the camera
+        final List<String> fValues = Arrays.asList("4.0","4.5","5.0","5.6","6.3","7.1","8.0","9.0","10","11","13","14","16","18","20","22");
+        final List<String> shutterValues = Arrays.asList("30\"","25\"","20\"","15\"","13\"","10\"","8\"","6\"","5\"","4\"","3.2\"","2.5\"","2\"","1.6\"","1.3\"","1\"","0.8\"","0.6\"","0.5\"","0.4\"","1/3","1/4","1/5","1/6","1/8","1/10","1/13","1/15","1/20","1/25","1/30","1/40","1/50","1/60","1/80","1/100","1/125","1/160","1/200","1/250","1/320","1/400","1/500","1/640","1/800","1/1000","1/1250","1/1600","1/2000","1/2500","1/3200","1/4000");
+        final List<String> isoValues = Arrays.asList("100","200","400","800","1600","3200","6400","12800","25600");
+        final List<String> values;
+        
+        switch (property)
+          {
+            case F_NUMBER:
+                values = fValues;
+                break;
+            
+            case SHUTTER_SPEED:
+                values = shutterValues;
+                break;
+                
+            case ISO_SPEED_RATE:
+                values = isoValues;
+                break;
+                
+            default:
+                throw new IllegalArgumentException("Cannot change " + property);
+          }
+        // END FIXME
+          
+        final String value = cameraObserver.getProperty(property);
+        presentation.editProperty(value, values, new EditCallback() 
+          {
+            @Override
+            public void setValue (final @Nonnull String value) 
+              {
+                setProperty(property, value);
+              }
+          });
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void setProperty (final @Nonnull CameraObserver.Property property, final @Nonnull String value)
+      {
+        new Thread()
+          {
+            @Override
+            public void run()
+              {
+                try 
+                  {
+                    cameraObserver.setProperty(property, value);
+                    presentation.notifyPropertyChanged(property.toString() + "=" + value);
+                  } 
+                catch (IOException e) 
+                  {
+                    log.warn("While setting property", e);
+                    presentation.notifyErrorWhileSettingProperty();
+                  }
+              }
+          }.start();
+      }
+    
     /*******************************************************************************************************************
      *
      *
