@@ -88,6 +88,14 @@ public interface CameraObserver
          **************************************************************************************************************/
         public void onShootModeChanged (@Nonnull String shootMode);
         
+        /***************************************************************************************************************
+         *
+         * Called when the value of a property in the camera has been changed.
+         *
+         * @param   property    the property
+         * @param   value       the property value
+         *
+         **************************************************************************************************************/
         public void onPropertyChanged (@Nonnull Property property, @Nonnull String value);
       }
 
