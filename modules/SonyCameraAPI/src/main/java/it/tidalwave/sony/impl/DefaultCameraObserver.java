@@ -292,7 +292,7 @@ import java.util.List;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public List<String> getPropertyValues (final @Nonnull Property property)
+    public List<String> getPropertyFeasibleValues (final @Nonnull Property property)
       {
         // FIXME: retrieve valid values from the camera
         final List<String> fValues = Arrays.asList("4.0","4.5","5.0","5.6","6.3","7.1","8.0","9.0","10","11","13","14","16","18","20","22");

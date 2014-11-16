@@ -347,11 +347,11 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
      *
      ******************************************************************************************************************/
     @Override
-    public void changeProperty (final @Nonnull CameraObserver.Property property)
+    public void editProperty (final @Nonnull CameraObserver.Property property)
       {
         final String value = cameraObserver.getProperty(property);
-        final List<String> values = cameraObserver.getPropertyValues(property);
-        presentation.editProperty(value, values, new EditCallback() 
+        final List<String> feasibleValues = cameraObserver.getPropertyFeasibleValues(property);
+        presentation.editProperty(value, feasibleValues, new EditCallback() 
           {
             @Override
             public void setValue (final @Nonnull String value) 
@@ -366,8 +366,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override
-    public void setProperty (final @Nonnull CameraObserver.Property property, final @Nonnull String value)
+    private void setProperty (final @Nonnull CameraObserver.Property property, final @Nonnull String value)
       {
         new Thread()
           {

@@ -507,7 +507,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      ******************************************************************************************************************/
     public void onFNumberClicked (final @Nonnull View view)
       {
-        control.changeProperty(CameraObserver.Property.F_NUMBER);
+        control.editProperty(CameraObserver.Property.F_NUMBER);
       }
     
     /*******************************************************************************************************************
@@ -517,7 +517,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      ******************************************************************************************************************/
     public void onShutterSpeedClicked (final @Nonnull View view)
       {
-        control.changeProperty(CameraObserver.Property.SHUTTER_SPEED);
+        control.editProperty(CameraObserver.Property.SHUTTER_SPEED);
       }
     
     /*******************************************************************************************************************
@@ -527,7 +527,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
      ******************************************************************************************************************/
     public void onIsoSpeedRateClicked (final @Nonnull View view)
       {
-        control.changeProperty(CameraObserver.Property.ISO_SPEED_RATE);
+        control.editProperty(CameraObserver.Property.ISO_SPEED_RATE);
       }
     
     /*******************************************************************************************************************

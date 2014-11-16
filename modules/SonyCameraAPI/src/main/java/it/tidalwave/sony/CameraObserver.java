@@ -150,7 +150,7 @@ public interface CameraObserver
      *
      ******************************************************************************************************************/
     @Nonnull
-    public List<String> getPropertyValues (final @Nonnull Property property);
+    public List<String> getPropertyFeasibleValues (@Nonnull Property property);
     
     /*******************************************************************************************************************
      *

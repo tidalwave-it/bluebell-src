@@ -28,7 +28,6 @@
 package it.tidalwave.bluebell.cameraview;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.sony.CameraApi;
 import it.tidalwave.sony.CameraObserver;
 
 /***********************************************************************************************************************
@@ -81,15 +80,12 @@ public interface CameraPresentationControl
      ******************************************************************************************************************/
     public void startOrStopMovieRecording();
     
-    public void changeProperty (@Nonnull CameraObserver.Property property);
-    
     /*******************************************************************************************************************
      *
-     * Sets the given property to the camera.
+     * Allow the user to edit the given property and set to the camera.
      * 
      * @param   property    the property
-     * @param   value       the value
      *
      ******************************************************************************************************************/
-    public void setProperty (@Nonnull CameraObserver.Property property, @Nonnull String value);
+    public void editProperty (@Nonnull CameraObserver.Property property);
   }
