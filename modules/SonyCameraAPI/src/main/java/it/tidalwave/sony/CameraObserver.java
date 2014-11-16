@@ -29,6 +29,7 @@ package it.tidalwave.sony;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
+import java.io.IOException;
 
 /***********************************************************************************************************************
  *
@@ -118,12 +119,27 @@ public interface CameraObserver
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
+     * Gets a property from the camera.
+     * 
+     * @param   property    the property
+     * @return              the property value
      *
      ******************************************************************************************************************/
     @Nonnull
     public String getProperty (@Nonnull Property property);
             
+    /*******************************************************************************************************************
+     *
+     * Sets a property to the camera.
+     * 
+     * @param   property    the property
+     * @param   value       the value
+     * @throws  IOException in case of error
+     *
+     ******************************************************************************************************************/
+    public void setProperty (@Nonnull Property property, @Nonnull String value)
+      throws IOException;
+    
     /*******************************************************************************************************************
      *
      * Checks to see whether a monitoring is already started.

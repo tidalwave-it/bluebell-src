@@ -93,6 +93,7 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
         @Getter
         private final Property property;
         
+        @Getter
         private final CameraApi.Property apiProperty;
       }
     
@@ -265,6 +266,24 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
         return valueMap.get(property);
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void setProperty (final @Nonnull Property property, final @Nonnull String value) 
+      throws IOException
+      {
+        for (final PropertyFetcher p : PropertyFetcher.values())
+          {
+            if (p.getProperty().equals(property))
+              {
+                cameraApi.setProperty(p.getApiProperty(), value);
+              }
+          }
+      }
+    
     /*******************************************************************************************************************
      *
      * Notifies the listener of available APIs change.
