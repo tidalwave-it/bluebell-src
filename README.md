@@ -39,16 +39,8 @@ The general design of blueBell refers to the Presentation Abstraction Control (P
     logic. They mostly expose methods to render data and populate UI widgets and to capture the user's gestures and
     take care of any UI threading issue. In blueBell, activities are PAC presentations. Their interface is modelled
     upon methods with represents a single interaction with the UI with a well defined semantics; for instance 
-    ``public void renderRecStartStopButtonAsStop()``. Their implementation is straightforward, such as
-
-...
-    @Override
-    public void renderRecStartStopButtonAsStop()
-      {
-        btRecStartStop.setEnabled(true);
-        btRecStartStop.setText(R.string.button_rec_stop);
-      }
-...
+    ``public void renderRecStartStopButtonAsStop()``. Their implementation is straightforward, such as just changing
+    the properties of a UI widget. They are usually just a few lines of code.
 
     Presentations are responsible for taking care of Android UI threading issues (see below).
    
@@ -76,7 +68,7 @@ pure Java classes, avoiding the cumbersome Android approach to tests.
 
 The application is composed by two Activites:
 
-* The ``**CameraDiscoveryPresentationActivity**`` makes it possible to pick a Wifi network and scans for the presence of Sony
+* The ``CameraDiscoveryPresentationActivity`` makes it possible to pick a Wifi network and scans for the presence of Sony
   camera devices. 
 
   This activity (together with its control object) demonstrates:
@@ -87,7 +79,7 @@ The application is composed by two Activites:
     * how to write a simple adapter to populate a ``ListView``;
     * how to use an ``Intent`` to communicate with another ``Activity``.
 
-* The ``**CameraPresentationActivity**`` connects to a camera device and, if it supports the "live view" feature, it 
+* The ``CameraPresentationActivity`` connects to a camera device and, if it supports the "live view" feature, it 
   continuously displays the contents of the Electronic Viewfinder (EVF). It also shows the values of some camera 
   settings such as the F number, the shutter speed, the ISO speed rating and others; some of the settings can be also
   changed. It also allow to shoot a photo or to record a movie. 
