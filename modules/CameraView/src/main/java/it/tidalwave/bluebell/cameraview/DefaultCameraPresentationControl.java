@@ -153,8 +153,6 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
             presentation.renderProperty(property, "--");
           }
         
-        cameraObserver.setListener(cameraListener);
-
         executorService.submit(new Runnable()
           {
             @Override
@@ -185,6 +183,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
                     if (apis.contains(API_EVENT)) // FIXME: what if it is not available? CameraObserver will never start
                       {
                         log.info("start(): EventObserver.start()");
+                        cameraObserver.setListener(cameraListener);
                         cameraObserver.start();
                       }
 
@@ -462,14 +461,13 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
           {
             this.availableApis.clear();
             this.availableApis.addAll(apis);
-            log.info(">>>> available APIs: {}", availableApis);
           }
         
         if (addedApis.contains(API_START_REC_MODE))
           {
-            log.info("openConnection(): startRecMode()");
             try 
               {
+                log.info("openConnection(): startRecMode()");
                 cameraApi.startRecMode();
               }
             catch (IOException e)
