@@ -299,6 +299,7 @@ public interface CameraApi
     /*******************************************************************************************************************
      *
      * Retrieves the current shoot mode.
+     * FIXME: refactor on setProperty(SHOOT_MODE)?
      * 
      * @return                  a response object with available information
      * @throws  IOException     in case of error
@@ -323,6 +324,7 @@ public interface CameraApi
     /*******************************************************************************************************************
      *
      * Sets the shoot mode.
+     * FIXME: refactor on getProperty(SHOOT_MODE)?
      * 
      * @return                  a response object with available information
      * @throws  IOException     in case of error
