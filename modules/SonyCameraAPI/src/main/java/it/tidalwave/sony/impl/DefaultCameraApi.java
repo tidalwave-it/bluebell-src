@@ -594,8 +594,7 @@ import lombok.extern.slf4j.Slf4j;
     public AvailableApisResponse getAvailableApiList()
       throws IOException
       {
-        final Call call = createCall(CAMERA_SERVICE).withMethod("getAvailableApiList");
-        return new DefaultAvailableApisResponse(call.post());
+        return new DefaultAvailableApisResponse(call(CAMERA_SERVICE).withMethod("getAvailableApiList").post());
       }
 
     /*******************************************************************************************************************
@@ -607,8 +606,7 @@ import lombok.extern.slf4j.Slf4j;
     public ApplicationInfoResponse getApplicationInfo()
       throws IOException
       {
-        final Call call = createCall(CAMERA_SERVICE).withMethod("getApplicationInfo");
-        return new DefaultApplicationInfoResponse(call.post());
+        return new DefaultApplicationInfoResponse(call(CAMERA_SERVICE).withMethod("getApplicationInfo").post());
       }
 
     /*******************************************************************************************************************
@@ -620,8 +618,7 @@ import lombok.extern.slf4j.Slf4j;
     public Response getShootMode()
       throws IOException
       {
-        final Call call = createCall(CAMERA_SERVICE).withMethod("getShootMode");
-        return new GenericResponse(call.post());
+        return new GenericResponse(call(CAMERA_SERVICE).withMethod("getShootMode").post());
     }
 
     /*******************************************************************************************************************
@@ -633,9 +630,9 @@ import lombok.extern.slf4j.Slf4j;
     public Response setShootMode (final @Nonnull String shootMode)
       throws IOException
       {
-        final Call call = createCall(CAMERA_SERVICE).withMethod("setShootMode")
-                                                    .withParam(shootMode);
-        return new ErrorCheckingResponse(call.post());
+        return new ErrorCheckingResponse(call(CAMERA_SERVICE).withMethod("setShootMode")
+                                                             .withParam(shootMode)
+                                                             .post());
       }
 
     /*******************************************************************************************************************
@@ -647,8 +644,7 @@ import lombok.extern.slf4j.Slf4j;
     public AvailableShootModeResponse getAvailableShootMode()
       throws IOException
       {
-        final Call call = createCall(CAMERA_SERVICE).withMethod("getAvailableShootMode");
-        return new DefaultAvailableShootModeResponse(call.post());
+        return new DefaultAvailableShootModeResponse(call(CAMERA_SERVICE).withMethod("getAvailableShootMode").post());
       }
 
     /*******************************************************************************************************************
@@ -660,8 +656,7 @@ import lombok.extern.slf4j.Slf4j;
     public Response getSupportedShootMode()
       throws IOException
       {
-        final Call call = createCall(CAMERA_SERVICE).withMethod("getSupportedShootMode");
-        return new GenericResponse(call.post());
+        return new GenericResponse(call(CAMERA_SERVICE).withMethod("getSupportedShootMode").post());
       }
 
     /*******************************************************************************************************************
@@ -673,8 +668,7 @@ import lombok.extern.slf4j.Slf4j;
     public StartLiveViewUrlResponse startLiveview()
       throws IOException
       {
-        final Call call = createCall(CAMERA_SERVICE).withMethod("startLiveview");
-        return new DefaultStartLiveViewUrlResponse(call.post());
+        return new DefaultStartLiveViewUrlResponse(call(CAMERA_SERVICE).withMethod("startLiveview").post());
       }
 
     /*******************************************************************************************************************
@@ -686,8 +680,7 @@ import lombok.extern.slf4j.Slf4j;
     public Response stopLiveview()
       throws IOException
       {
-        final Call call = createCall(CAMERA_SERVICE).withMethod("stopLiveview");
-        return new GenericResponse(call.post());
+        return new GenericResponse(call(CAMERA_SERVICE).withMethod("stopLiveview").post());
       }
 
     /*******************************************************************************************************************
@@ -699,8 +692,7 @@ import lombok.extern.slf4j.Slf4j;
     public RecModeResponse startRecMode()
       throws IOException
       {
-        final Call call = createCall(CAMERA_SERVICE).withMethod("startRecMode");
-        return new DefaultRecModeResponse(call.post());
+        return new DefaultRecModeResponse(call(CAMERA_SERVICE).withMethod("startRecMode").post());
       }
 
     /*******************************************************************************************************************
@@ -712,8 +704,7 @@ import lombok.extern.slf4j.Slf4j;
     public RecModeResponse stopRecMode()
       throws IOException
       {
-        final Call call = createCall(CAMERA_SERVICE).withMethod("stopRecMode");
-        return new DefaultRecModeResponse(call.post());
+        return new DefaultRecModeResponse(call(CAMERA_SERVICE).withMethod("stopRecMode").post());
       }
 
     /*******************************************************************************************************************
@@ -725,8 +716,7 @@ import lombok.extern.slf4j.Slf4j;
     public TakePictureResponse actTakePicture()
       throws IOException
       {
-        final Call call = createCall(CAMERA_SERVICE).withMethod("actTakePicture");
-        return new DefaultTakePictureResponse(call.post());
+        return new DefaultTakePictureResponse(call(CAMERA_SERVICE).withMethod("actTakePicture").post());
       }
 
     /*******************************************************************************************************************
@@ -738,8 +728,7 @@ import lombok.extern.slf4j.Slf4j;
     public Response startMovieRec()
       throws IOException
       {
-        final Call call = createCall(CAMERA_SERVICE).withMethod("startMovieRec");
-        return new ErrorCheckingResponse(call.post());
+        return new ErrorCheckingResponse(call(CAMERA_SERVICE).withMethod("startMovieRec").post());
       }
 
     /*******************************************************************************************************************
@@ -751,8 +740,7 @@ import lombok.extern.slf4j.Slf4j;
     public StopMovieRecResponse stopMovieRec()
       throws IOException
       {
-        final Call call = createCall(CAMERA_SERVICE).withMethod("stopMovieRec");
-        return new DefaultStopMovieRecResponse(call.post());
+        return new DefaultStopMovieRecResponse(call(CAMERA_SERVICE).withMethod("stopMovieRec").post());
       }
 
     /*******************************************************************************************************************
@@ -772,8 +760,7 @@ import lombok.extern.slf4j.Slf4j;
             throw new IllegalArgumentException("Setting property not supported: " + property);  
           }
           
-        final Call call = createCall(CAMERA_SERVICE).withMethod(setterMethodName).withParam(value);
-        return new ErrorCheckingResponse(call.post());
+        return new ErrorCheckingResponse(call(CAMERA_SERVICE).withMethod(setterMethodName).withParam(value).post());
       }
 
     /*******************************************************************************************************************
@@ -785,9 +772,9 @@ import lombok.extern.slf4j.Slf4j;
     public EventResponse getEvent (final @Nonnull Polling polling)
       throws IOException
       {
-        final Call call = createCall(CAMERA_SERVICE).withMethod("getEvent")
-                                                    .withParam(polling == Polling.LONG_POLLING);
-        return new DefaultEventResponse(call.post(polling.getTimeout()));
+        return new DefaultEventResponse(call(CAMERA_SERVICE).withMethod("getEvent")
+                                                            .withParam(polling == Polling.LONG_POLLING)
+                                                            .post(polling.getTimeout()));
       }
 
     /*******************************************************************************************************************
@@ -796,7 +783,7 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Call createCall (final @Nonnull String service)
+    private Call call (final @Nonnull String service)
       throws IOException
       {
         return new Call(service);
