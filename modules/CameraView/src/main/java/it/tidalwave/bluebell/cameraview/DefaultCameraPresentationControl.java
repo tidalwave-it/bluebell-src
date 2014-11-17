@@ -80,6 +80,42 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
     /** To run background jobs. */
     @Nonnull
     private final ExecutorService executorService;
+    
+    /*******************************************************************************************************************
+     *
+     * The listener of changes in the camera.
+     * 
+     ******************************************************************************************************************/
+    private final CameraObserver.ChangeListener cameraListener = new CameraObserver.ChangeListener()
+      {
+        @Override
+        public void onPropertyChanged (final @Nonnull Property property, final @Nonnull String value)
+          {
+            log.info("onPropertyChanged({}, {})", property, value);
+
+            switch (property)
+              {
+                case SHOOT_MODE:
+                case CAMERA_STATUS:
+                    refreshUi();
+                    break;
+
+                default:
+                    refreshUiProperty(property);
+                    break;
+              }
+          }
+
+        @Override
+        public void onApisChanged (final @Nonnull Set<String> apis,
+                                   final @Nonnull Set<String> addedApis, 
+                                   final @Nonnull Set<String> removedApis)
+          {
+            log.info("APIs changed: all: {} added: {} removed: {}",
+                    new Object[] { apis, addedApis, removedApis });
+            setAvailableApis(apis, addedApis, removedApis);
+          }
+      };
 
     /*******************************************************************************************************************
      *
@@ -109,8 +145,6 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    // Open connection to the camera device to start monitoring Camera events
-    // and showing liveview.
     @Override
     public void start()
       {
@@ -119,36 +153,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
             presentation.renderProperty(property, "--");
           }
         
-        cameraObserver.setListener(new CameraObserver.ChangeListener()
-          {
-            @Override
-            public void onPropertyChanged (final @Nonnull Property property, final @Nonnull String value)
-              {
-                log.info("onPropertyChanged({}, {})", property, value);
-                
-                switch (property)
-                  {
-                    case SHOOT_MODE:
-                    case CAMERA_STATUS:
-                        refreshUi();
-                        break;
-                        
-                    default:
-                        refreshUiProperty(property);
-                        break;
-                  }
-              }
-            
-            @Override
-            public void onApisChanged (final @Nonnull Set<String> apis,
-                                       final @Nonnull Set<String> addedApis, 
-                                       final @Nonnull Set<String> removedApis)
-              {
-                log.info("APIs changed: all: {} added: {} removed: {}",
-                        new Object[] { apis, addedApis, removedApis });
-                setAvailableApis(apis, addedApis, removedApis);
-              }
-          });
+        cameraObserver.setListener(cameraListener);
 
         executorService.submit(new Runnable()
           {
@@ -352,7 +357,10 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
     
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
+     * Sets a property to the camera.
+     * 
+     * @param   property    the property
+     * @param   value       the value
      *
      ******************************************************************************************************************/
     private void setProperty (final @Nonnull CameraObserver.Property property, final @Nonnull String value)
