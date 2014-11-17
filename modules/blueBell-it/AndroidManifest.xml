@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="it.tidalwave.bluebell.bluebell.test" android:versionCode="1" android:versionName="1.0-ALPHA-1-SNAPSHOT">
+
+  <application android:icon="@drawable/icon" android:label="@string/app_name">
+    <uses-library android:name="android.test.runner" />
+  </application>
+
+  <instrumentation android:targetPackage="it.tidalwave.bluebell.bluebell"
+    android:name="android.test.InstrumentationTestRunner" />
+
+</manifest>
+

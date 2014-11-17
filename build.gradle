@@ -1,0 +1,32 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.13.2'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+    }
+}
+
+allprojects  {
+    apply plugin: 'maven'
+
+    group = 'it.tidalwave.bluebell'
+    version = '1.0-ALPHA-1-SNAPSHOT'
+}
+
+subprojects {
+
+    repositories {
+        mavenLocal()
+    
+        maven { url "http://bits.netbeans.org/maven2/" }
+        maven { url "http://oss.sonatype.org/content/repositories/releases/" }
+        maven { url "http://services.tidalwave.it/nexus/content/repositories/releases" }
+        maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "http://repo.maven.apache.org/maven2" }
+    }
+
+    configurations.all {
+    }
+}

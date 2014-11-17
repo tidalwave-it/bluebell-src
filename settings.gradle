@@ -1,0 +1,11 @@
+rootProject.name = 'bluebell'
+
+include ':bluebell-modules:camera-view'
+include ':bluebell-modules:sony-camera-api'
+include ':bluebell-modules:bluebell-application'
+include ':bluebell-modules'
+
+project(':bluebell-modules:camera-view').projectDir = "$rootDir/modules/CameraView" as File
+project(':bluebell-modules:sony-camera-api').projectDir = "$rootDir/modules/SonyCameraAPI" as File
+project(':bluebell-modules:bluebell-application').projectDir = "$rootDir/modules/blueBell" as File
+project(':bluebell-modules').projectDir = "$rootDir/modules" as File

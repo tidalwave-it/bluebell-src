@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/msg_search_devices"
+        android:id="@+id/tv_help"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/msg_wifi_disconnect"
+        android:id="@+id/tv_wifi_status"
+        android:layout_below="@+id/tv_help"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:onClick="onWifiClicked"
+        android:clickable="true"
+        android:layout_marginBottom="20dp" />
+
+    <ListView
+        android:id="@+id/lv_camera_devices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_help"
+        android:layout_alignStart="@+id/tv_help"
+        android:layout_above="@+id/bt_search"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/tv_wifi_status"
+        android:background="@color/list_background"
+        android:padding="4dp">
+    </ListView>
+
+    <Button
+        android:id="@+id/bt_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/button_start_search"
+        android:onClick="onSearchButtonClicked"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>
