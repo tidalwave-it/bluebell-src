@@ -116,7 +116,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
       {
         for (final Property property : Property.values())
           {
-            presentation.renderProperty(property, "");
+            presentation.renderProperty(property, "--");
           }
         
         cameraObserver.setListener(new CameraObserver.ChangeListener()
@@ -139,7 +139,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
             public void onPropertyChanged (final @Nonnull Property property, final @Nonnull String value)
               {
                 log.info("onPropertyChanged({}, {})", property, value);
-                refreshUi(property);
+                refreshUiProperty(property);
               }
             
             @Override
@@ -452,10 +452,12 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
 
     /*******************************************************************************************************************
      *
-     *
+     * Refresh a camera property on the UI.
+     * 
+     * @param   property    the property
      *
      ******************************************************************************************************************/
-    private void refreshUi (final @Nonnull Property property) 
+    private void refreshUiProperty (final @Nonnull Property property) 
       {
         final String value = cameraObserver.getProperty(property);
         presentation.renderProperty(property, value);
