@@ -489,6 +489,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
           }
         
         // TODO: getTouchAFPosition, setTouchAFPosition
+        // TODO: zoom
       }
 
     /*******************************************************************************************************************
