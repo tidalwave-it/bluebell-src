@@ -79,6 +79,76 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
     
     /*******************************************************************************************************************
      *
+     * This loop continuously polls the camera for its status and eventually fires events. 
+     *
+     ******************************************************************************************************************/
+    private final Runnable pollingLoop = new Runnable()
+      {
+        @Override
+        public void run()
+          {
+            log.debug("start() exec.");
+            boolean firstCall = true;
+
+            MONITORLOOP: while (running)
+              {
+                try
+                  {
+                    final EventResponse response = cameraApi.getEvent(firstCall ? LONG_POLLING : SHORT_POLLING);
+                    final StatusCode statusCode = response.getStatusCode();
+                    firstCall = false;
+                    log.debug(">>>> statusCode {}", statusCode);
+
+                    switch (statusCode)
+                      {
+                        case OK:
+                            break;
+
+                        case ANY:
+                        case NO_SUCH_METHOD:
+                            break MONITORLOOP;
+
+                        case TIMEOUT:
+                            continue MONITORLOOP;
+
+                        case ALREADY_POLLING:
+                            try
+                              {
+                                log.warn("ALREADY_POLLING received - sleeping for 5 sec");
+                                Thread.sleep(5000);
+                              }
+                            catch (InterruptedException e)
+                              {
+                                // do nothing.
+                              }
+                            continue MONITORLOOP;
+
+                        default:
+                            log.warn("Unexpected error: {}", statusCode);
+                            break MONITORLOOP;
+                      }
+
+                    checkApiChange(response);
+                    checkPropertyChange(response);
+                  }
+                catch (IOException e) // Occurs when the server is not available now.
+                  {
+                    log.debug("getEvent timeout by client trigger.");
+                    break MONITORLOOP;
+                  }
+                catch (RuntimeException e)
+                  {
+                    log.warn("getEvent: JSON format error. ", e);
+                    break MONITORLOOP;
+                  }
+              }
+
+            running = false;
+          }
+      };
+    
+    /*******************************************************************************************************************
+     *
      * 
      *
      ******************************************************************************************************************/
@@ -136,95 +206,7 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
           }
 
         running = true;
-
-        executorService.submit(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                log.debug("start() exec.");
-                boolean firstCall = true;
-
-                MONITORLOOP: while (running)
-                  {
-                    try
-                      {
-                        final EventResponse response = cameraApi.getEvent(firstCall ? LONG_POLLING : SHORT_POLLING);
-                        final StatusCode statusCode = response.getStatusCode();
-                        firstCall = false;
-                        log.debug(">>>> statusCode {}", statusCode);
-
-                        switch (statusCode)
-                          {
-                            case OK:
-                                break;
-
-                            case ANY:
-                            case NO_SUCH_METHOD:
-                                break MONITORLOOP;
-
-                            case TIMEOUT:
-                                continue MONITORLOOP;
-
-                            case ALREADY_POLLING:
-                                try
-                                  {
-                                    log.warn("ALREADY_POLLING received - sleeping for 5 sec");
-                                    Thread.sleep(5000);
-                                  }
-                                catch (InterruptedException e)
-                                  {
-                                    // do nothing.
-                                  }
-                                continue MONITORLOOP;
-
-                            default:
-                                log.warn("Unexpected error: {}", statusCode);
-                                break MONITORLOOP;
-                          }
-
-                        final Set<String> apis = response.getApis();
-                        final Set<String> addedApis = new TreeSet<>(apis);
-                        addedApis.removeAll(currentApis);
-                        final Set<String> removedApis = new TreeSet<>(currentApis);
-                        removedApis.removeAll(apis);
-                        
-                        currentApis.clear();
-                        currentApis.addAll(apis);
-                        
-                        if (!addedApis.isEmpty() || !removedApis.isEmpty())
-                          {
-                            fireApisChanged(currentApis, addedApis, removedApis);
-                          }
-
-                        for (final PropertyFetcher fetcher : PropertyFetcher.values())
-                          {
-                            final Property property = fetcher.getProperty();
-                            final String oldValue = valueMap.get(property);
-                            final String newValue = fetcher.fetch(response);
-                            
-                            if (!oldValue.equals(newValue))
-                              {
-                                valueMap.put(property, newValue);
-                                firePropertyChanged(property, newValue);
-                              }
-                          }
-                      }
-                    catch (IOException e) // Occurs when the server is not available now.
-                      {
-                        log.debug("getEvent timeout by client trigger.");
-                        break MONITORLOOP;
-                      }
-                    catch (RuntimeException e)
-                      {
-                        log.warn("getEvent: JSON format error. ", e);
-                        break MONITORLOOP;
-                      }
-                  }
-
-                running = false;
-              }
-          });
+        executorService.submit(pollingLoop);
 
         return true;
       }
@@ -294,10 +276,12 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
         throw new IllegalArgumentException("Cannot set property " + property);
       }
     
+    // FIXME: see below
     private static final List<String> F_VALUES = Arrays.asList("4.0","4.5","5.0","5.6","6.3","7.1","8.0","9.0","10","11","13","14","16","18","20","22");
     private static final List<String> SHUTTER_VALUES = Arrays.asList("30\"","25\"","20\"","15\"","13\"","10\"","8\"","6\"","5\"","4\"","3.2\"","2.5\"","2\"","1.6\"","1.3\"","1\"","0.8\"","0.6\"","0.5\"","0.4\"","1/3","1/4","1/5","1/6","1/8","1/10","1/13","1/15","1/20","1/25","1/30","1/40","1/50","1/60","1/80","1/100","1/125","1/160","1/200","1/250","1/320","1/400","1/500","1/640","1/800","1/1000","1/1250","1/1600","1/2000","1/2500","1/3200","1/4000");
     private static final List<String> ISO_VALUES = Arrays.asList("100","200","400","800","1600","3200","6400","12800","25600");
     private static final List<String> FOCUS_MODE_VALUES = Arrays.asList("AF-S","AF-C","DMF","MF");
+    // END FIXME
     
     /*******************************************************************************************************************
      *
@@ -328,6 +312,52 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
         // END FIXME
       }
     
+    /*******************************************************************************************************************
+     *
+     * Check whether any API has been added or removed and eventually fires an event.
+     * 
+     * @param   response        the polling response
+     *
+     ******************************************************************************************************************/
+    private void checkApiChange (final @Nonnull EventResponse response) 
+      {
+        final Set<String> apis = response.getApis();
+        final Set<String> addedApis = new TreeSet<>(apis);
+        addedApis.removeAll(currentApis);
+        final Set<String> removedApis = new TreeSet<>(currentApis);
+        removedApis.removeAll(apis);
+
+        if (!addedApis.isEmpty() || !removedApis.isEmpty())
+          {
+            currentApis.clear();
+            currentApis.addAll(apis);
+            fireApisChanged(currentApis, addedApis, removedApis);
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Check whether any property has been changed and eventually fires an event.
+     * 
+     * @param   response        the polling response
+     *
+     ******************************************************************************************************************/
+    private void checkPropertyChange (final @Nonnull EventResponse response)
+      {
+        for (final PropertyFetcher fetcher : PropertyFetcher.values())
+          {
+            final Property property = fetcher.getProperty();
+            final String oldValue = valueMap.get(property);
+            final String newValue = fetcher.fetch(response);
+
+            if (!oldValue.equals(newValue))
+              {
+                valueMap.put(property, newValue);
+                firePropertyChanged(property, newValue);
+              }
+          }
+      }
+
     /*******************************************************************************************************************
      *
      * Notifies the listener of available APIs change.
