@@ -147,7 +147,7 @@ structured so it can work with both tools:
  * files ``pom.xml`` are related to Maven;
  * files ``*.gradle``, ``local.properties`` and ``*.iml`` are related to Gradle and Android Studio.
 
-If you're opening the project with a Maven enabled IDE such as NetBeans and Eclipse, you don't have to do nothing
+If you're opening the project with a Maven enabled IDE such as NetBeans and Eclipse, you don't have to do anything
 special (Gradle and Android Studio are just ignored). If you're opening the project with Android Studio, you should use
 the menu "File / Import Project..." rather than "Open...". Even in this case, you might get some Maven warnings, since
 Android Studio has some Maven support embedded. Just ignore them. Perhaps, the best thing that you can do when working
