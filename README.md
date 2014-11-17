@@ -33,26 +33,26 @@ controller. It makes sense to split the presentation logic into a separate class
 [Separation of Concerns (SoC) principle](http://en.wikipedia.org/wiki/Separation_of_concerns) and its specialisation
 [Separation Presentation](http://martinfowler.com/eaaDev/SeparatedPresentation.html).
 
-The general design of blueBill refers to the Presentation Abstraction Control (PAC) architectural pattern:
+The general design of blueBell refers to the Presentation Abstraction Control (PAC) architectural pattern:
 
   * components which interact with the user (**Presentations**) are kept as simple and dumb as possible, without any
     logic. They mostly expose methods to render data and populate UI widgets and to capture the user's gestures and
-    take care of any UI threading issue. In blueBill, activities are PAC presentations. Their interface is modelled
+    take care of any UI threading issue. In blueBell, activities are PAC presentations. Their interface is modelled
     upon methods with represents a single interaction with the UI with a well defined semantics; for instance 
     ``public void renderRecStartStopButtonAsStop()``. Their implementation is straightforward, such as
 
-    ...
+...
     @Override
     public void renderRecStartStopButtonAsStop()
       {
         btRecStartStop.setEnabled(true);
         btRecStartStop.setText(R.string.button_rec_stop);
       }
-    ...
+...
 
     Presentations are responsible for taking care of Android UI threading issues (see below).
    
-  * the presentation logic is encapsulated in controllers (**Controls**). In blueBill, these are separated, mostly plain
+  * the presentation logic is encapsulated in controllers (**Controls**). In blueBell, these are separated, mostly plain
     Java classes. They are indeed split in two parts:
       * a superclass which contains all the code that can be written without depending on Android;
       * a specialised class which extends the abstract controller with the required Android-specific code.
@@ -63,11 +63,11 @@ The general design of blueBill refers to the Presentation Abstraction Control (P
       * the use of system specific infrastructures, such as the ``BroadcastReceiver``;
       * the use of system services, such as ``WifiManager``.
 
-    Since Android forbids networking code to be called from the UI thread, and blueBill is mostly about interacting with
+    Since Android forbids networking code to be called from the UI thread, and blueBell is mostly about interacting with
     a remote service hosted on the camera, controllers execute most of their jobs in a background thread.
 
 The general rationale behind this approach is explained in [this blog post](http://tidalwave.it/fabrizio/blog/beyond-mvc-pac-presentation-model-dci/),
-even though there's no use of DCI in blueBill. A common benefit is testing: since both Presentations and Controls are 
+even though there's no use of DCI in blueBell. A common benefit is testing: since both Presentations and Controls are 
 described by interfaces, it is possible the creation of mocks that can be used in automated testing. While at the present 
 time there are no valid tests in this project, most of the presentation logic can be automatically tested by means of 
 pure Java classes, avoiding the cumbersome Android approach to tests.
