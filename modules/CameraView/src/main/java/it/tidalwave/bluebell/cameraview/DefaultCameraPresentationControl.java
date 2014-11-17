@@ -487,6 +487,8 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
             log.info("openConnection(): prepareShootModeRadioButtons()");
             prepareShootModeRadioButtons();
           }
+        
+        // TODO: getTouchAFPosition, setTouchAFPosition
       }
 
     /*******************************************************************************************************************
