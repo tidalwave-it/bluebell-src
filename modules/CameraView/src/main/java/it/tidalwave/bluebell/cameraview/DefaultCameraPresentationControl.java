@@ -80,6 +80,42 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
     /** To run background jobs. */
     @Nonnull
     private final ExecutorService executorService;
+    
+    /*******************************************************************************************************************
+     *
+     * The listener of changes in the camera.
+     * 
+     ******************************************************************************************************************/
+    private final CameraObserver.ChangeListener cameraListener = new CameraObserver.ChangeListener()
+      {
+        @Override
+        public void onPropertyChanged (final @Nonnull Property property, final @Nonnull String value)
+          {
+            log.info("onPropertyChanged({}, {})", property, value);
+
+            switch (property)
+              {
+                case SHOOT_MODE:
+                case CAMERA_STATUS:
+                    refreshUi();
+                    break;
+
+                default:
+                    refreshUiProperty(property);
+                    break;
+              }
+          }
+
+        @Override
+        public void onApisChanged (final @Nonnull Set<String> apis,
+                                   final @Nonnull Set<String> addedApis, 
+                                   final @Nonnull Set<String> removedApis)
+          {
+            log.info("APIs changed: all: {} added: {} removed: {}",
+                    new Object[] { apis, addedApis, removedApis });
+            setAvailableApis(apis, addedApis, removedApis);
+          }
+      };
 
     /*******************************************************************************************************************
      *
@@ -109,59 +145,26 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    // Open connection to the camera device to start monitoring Camera events
-    // and showing liveview.
     @Override
     public void start()
       {
         for (final Property property : Property.values())
           {
-            presentation.renderProperty(property, "");
+            presentation.renderProperty(property, "--");
           }
         
-        cameraObserver.setListener(new CameraObserver.ChangeListener()
-          {
-            @Override
-            public void onShootModeChanged (final @Nonnull String shootMode)
-              {
-                log.info("onShootModeChanged({})", shootMode);
-                refreshUi();
-              }
-
-            @Override
-            public void onStatusChanged (final @Nonnull String status)
-              {
-                log.info("onStatusChanged({})", status);
-                refreshUi();
-              }
-
-            @Override
-            public void onPropertyChanged (final @Nonnull Property property, final @Nonnull String value)
-              {
-                log.info("onPropertyChanged({}, {})", property, value);
-                refreshUi(property);
-              }
-            
-            @Override
-            public void onApisChanged (final @Nonnull Set<String> apis)
-              {
-                log.info("onApisChanged({})", apis);
-                setAvailableApis(apis);
-              }
-          });
-
         executorService.submit(new Runnable()
           {
             @Override
             public void run()
               {
-                log.info("openConnection(): exec.");
+                log.info("start(): exec.");
 
                 try
                   {
-                    setAvailableApis(cameraApi.getAvailableApiList().getApis());
+                    final Set<String> apis = cameraApi.getAvailableApiList().getApis();
 
-                    if (isApiAvailable(API_GET_APPLICATION_INFO))
+                    if (apis.contains(API_GET_APPLICATION_INFO))
                       {
                         if (cameraApi.getApplicationInfo().getVersion() < 2)
                           {
@@ -177,36 +180,18 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
                         return;
                       }
 
-                    if (isApiAvailable(API_START_REC_MODE))
+                    if (apis.contains(API_EVENT)) // FIXME: what if it is not available? CameraObserver will never start
                       {
-                        log.info("openConnection(): startRecMode()");
-                        cameraApi.startRecMode();
-                        setAvailableApis(cameraApi.getAvailableApiList().getApis());
-                      }
-
-                    if (isApiAvailable(API_EVENT))
-                      {
-                        log.info("openConnection(): EventObserver.start()");
+                        log.info("start(): EventObserver.start()");
+                        cameraObserver.setListener(cameraListener);
                         cameraObserver.start();
                       }
 
-                    if (isApiAvailable(API_START_LIVEVIEW))
-                      {
-                        log.info("openConnection(): LiveviewSurface.start()");
-                        liveViewPresentationControl.start();
-                      }
-
-                    if (isApiAvailable(API_AVAILABLE_SHOOT_MODE))
-                      {
-                        log.info("openConnection(): prepareShootModeRadioButtons()");
-                        prepareShootModeRadioButtons();
-                      }
-
-                    log.info("openConnection(): completed.");
+                    log.info("start(): completed.");
                   }
                 catch (IOException e)
                   {
-                    log.warn("openConnection: IOException: ", e);
+                    log.warn("start(): IOException: ", e);
                     presentation.notifyConnectionError();
                   }
               }
@@ -325,7 +310,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
               {
                 try
                   {
-                    final String cameraStatus = cameraObserver.getStatus();
+                    final String cameraStatus = cameraObserver.getProperty(Property.CAMERA_STATUS);
 
                     if (CAMERA_STATUS_IDLE.equals(cameraStatus))
                       {
@@ -371,7 +356,10 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
     
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
+     * Sets a property to the camera.
+     * 
+     * @param   property    the property
+     * @param   value       the value
      *
      ******************************************************************************************************************/
     private void setProperty (final @Nonnull CameraObserver.Property property, final @Nonnull String value)
@@ -411,8 +399,8 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
      ******************************************************************************************************************/
     private void refreshUi()
       {
-        final String cameraStatus = cameraObserver.getStatus();
-        final String shootMode = cameraObserver.getShootMode();
+        final String cameraStatus = cameraObserver.getProperty(Property.CAMERA_STATUS);
+        final String shootMode = cameraObserver.getProperty(Property.SHOOT_MODE);
 
         presentation.renderCameraStatus(cameraStatus);
 
@@ -449,10 +437,12 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
 
     /*******************************************************************************************************************
      *
-     *
+     * Refresh a camera property on the UI.
+     * 
+     * @param   property    the property
      *
      ******************************************************************************************************************/
-    private void refreshUi (final @Nonnull Property property) 
+    private void refreshUiProperty (final @Nonnull Property property) 
       {
         final String value = cameraObserver.getProperty(property);
         presentation.renderProperty(property, value);
@@ -463,14 +453,43 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
      *
      *
      ******************************************************************************************************************/
-    private void setAvailableApis (final @Nonnull Set<String> availableApis)
+    private void setAvailableApis (final @Nonnull Set<String> apis,
+                                   final @Nonnull Set<String> addedApis, 
+                                   final @Nonnull Set<String> removedApis)
       {
         synchronized (this.availableApis)
           {
             this.availableApis.clear();
-            this.availableApis.addAll(availableApis);
-            log.info(">>>> available APIs: {}", availableApis);
+            this.availableApis.addAll(apis);
           }
+        
+        if (addedApis.contains(API_START_REC_MODE))
+          {
+            try 
+              {
+                log.info("openConnection(): startRecMode()");
+                cameraApi.startRecMode();
+              }
+            catch (IOException e)
+              {
+                log.warn("while calling startRecMode()", e);
+              }
+          }
+
+        if (addedApis.contains(API_START_LIVEVIEW))
+          {
+            log.info("openConnection(): LiveviewSurface.start()");
+            liveViewPresentationControl.start();
+          }
+
+        if (addedApis.contains(API_AVAILABLE_SHOOT_MODE))
+          {
+            log.info("openConnection(): prepareShootModeRadioButtons()");
+            prepareShootModeRadioButtons();
+          }
+        
+        // TODO: getTouchAFPosition, setTouchAFPosition
+        // TODO: zoom
       }
 
     /*******************************************************************************************************************

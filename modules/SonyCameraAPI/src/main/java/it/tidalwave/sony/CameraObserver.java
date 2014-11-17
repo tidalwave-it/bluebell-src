@@ -29,8 +29,8 @@ package it.tidalwave.sony;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
-import java.io.IOException;
 import java.util.List;
+import java.io.IOException;
 
 /***********************************************************************************************************************
  *
@@ -45,6 +45,8 @@ public interface CameraObserver
   {
     public enum Property
       {
+        CAMERA_STATUS,
+        SHOOT_MODE,
         F_NUMBER,
         SHUTTER_SPEED,
         ISO_SPEED_RATE,
@@ -65,29 +67,15 @@ public interface CameraObserver
          *
          * Called when the list of available APIs is modified.
          *
-         * @param apis a list of available APIs
+         * @param   apis            all the available APIs
+         * @param   addedApis       APIs that have been added
+         * @param   removedApis     APIs that have been deleted
          *
          **************************************************************************************************************/
-        public void onApisChanged (@Nonnull Set<String> apis);
+        public void onApisChanged (@Nonnull Set<String> apis,
+                                   @Nonnull Set<String> addedApis, 
+                                   @Nonnull Set<String> removedApis);
 
-        /***************************************************************************************************************
-         *
-         * Called when the value of "Camera Status" is changed.
-         *
-         * @param status camera status (ex."IDLE")
-         *
-         **************************************************************************************************************/
-        public void onStatusChanged (@Nonnull String status);
-
-        /***************************************************************************************************************
-         *
-         * Called when the value of "Shoot Mode" is changed.
-         *
-         * @param shootMode shoot mode (ex."still")
-         *
-         **************************************************************************************************************/
-        public void onShootModeChanged (@Nonnull String shootMode);
-        
         /***************************************************************************************************************
          *
          * Called when the value of a property in the camera has been changed.
@@ -105,26 +93,6 @@ public interface CameraObserver
      *
      ******************************************************************************************************************/
     public void unsetListener();
-
-    /*******************************************************************************************************************
-     *
-     * Returns the current Camera Status value.
-     *
-     * @return camera status
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public String getStatus();
-
-    /*******************************************************************************************************************
-     *
-     * Returns the current Shoot Mode value.
-     *
-     * @return shoot mode
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public String getShootMode();
 
     /*******************************************************************************************************************
      *

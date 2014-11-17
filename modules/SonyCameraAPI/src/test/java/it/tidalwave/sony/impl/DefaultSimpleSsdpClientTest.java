@@ -101,29 +101,22 @@ public class DefaultSimpleSsdpClientTest
         assertThat(service, is(notNullValue()));
         final CameraApi cameraApi = service.getApi();
         final CameraObserver observer = service.getObserver();
+        
         observer.setListener(new CameraObserver.ChangeListener()
           {
             @Override
-            public void onApisChanged (final @Nonnull Set<String> apis)
+            public void onApisChanged (final @Nonnull Set<String> apis,
+                                       final @Nonnull Set<String> addedApis, 
+                                       final @Nonnull Set<String> removedApis)
               {
-                log.info("APIs changed: {}", apis);
-              }
-
-            @Override
-            public void onStatusChanged (final @Nonnull String status)
-              {
-                log.info("status changed: {}", status);
-              }
-
-            @Override
-            public void onShootModeChanged (final @Nonnull String shootMode)
-              {
-                log.info("shoot mode changed: {}", shootMode);
+                log.info("APIs changed: all: {} added: {} removed: {}",
+                        new Object[] { apis, addedApis, removedApis });
               }
 
             @Override
             public void onPropertyChanged (final CameraObserver.Property property, final String value) 
               {
+                log.info("property changed: {}={}", property, value);
               }
           });
 
