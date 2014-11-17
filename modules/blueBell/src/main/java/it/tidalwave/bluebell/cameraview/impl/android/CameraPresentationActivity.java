@@ -583,7 +583,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
       {
         log.info("onResume()");
         super.onResume();
-        pbWait.setVisibility(View.INVISIBLE);
+        pbWait.setVisibility(View.INVISIBLE); // FIXME: move to controller
         control.start();
       }
 
