@@ -28,6 +28,7 @@
 package it.tidalwave.bluebell.cameraview.impl.android;
 
 import javax.annotation.Nonnull;
+import java.util.concurrent.ExecutorService;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +41,6 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import java.util.concurrent.ExecutorService;
 import lombok.Cleanup;
 
 /***********************************************************************************************************************
@@ -60,11 +60,11 @@ public class AndroidCameraPresentationControl extends DefaultCameraPresentationC
      *
      * Creates a new instance.
      *
-     * @param presentation        the controlled presentation
-     * @param context             the Android {@link Context}
-     * @param liveView            the live view
-     * @param cameraDescriptor    the descriptor of the current device
-     * @param   executorService         an {@link ExecutorService} for running background jobs
+     * @param   presentation        the controlled presentation
+     * @param   context             the Android {@link Context}
+     * @param   liveView            the live view
+     * @param   cameraDescriptor    the descriptor of the current device
+     * @param   executorService     an {@link ExecutorService} for running background jobs
      * 
      ******************************************************************************************************************/
     public AndroidCameraPresentationControl (final @Nonnull CameraPresentation presentation,
