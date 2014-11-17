@@ -64,13 +64,16 @@ described by interfaces, it is possible the creation of mocks that can be used i
 time there are no valid tests in this project, most of the presentation logic can be automatically tested by means of 
 pure Java classes, avoiding the cumbersome Android approach to tests.
 
+Given the very nature of Android, which is not plain Java, the application of PAC raises some more problems than with
+a JSE or JEE application. Some trade-offs are to be applied.
+
+
 ## Structure of the application
 
 The application is composed by two Activites:
 
 * The ``CameraDiscoveryPresentationActivity`` makes it possible to pick a Wifi network and scans for the presence of Sony
   camera devices. 
-
   This activity (together with its control object) demonstrates:
     * how to interact with the Wifi system service;
     * how to interact with a system activity (the Wifi configuration panel);
@@ -83,7 +86,6 @@ The application is composed by two Activites:
   continuously displays the contents of the Electronic Viewfinder (EVF). It also shows the values of some camera 
   settings such as the F number, the shutter speed, the ISO speed rating and others; some of the settings can be also
   changed. It also allow to shoot a photo or to record a movie. 
-
   This activity (together with its control object) demonstrates:
     * how to create an ``Activity`` that interacts with a remote service (REST in this case);
     * how to customise an ``Activity`` so it runs at full screen;
