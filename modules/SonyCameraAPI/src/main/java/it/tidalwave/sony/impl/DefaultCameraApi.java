@@ -207,82 +207,38 @@ import lombok.extern.slf4j.Slf4j;
         @Override @Nonnull
         public String getCameraStatus()
           {
-            try
-              {
-                String cameraStatus = "";
-                int indexOfCameraStatus = 1;
-                JSONArray resultsObj = responseJson.getJSONArray("result");
-
-                if (!resultsObj.isNull(indexOfCameraStatus))
-                  {
-                    JSONObject cameraStatusObj = resultsObj.getJSONObject(indexOfCameraStatus);
-                    String type = cameraStatusObj.getString("type");
-
-                    if ("cameraStatus".equals(type))
-                      {
-                        cameraStatus = cameraStatusObj.getString("cameraStatus");
-                      }
-                    else
-                      {
-                        log.warn("Event reply: Illegal Index (1: CameraStatus) ", type);
-                      }
-                  }
-
-                return cameraStatus;
-              }
-            catch (JSONException e)
-              {
-                throw new RuntimeException("malformed JSON", e);
-              }
+            return getValue("cameraStatus", 1, "cameraStatus");
           }
 
         @Override @Nonnull
         public String getShootMode()
           {
-            try
-              {
-                String shootMode = "";
-                int indexOfShootMode = 21;
-                JSONArray resultsObj = responseJson.getJSONArray("result");
-
-                if (!resultsObj.isNull(indexOfShootMode))
-                  {
-                    JSONObject shootModeObj = resultsObj.getJSONObject(indexOfShootMode);
-                    String type = shootModeObj.getString("type");
-
-                    if ("shootMode".equals(type))
-                      {
-                        shootMode = shootModeObj.getString("currentShootMode");
-                      }
-                    else
-                      {
-                        log.warn("Event reply: Illegal Index (21: ShootMode) ", type);
-                      }
-                  }
-
-                return shootMode;
-              }
-            catch (JSONException e)
-              {
-                throw new RuntimeException("malformed JSON", e);
-              }
+            return getValue("currentShootMode", 21, "shootMode");
           }
 
-        private String getValue (final String field, final int index, final String expectedType) 
+        @Override @Nonnull
+        public String getProperty (final @Nonnull Property property)
+          {
+            return getValue(property.getName(), property.getIndex(), property.getType());
+          }
+        
+        @Nonnull
+        private String getValue (final @Nonnull String field, 
+                                 final @Nonnegative int index, 
+                                 final @Nonnull String expectedType) 
           {
             try
               {
-                String value = "";
-                JSONArray resultsObj = responseJson.getJSONArray("result");
+                final JSONArray resultObject = responseJson.getJSONArray("result");
 
-                if (!resultsObj.isNull(index))
+                if (!resultObject.isNull(index))
                   {
-                    JSONObject shootModeObj = resultsObj.getJSONObject(index);
-                    String type = shootModeObj.getString("type");
+                    final JSONObject valueObject = resultObject.getJSONObject(index);
+                    final String type = valueObject.getString("type");
 
                     if (expectedType.equals(type))
                       {
-                        value = shootModeObj.getString(field);
+                        return valueObject.getString(field);
                       }
                     else
                       {
@@ -291,18 +247,12 @@ import lombok.extern.slf4j.Slf4j;
                       }
                   }
 
-                return value;
+                return "";
               }
             catch (JSONException e)
               {
                 throw new RuntimeException("malformed JSON", e);
               }
-          }
-        
-        @Override @Nonnull
-        public String getProperty (final @Nonnull Property property)
-          {
-            return getValue(property.getName(), property.getIndex(), property.getType());
           }
       }
 
