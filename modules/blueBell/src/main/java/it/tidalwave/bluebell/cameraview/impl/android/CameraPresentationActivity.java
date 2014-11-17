@@ -47,7 +47,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import it.tidalwave.sony.CameraDescriptor;
-import it.tidalwave.sony.CameraDevice;
 import it.tidalwave.sony.CameraObserver;
 import it.tidalwave.bluebell.cameraview.CameraPresentation;
 import it.tidalwave.bluebell.cameraview.DefaultCameraPresentationControl;
@@ -72,9 +71,6 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
   {
     /** The controller of this presentation. */
     private DefaultCameraPresentationControl control;
-
-    /** The controlled camera. */
-    private CameraDevice cameraDevice;
 
     // Below are widget references
     private ImageView ivPhotoBox;
@@ -570,7 +566,6 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
 
         final CameraDescriptorIntentHelper intentHelper = new CameraDescriptorIntentHelper(getIntent());
         final CameraDescriptor cameraDescriptor = intentHelper.getCameraDescriptor();
-        cameraDevice = cameraDescriptor.createDevice();
         control = new AndroidCameraPresentationControl(createUIThreadDecorator(this, CameraPresentation.class),
                                                        this,
                                                        svLiveView,
