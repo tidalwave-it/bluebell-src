@@ -68,6 +68,8 @@ public interface CameraApi
     public static enum Property
       {
         // TODO: remove internal API bindings from public visibility
+        CAMERA_STATUS(        "cameraStatus",                 1, "cameraStatus",         null),
+        SHOOT_MODE(           "currentShootMode",            21, "shootMode",            null),
         EXPOSURE_COMPENSATION("currentExposureCompensation", 25, "exposureCompensation", "setExposureCompensation"),
         FLASH_MODE(           "currentFlashMode",            26, "flashMode",            "setFlashMode"),
         F_NUMBER(             "currentFNumber",              27, "fNumber",              "setFNumber"),
@@ -159,12 +161,6 @@ public interface CameraApi
         @Nonnull
         public Set<String> getApis();
 
-        @Nonnull
-        public String getShootMode();
-
-        @Nonnull
-        public String getCameraStatus();
-        
         @Nonnull
         public String getProperty (@Nonnull Property property);
         

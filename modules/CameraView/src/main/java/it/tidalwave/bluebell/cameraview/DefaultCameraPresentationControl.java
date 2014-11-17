@@ -121,25 +121,36 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
         
         cameraObserver.setListener(new CameraObserver.ChangeListener()
           {
-            @Override
-            public void onShootModeChanged (final @Nonnull String shootMode)
-              {
-                log.info("onShootModeChanged({})", shootMode);
-                refreshUi();
-              }
-
-            @Override
-            public void onStatusChanged (final @Nonnull String status)
-              {
-                log.info("onStatusChanged({})", status);
-                refreshUi();
-              }
-
+//            @Override
+//            public void onShootModeChanged (final @Nonnull String shootMode)
+//              {
+//                log.info("onShootModeChanged({})", shootMode);
+//                refreshUi();
+//              }
+//
+//            @Override
+//            public void onStatusChanged (final @Nonnull String status)
+//              {
+//                log.info("onStatusChanged({})", status);
+//                refreshUi();
+//              }
+//
             @Override
             public void onPropertyChanged (final @Nonnull Property property, final @Nonnull String value)
               {
                 log.info("onPropertyChanged({}, {})", property, value);
-                refreshUiProperty(property);
+                
+                switch (property)
+                  {
+                    case SHOOT_MODE:
+                    case CAMERA_STATUS:
+                        refreshUi();
+                        break;
+                        
+                    default:
+                        refreshUiProperty(property);
+                        break;
+                  }
               }
             
             @Override
@@ -149,7 +160,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
               {
                 log.info("APIs changed: all: {} added: {} removed: {}",
                         new Object[] { apis, addedApis, removedApis });
-                setAvailableApis(apis);
+                setAvailableApis(apis, addedApis, removedApis);
               }
           });
 
@@ -158,13 +169,13 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
             @Override
             public void run()
               {
-                log.info("openConnection(): exec.");
+                log.info("start(): exec.");
 
                 try
                   {
-                    setAvailableApis(cameraApi.getAvailableApiList().getApis());
+                    final Set<String> apis = cameraApi.getAvailableApiList().getApis();
 
-                    if (isApiAvailable(API_GET_APPLICATION_INFO))
+                    if (apis.contains(API_GET_APPLICATION_INFO))
                       {
                         if (cameraApi.getApplicationInfo().getVersion() < 2)
                           {
@@ -180,36 +191,17 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
                         return;
                       }
 
-                    if (isApiAvailable(API_START_REC_MODE))
+                    if (apis.contains(API_EVENT)) // FIXME: what if it is not available? CameraObserver will never start
                       {
-                        log.info("openConnection(): startRecMode()");
-                        cameraApi.startRecMode();
-                        setAvailableApis(cameraApi.getAvailableApiList().getApis());
-                      }
-
-                    if (isApiAvailable(API_EVENT))
-                      {
-                        log.info("openConnection(): EventObserver.start()");
+                        log.info("start(): EventObserver.start()");
                         cameraObserver.start();
                       }
 
-                    if (isApiAvailable(API_START_LIVEVIEW))
-                      {
-                        log.info("openConnection(): LiveviewSurface.start()");
-                        liveViewPresentationControl.start();
-                      }
-
-                    if (isApiAvailable(API_AVAILABLE_SHOOT_MODE))
-                      {
-                        log.info("openConnection(): prepareShootModeRadioButtons()");
-                        prepareShootModeRadioButtons();
-                      }
-
-                    log.info("openConnection(): completed.");
+                    log.info("start(): completed.");
                   }
                 catch (IOException e)
                   {
-                    log.warn("openConnection: IOException: ", e);
+                    log.warn("start(): IOException: ", e);
                     presentation.notifyConnectionError();
                   }
               }
@@ -328,7 +320,7 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
               {
                 try
                   {
-                    final String cameraStatus = cameraObserver.getStatus();
+                    final String cameraStatus = cameraObserver.getProperty(Property.CAMERA_STATUS);
 
                     if (CAMERA_STATUS_IDLE.equals(cameraStatus))
                       {
@@ -414,8 +406,8 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
      ******************************************************************************************************************/
     private void refreshUi()
       {
-        final String cameraStatus = cameraObserver.getStatus();
-        final String shootMode = cameraObserver.getShootMode();
+        final String cameraStatus = cameraObserver.getProperty(Property.CAMERA_STATUS);
+        final String shootMode = cameraObserver.getProperty(Property.SHOOT_MODE);
 
         presentation.renderCameraStatus(cameraStatus);
 
@@ -468,13 +460,40 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
      *
      *
      ******************************************************************************************************************/
-    private void setAvailableApis (final @Nonnull Set<String> availableApis)
+    private void setAvailableApis (final @Nonnull Set<String> apis,
+                                   final @Nonnull Set<String> addedApis, 
+                                   final @Nonnull Set<String> removedApis)
       {
         synchronized (this.availableApis)
           {
             this.availableApis.clear();
-            this.availableApis.addAll(availableApis);
+            this.availableApis.addAll(apis);
             log.info(">>>> available APIs: {}", availableApis);
+          }
+        
+        if (addedApis.contains(API_START_REC_MODE))
+          {
+            log.info("openConnection(): startRecMode()");
+            try 
+              {
+                cameraApi.startRecMode();
+              }
+            catch (IOException e)
+              {
+                log.warn("while calling startRecMode()", e);
+              }
+          }
+
+        if (addedApis.contains(API_START_LIVEVIEW))
+          {
+            log.info("openConnection(): LiveviewSurface.start()");
+            liveViewPresentationControl.start();
+          }
+
+        if (addedApis.contains(API_AVAILABLE_SHOOT_MODE))
+          {
+            log.info("openConnection(): prepareShootModeRadioButtons()");
+            prepareShootModeRadioButtons();
           }
       }
 

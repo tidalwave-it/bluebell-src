@@ -205,18 +205,6 @@ import lombok.extern.slf4j.Slf4j;
           }
 
         @Override @Nonnull
-        public String getCameraStatus()
-          {
-            return getValue("cameraStatus", 1, "cameraStatus");
-          }
-
-        @Override @Nonnull
-        public String getShootMode()
-          {
-            return getValue("currentShootMode", 21, "shootMode");
-          }
-
-        @Override @Nonnull
         public String getProperty (final @Nonnull Property property)
           {
             return getValue(property.getName(), property.getIndex(), property.getType());

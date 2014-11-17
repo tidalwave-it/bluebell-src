@@ -35,6 +35,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.io.IOException;
 import it.tidalwave.sony.CameraApi;
@@ -46,7 +47,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.sony.CameraApi.Polling.*;
-import java.util.TreeSet;
 
 /***********************************************************************************************************************
  *
@@ -69,12 +69,12 @@ import java.util.TreeSet;
     @Getter
     private volatile boolean running = false;
 
-    @Getter @Nonnull
-    private String status = "";
-
-    @Getter @Nonnull
-    private String shootMode = "";
-    
+//    @Getter @Nonnull
+//    private String status = "";
+//
+//    @Getter @Nonnull
+//    private String shootMode = "";
+//    
     private final Map<Property, String> valueMap = Collections.synchronizedMap(new EnumMap<Property, String>(Property.class));
 
     private final Set<String> currentApis = new TreeSet<>();
@@ -92,6 +92,8 @@ import java.util.TreeSet;
     @RequiredArgsConstructor
     enum PropertyFetcher
       {
+        FETCHER_CAMERA_STATUS(Property.CAMERA_STATUS, CameraApi.Property.CAMERA_STATUS),
+        FETCHER_SHOOT_MODE(Property.SHOOT_MODE, CameraApi.Property.SHOOT_MODE),
         FETCHER_F_NUMBER(Property.F_NUMBER, CameraApi.Property.F_NUMBER),
         FETCHER_SHUTTER(Property.SHUTTER_SPEED, CameraApi.Property.SHUTTER_SPEED),
         FETCHER_ISO(Property.ISO_SPEED_RATE, CameraApi.Property.ISO_SPEED_RATE),
@@ -195,26 +197,29 @@ import java.util.TreeSet;
                         
                         currentApis.clear();
                         currentApis.addAll(apis);
-                                          
-                        fireApisChanged(currentApis, addedApis, removedApis);
-
-                        final String newStatus = response.getCameraStatus();
-                        log.debug("getEvent status: {}", newStatus);
-
-                        if (!status.equals(newStatus))
+                        
+                        if (!addedApis.isEmpty() || !removedApis.isEmpty())
                           {
-                            status = newStatus;
-                            fireStatusChanged(status);
+                            fireApisChanged(currentApis, addedApis, removedApis);
                           }
 
-                        final String newShootMode = response.getShootMode();
-                        log.debug("getEvent shootMode: {}", newShootMode);
-
-                        if (!shootMode.equals(newShootMode))
-                          {
-                            shootMode = newShootMode;
-                            fireShootModeChanged(shootMode);
-                          }
+//                        final String newStatus = response.getProperty(CameraApi.Property.CAMERA_STATUS);
+//                        log.debug("getEvent status: {}", newStatus);
+//
+//                        if (!status.equals(newStatus))
+//                          {
+//                            status = newStatus;
+//                            fireStatusChanged(status);
+//                          }
+//
+//                        final String newShootMode = response.getProperty(CameraApi.Property.SHOOT_MODE);
+//                        log.debug("getEvent shootMode: {}", newShootMode);
+//
+//                        if (!shootMode.equals(newShootMode))
+//                          {
+//                            shootMode = newShootMode;
+//                            fireShootModeChanged(shootMode);
+//                          }
                         
                         for (final PropertyFetcher fetcher : PropertyFetcher.values())
                           {
@@ -362,31 +367,31 @@ import java.util.TreeSet;
           }
       }
 
-    /*******************************************************************************************************************
-     *
-     * Notifies the listener of Camera Status change.
-     *
-     ******************************************************************************************************************/
-    private void fireStatusChanged (final @Nonnull String status)
-      {
-        if (listener != null)
-          {
-            listener.onStatusChanged(status);
-          }
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Notifies the listener of Shoot Mode change.
-     *
-     ******************************************************************************************************************/
-    private void fireShootModeChanged (final @Nonnull String shootMode)
-      {
-        if (listener != null)
-          {
-            listener.onShootModeChanged(shootMode);
-          }
-      }
+//    /*******************************************************************************************************************
+//     *
+//     * Notifies the listener of Camera Status change.
+//     *
+//     ******************************************************************************************************************/
+//    private void fireStatusChanged (final @Nonnull String status)
+//      {
+//        if (listener != null)
+//          {
+//            listener.onStatusChanged(status);
+//          }
+//      }
+//
+//    /*******************************************************************************************************************
+//     *
+//     * Notifies the listener of Shoot Mode change.
+//     *
+//     ******************************************************************************************************************/
+//    private void fireShootModeChanged (final @Nonnull String shootMode)
+//      {
+//        if (listener != null)
+//          {
+//            listener.onShootModeChanged(shootMode);
+//          }
+//      }
     
     private void firePropertyChanged (final @Nonnull Property property, final String value)
       {
