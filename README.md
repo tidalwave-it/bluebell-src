@@ -126,9 +126,8 @@ The used annotations are:
 * ``@Cleanup`` to correctly close I/O resources (given that try-with-resources can't be used - see above).
 
 While Lombok works transparently when the application is compiled from the command line, some additional work is
-required to avoid false syntax errors in the IDE. In general:
-
-This requires some interaction with the IDE so it doesn't complain about syntax errors.
+required to avoid false syntax errors in the IDE.
+This might requires some special configuration in the IDE so it doesn't complain about syntax errors.
 
 * If you work with NetBeans 7.3 and later, you don't need anything.
 
