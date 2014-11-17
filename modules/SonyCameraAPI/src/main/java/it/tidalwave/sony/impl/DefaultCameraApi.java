@@ -772,6 +772,7 @@ import lombok.extern.slf4j.Slf4j;
     public EventResponse getEvent (final @Nonnull Polling polling)
       throws IOException
       {
+        // TODO: call v1.1 or v1.2 when available
         return new DefaultEventResponse(call(CAMERA_SERVICE).withMethod("getEvent")
                                                             .withParam(polling == Polling.LONG_POLLING)
                                                             .post(polling.getTimeout()));
