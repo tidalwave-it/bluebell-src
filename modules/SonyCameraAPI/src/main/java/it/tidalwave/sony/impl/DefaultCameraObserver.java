@@ -46,6 +46,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.sony.CameraApi.Polling.*;
+import java.util.TreeSet;
 
 /***********************************************************************************************************************
  *
@@ -76,6 +77,8 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
     
     private final Map<Property, String> valueMap = Collections.synchronizedMap(new EnumMap<Property, String>(Property.class));
 
+    private final Set<String> currentApis = new TreeSet<>();
+            
     /** To run background jobs. */
     @Nonnull
     private final ExecutorService executorService;
@@ -184,7 +187,16 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
                                 break MONITORLOOP;
                           }
 
-                        fireApisChanged(response.getApis());
+                        final Set<String> apis = response.getApis();
+                        final Set<String> addedApis = new TreeSet<>(apis);
+                        addedApis.removeAll(currentApis);
+                        final Set<String> removedApis = new TreeSet<>(currentApis);
+                        removedApis.removeAll(apis);
+                        
+                        currentApis.clear();
+                        currentApis.addAll(apis);
+                                          
+                        fireApisChanged(currentApis, addedApis, removedApis);
 
                         final String newStatus = response.getCameraStatus();
                         log.debug("getEvent status: {}", newStatus);
@@ -340,11 +352,13 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
      * Notifies the listener of available APIs change.
      *
      ******************************************************************************************************************/
-    private void fireApisChanged (final @Nonnull Set<String> availableApis)
+    private void fireApisChanged (final @Nonnull Set<String> apis,
+                                  final @Nonnull Set<String> addedApis, 
+                                  final @Nonnull Set<String> removedApis)
       {
         if (listener != null)
           {
-            listener.onApisChanged(availableApis);
+            listener.onApisChanged(apis, addedApis, removedApis);
           }
       }
 

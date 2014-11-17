@@ -104,9 +104,12 @@ public class DefaultSimpleSsdpClientTest
         observer.setListener(new CameraObserver.ChangeListener()
           {
             @Override
-            public void onApisChanged (final @Nonnull Set<String> apis)
+            public void onApisChanged (final @Nonnull Set<String> apis,
+                                       final @Nonnull Set<String> addedApis, 
+                                       final @Nonnull Set<String> removedApis)
               {
-                log.info("APIs changed: {}", apis);
+                log.info("APIs changed: all: {} added: {} removed: {}",
+                        new Object[] { apis, addedApis, removedApis });
               }
 
             @Override

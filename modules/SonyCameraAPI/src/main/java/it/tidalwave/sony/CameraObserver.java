@@ -65,15 +65,20 @@ public interface CameraObserver
          *
          * Called when the list of available APIs is modified.
          *
-         * @param apis a list of available APIs
+         * @param   apis            all the available APIs
+         * @param   addedApis       APIs that have been added
+         * @param   removedApis     APIs that have been deleted
          *
          **************************************************************************************************************/
-        public void onApisChanged (@Nonnull Set<String> apis);
+        public void onApisChanged (@Nonnull Set<String> apis,
+                                   @Nonnull Set<String> addedApis, 
+                                   @Nonnull Set<String> removedApis);
 
         /***************************************************************************************************************
          *
          * Called when the value of "Camera Status" is changed.
-         *
+         * FIXME: merge to onPropertyChanged?
+         * 
          * @param status camera status (ex."IDLE")
          *
          **************************************************************************************************************/
@@ -82,6 +87,7 @@ public interface CameraObserver
         /***************************************************************************************************************
          *
          * Called when the value of "Shoot Mode" is changed.
+         * FIXME: merge to onPropertyChanged?
          *
          * @param shootMode shoot mode (ex."still")
          *

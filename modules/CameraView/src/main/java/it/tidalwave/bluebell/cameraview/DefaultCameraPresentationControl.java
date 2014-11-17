@@ -143,9 +143,12 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
               }
             
             @Override
-            public void onApisChanged (final @Nonnull Set<String> apis)
+            public void onApisChanged (final @Nonnull Set<String> apis,
+                                       final @Nonnull Set<String> addedApis, 
+                                       final @Nonnull Set<String> removedApis)
               {
-                log.info("onApisChanged({})", apis);
+                log.info("APIs changed: all: {} added: {} removed: {}",
+                        new Object[] { apis, addedApis, removedApis });
                 setAvailableApis(apis);
               }
           });
