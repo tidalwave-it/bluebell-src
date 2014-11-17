@@ -142,7 +142,7 @@ This might requires some special configuration in the IDE so it doesn't complain
 
 blueBell is being developed with Maven, which is not an obvious choice for most people. In particular, it is not the 
 default tool suggested by Google. Google's Android Studio, in fact, uses Gradle. For this reason, the project has been
-structures so it can work with both tools:
+structured so it can work with both tools:
 
  * files ``pom.xml`` are related to Maven;
  * files ``*.gradle``, ``local.properties`` and ``*.iml`` are related to Gradle and Android Studio.
