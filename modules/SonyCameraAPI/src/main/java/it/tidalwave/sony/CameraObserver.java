@@ -29,8 +29,8 @@ package it.tidalwave.sony;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
-import java.io.IOException;
 import java.util.List;
+import java.io.IOException;
 
 /***********************************************************************************************************************
  *
@@ -76,26 +76,6 @@ public interface CameraObserver
                                    @Nonnull Set<String> addedApis, 
                                    @Nonnull Set<String> removedApis);
 
-//        /***************************************************************************************************************
-//         *
-//         * Called when the value of "Camera Status" is changed.
-//         * FIXME: merge to onPropertyChanged?
-//         * 
-//         * @param status camera status (ex."IDLE")
-//         *
-//         **************************************************************************************************************/
-//        public void onStatusChanged (@Nonnull String status);
-//
-//        /***************************************************************************************************************
-//         *
-//         * Called when the value of "Shoot Mode" is changed.
-//         * FIXME: merge to onPropertyChanged?
-//         *
-//         * @param shootMode shoot mode (ex."still")
-//         *
-//         **************************************************************************************************************/
-//        public void onShootModeChanged (@Nonnull String shootMode);
-        
         /***************************************************************************************************************
          *
          * Called when the value of a property in the camera has been changed.
@@ -113,26 +93,6 @@ public interface CameraObserver
      *
      ******************************************************************************************************************/
     public void unsetListener();
-
-//    /*******************************************************************************************************************
-//     *
-//     * Returns the current Camera Status value.
-//     *
-//     * @return camera status
-//     *
-//     ******************************************************************************************************************/
-//    @Nonnull
-//    public String getStatus();
-//
-//    /*******************************************************************************************************************
-//     *
-//     * Returns the current Shoot Mode value.
-//     *
-//     * @return shoot mode
-//     *
-//     ******************************************************************************************************************/
-//    @Nonnull
-//    public String getShootMode();
 
     /*******************************************************************************************************************
      *

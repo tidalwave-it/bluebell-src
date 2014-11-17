@@ -113,18 +113,6 @@ public class DefaultSimpleSsdpClientTest
                         new Object[] { apis, addedApis, removedApis });
               }
 
-//            @Override
-//            public void onStatusChanged (final @Nonnull String status)
-//              {
-//                log.info("status changed: {}", status);
-//              }
-//
-//            @Override
-//            public void onShootModeChanged (final @Nonnull String shootMode)
-//              {
-//                log.info("shoot mode changed: {}", shootMode);
-//              }
-
             @Override
             public void onPropertyChanged (final CameraObserver.Property property, final String value) 
               {

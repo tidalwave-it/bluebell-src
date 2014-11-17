@@ -69,12 +69,6 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
     @Getter
     private volatile boolean running = false;
 
-//    @Getter @Nonnull
-//    private String status = "";
-//
-//    @Getter @Nonnull
-//    private String shootMode = "";
-//    
     private final Map<Property, String> valueMap = Collections.synchronizedMap(new EnumMap<Property, String>(Property.class));
 
     private final Set<String> currentApis = new TreeSet<>();
@@ -203,24 +197,6 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
                             fireApisChanged(currentApis, addedApis, removedApis);
                           }
 
-//                        final String newStatus = response.getProperty(CameraApi.Property.CAMERA_STATUS);
-//                        log.debug("getEvent status: {}", newStatus);
-//
-//                        if (!status.equals(newStatus))
-//                          {
-//                            status = newStatus;
-//                            fireStatusChanged(status);
-//                          }
-//
-//                        final String newShootMode = response.getProperty(CameraApi.Property.SHOOT_MODE);
-//                        log.debug("getEvent shootMode: {}", newShootMode);
-//
-//                        if (!shootMode.equals(newShootMode))
-//                          {
-//                            shootMode = newShootMode;
-//                            fireShootModeChanged(shootMode);
-//                          }
-                        
                         for (final PropertyFetcher fetcher : PropertyFetcher.values())
                           {
                             final Property property = fetcher.getProperty();
@@ -367,32 +343,6 @@ import static it.tidalwave.sony.CameraApi.Polling.*;
           }
       }
 
-//    /*******************************************************************************************************************
-//     *
-//     * Notifies the listener of Camera Status change.
-//     *
-//     ******************************************************************************************************************/
-//    private void fireStatusChanged (final @Nonnull String status)
-//      {
-//        if (listener != null)
-//          {
-//            listener.onStatusChanged(status);
-//          }
-//      }
-//
-//    /*******************************************************************************************************************
-//     *
-//     * Notifies the listener of Shoot Mode change.
-//     *
-//     ******************************************************************************************************************/
-//    private void fireShootModeChanged (final @Nonnull String shootMode)
-//      {
-//        if (listener != null)
-//          {
-//            listener.onShootModeChanged(shootMode);
-//          }
-//      }
-    
     private void firePropertyChanged (final @Nonnull Property property, final String value)
       {
         if (listener != null)

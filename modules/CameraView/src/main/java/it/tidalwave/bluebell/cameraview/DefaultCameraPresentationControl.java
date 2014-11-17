@@ -121,20 +121,6 @@ public abstract class DefaultCameraPresentationControl implements CameraPresenta
         
         cameraObserver.setListener(new CameraObserver.ChangeListener()
           {
-//            @Override
-//            public void onShootModeChanged (final @Nonnull String shootMode)
-//              {
-//                log.info("onShootModeChanged({})", shootMode);
-//                refreshUi();
-//              }
-//
-//            @Override
-//            public void onStatusChanged (final @Nonnull String status)
-//              {
-//                log.info("onStatusChanged({})", status);
-//                refreshUi();
-//              }
-//
             @Override
             public void onPropertyChanged (final @Nonnull Property property, final @Nonnull String value)
               {
