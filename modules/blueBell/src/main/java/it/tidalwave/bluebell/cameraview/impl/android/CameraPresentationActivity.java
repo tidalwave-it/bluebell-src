@@ -37,8 +37,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -77,9 +77,9 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
 
     private RadioGroup rbShootMode;
 
-    private Button btTakePhoto;
+    private ImageButton btTakePhoto;
 
-    private Button btRecStartStop;
+    private ImageButton btRecStartStop;
 
     private TextView tvCameraStatus;
 
@@ -258,7 +258,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     public void renderRecStartStopButtonAsStop()
       {
         btRecStartStop.setEnabled(true);
-        btRecStartStop.setText(R.string.button_rec_stop);
+        btRecStartStop.setImageResource(R.drawable.icon_stop);
       }
 
     /*******************************************************************************************************************
@@ -270,7 +270,7 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
     public void renderRecStartStopButtonAsStart()
       {
         btRecStartStop.setEnabled(true);
-        btRecStartStop.setText(R.string.button_rec_start);
+        btRecStartStop.setImageResource(R.drawable.icon_rec);
       }
 
     /*******************************************************************************************************************
@@ -551,8 +551,8 @@ public class CameraPresentationActivity extends Activity implements CameraPresen
 
         ivPhotoBox = (ImageView)findViewById(R.id.iv_photo_box);
         rbShootMode = (RadioGroup)findViewById(R.id.rg_shoot_mode);
-        btTakePhoto = (Button)findViewById(R.id.bt_take_photo);
-        btRecStartStop = (Button)findViewById(R.id.bt_rec_start_stop);
+        btTakePhoto = (ImageButton)findViewById(R.id.bt_take_photo);
+        btRecStartStop = (ImageButton)findViewById(R.id.bt_rec_start_stop);
         tvCameraStatus = (TextView)findViewById(R.id.tv_camera_status);
         svLiveView = (LiveViewSurfaceView)findViewById(R.id.sv_live_view);
         tvFNumber = (TextView)findViewById(R.id.tv_f_number);

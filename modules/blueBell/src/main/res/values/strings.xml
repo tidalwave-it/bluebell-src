@@ -7,8 +7,6 @@
     <string name="activity_camera_label">blueBell - Camera control</string>
 
     <string name="button_take_picture">Shoot</string>
-    <string name="button_rec_start">Rec</string>
-    <string name="button_rec_stop">Stop</string>
     <string name="button_start_search">Rescan</string>
     <string name="button_cancel_search">Cancel</string>
 
