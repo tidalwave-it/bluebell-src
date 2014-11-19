@@ -102,6 +102,43 @@
             android:layout_marginLeft="5dp"
             android:gravity="center">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="AFS-C"
+                android:id="@+id/tv_focus_mode"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:background="#ffffffff"
+                android:onClick="onFocusModeClicked"
+                android:clickable="true"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="AWB"
+                android:id="@+id/tv_white_balance"
+                android:textColor="#ffffffff"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/la_top"
+            android:layout_above="@+id/la_bottom"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/la_right"
+            android:layout_marginRight="5dp"
+            android:gravity="center">
+
             <RadioGroup
                 android:id="@+id/rg_shoot_mode"
                 android:layout_width="wrap_content"
@@ -134,42 +171,6 @@
                 android:text="Exit"
                 android:id="@+id/bt_exit"
                 android:onClick="onExitButtonClicked" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="AFS-C"
-                android:id="@+id/tv_focus_mode"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center"
-                android:background="#ffffffff"
-                android:onClick="onFocusModeClicked"
-                android:clickable="true"
-                android:paddingLeft="2dp"
-                android:paddingRight="2dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_below="@+id/la_top"
-            android:layout_above="@+id/la_bottom"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:id="@+id/la_right"
-            android:layout_marginRight="5dp"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="AWB"
-                android:id="@+id/tv_white_balance"
-                android:textColor="#ffffffff"
-                android:layout_gravity="center" />
         </LinearLayout>
 
         <ProgressBar
