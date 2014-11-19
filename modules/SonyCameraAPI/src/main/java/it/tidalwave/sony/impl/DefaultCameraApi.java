@@ -504,13 +504,14 @@ import lombok.extern.slf4j.Slf4j;
 
         private final String url;
 
+        private String version = "1.0";
+                
         public Call (final @Nonnull String service)
           throws IOException
           {
             try
               {
                 url = findActionListUrl(service) + "/" + service;
-                request.put("version", "1.0");
                 request.put("id", requestId++);
               }
             catch (JSONException e)
@@ -543,6 +544,14 @@ import lombok.extern.slf4j.Slf4j;
           }
 
         @Nonnull
+        public Call withVersion (final @Nonnull String version)
+          throws IOException
+          {
+            this.version = version;
+            return this;
+          }
+
+        @Nonnull
         public JSONObject post()
           throws IOException
           {
@@ -555,6 +564,7 @@ import lombok.extern.slf4j.Slf4j;
           {
             try
               {
+                request.put("version", version);
                 request.put("params", params);
 
                 log.debug("Request: {}", request);
@@ -773,8 +783,10 @@ import lombok.extern.slf4j.Slf4j;
       throws IOException
       {
         // TODO: call v1.1 or v1.2 when available
+        final String version = "1.0";
         return new DefaultEventResponse(call(CAMERA_SERVICE).withMethod("getEvent")
                                                             .withParam(polling == Polling.LONG_POLLING)
+                                                            .withVersion(version)
                                                             .post(polling.getTimeout()));
       }
 
