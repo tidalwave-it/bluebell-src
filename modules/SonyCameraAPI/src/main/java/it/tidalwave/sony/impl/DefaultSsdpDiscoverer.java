@@ -147,7 +147,7 @@ public class DefaultSsdpDiscoverer implements SsdpDiscoverer
 
                 // Receive reply packets
                 long startTime = System.currentTimeMillis();
-                List<String> foundDevices = new ArrayList<String>();
+                List<String> foundDevices = new ArrayList<>();
 
                 while (searching)
                   {
