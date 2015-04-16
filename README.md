@@ -31,7 +31,7 @@ Android life-cycle, and from this respect acts as a controller. But it also inte
 setting its state and registering callbacks. So, I'd rather say it's a "life-cycle" controller or a "navigation" 
 controller. It makes sense to split the presentation logic into a separate class for complying with the 
 [Separation of Concerns (SoC) principle](http://en.wikipedia.org/wiki/Separation_of_concerns) and its specialisation
-[Separation Presentation](http://martinfowler.com/eaaDev/SeparatedPresentation.html).
+[Separated Presentation](http://martinfowler.com/eaaDev/SeparatedPresentation.html).
 
 The general design of blueBell refers to the Presentation Abstraction Control (PAC) architectural pattern:
 
