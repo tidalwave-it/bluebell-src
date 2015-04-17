@@ -40,7 +40,7 @@
     <artifactId>bluebell-application</artifactId>
     <version>1.0-ALPHA-1-SNAPSHOT</version>
     <packaging>apk</packaging>
-    <name>blueBell - Application</name>
+    <name>blueBell - Android Application</name>
 
     <properties>
         <buildNumber></buildNumber> <!-- FIXME -->

@@ -40,7 +40,7 @@
     <artifactId>camera-view</artifactId>
     <version>1.0-ALPHA-1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>blueBell - Camera View</name>
+    <name>blueBell - UI</name>
 
     <dependencies>
         <dependency>
@@ -57,23 +57,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-        </dependency>
-
-        <!-- TEST -->
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>it.tidalwave.thesefoolishthings</groupId>
-            <artifactId>it-tidalwave-util-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
