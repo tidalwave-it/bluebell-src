@@ -40,7 +40,7 @@
     <artifactId>camera-view</artifactId>
     <version>1.0-ALPHA-1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>blueBell - Camera View</name>
+    <name>blueBell - UI</name>
 
     <dependencies>
         <dependency>
