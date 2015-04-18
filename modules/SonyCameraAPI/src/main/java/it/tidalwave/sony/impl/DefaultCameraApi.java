@@ -230,8 +230,7 @@ import lombok.extern.slf4j.Slf4j;
                       }
                     else
                       {
-                        log.warn("Event reply: Illegal Index ({}: {} - {}) ",
-                                new Object[] { index, field, type });
+                        log.warn("Event reply: Illegal Index ({}: {} - {}) ", index, field, type);
                       }
                   }
 

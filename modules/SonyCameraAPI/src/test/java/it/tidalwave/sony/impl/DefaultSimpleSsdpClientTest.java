@@ -109,8 +109,7 @@ public class DefaultSimpleSsdpClientTest
                                        final @Nonnull Set<String> addedApis, 
                                        final @Nonnull Set<String> removedApis)
               {
-                log.info("APIs changed: all: {} added: {} removed: {}",
-                        new Object[] { apis, addedApis, removedApis });
+                log.info("APIs changed: all: {} added: {} removed: {}", apis, addedApis, removedApis);
               }
 
             @Override
