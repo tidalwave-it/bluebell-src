@@ -211,7 +211,7 @@ Please also read the chapter above related to Lombok.
         <netbeans.hint.license>Tidalwave-ASF</netbeans.hint.license>
         <netbeans.compile.on.save>all</netbeans.compile.on.save>
 
-        <tft.maven-android-plugin.version>4.0.0-rc.2</tft.maven-android-plugin.version>
+        <tft.maven-android-plugin.version>4.3.0</tft.maven-android-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -250,7 +250,7 @@ Please also read the chapter above related to Lombok.
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                    <groupId>com.simpligility.maven.plugins</groupId>
                     <artifactId>android-maven-plugin</artifactId>
                     <version>${tft.maven-android-plugin.version}</version>
                     <inherited>true</inherited>
