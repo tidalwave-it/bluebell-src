@@ -5,7 +5,7 @@
 
   blueBell
   %%
-  Copyright (C) 2013 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+  Copyright (C) 2013 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
   %%
   *********************************************************************************************************************
 
@@ -50,7 +50,7 @@
         <netbeans.hint.jdkPlatform>JDK_1.7.0</netbeans.hint.jdkPlatform>
         <netbeans.hint.license>Tidalwave-ASF</netbeans.hint.license>
         <netbeans.compile.on.save>all</netbeans.compile.on.save>
-        
+
         <tft.maven-android-plugin.version>4.0.0-rc.2</tft.maven-android-plugin.version>
     </properties>
 
