@@ -275,10 +275,10 @@ Please also read the chapter above related to Lombok.
                         <archive>${project.build.directory}/${project.build.finalName}.${project.packaging}</archive>
                         <verbose>true</verbose>
                         <certs>true</certs>
-                        <keystore>${sign.keystore}</keystore>
+                        <keystore>${android.keystore}</keystore>
                         <alias>${sign.alias}</alias>
-                        <storepass>${sign.storepass}</storepass>
-                        <keypass>${sign.keypass}</keypass>
+                        <storepass>${android.keystore.password}</storepass>
+                        <keypass>${android.key.password}</keypass>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -323,15 +323,15 @@ Please also read the chapter above related to Lombok.
                                 <configuration>
                                     <rules>
                                         <requireProperty>
-                                            <property>sign.keystore</property>
-                                            <message>The 'sign.keystore' property is missing. It must contain the path to the
+                                            <property>android.keystore</property>
+                                            <message>The 'android.keystore' property is missing. It must contain the path to the
                                                 keystore used to sign the application.</message>
                                         </requireProperty>
                                         <requireFilesExist>
                                             <files>
-                                                <file>${sign.keystore}</file>
+                                                <file>${android.keystore}</file>
                                             </files>
-                                            <message>The 'sign.keystore' property does not point to a file. It must contain the
+                                            <message>The 'android.keystore' property does not point to a file. It must contain the
                                                 path to the keystore used to sign the application.</message>
                                         </requireFilesExist>
                                         <requireProperty>
@@ -340,14 +340,14 @@ Please also read the chapter above related to Lombok.
                                                 sign the application.</message>
                                         </requireProperty>
                                         <requireProperty>
-                                            <property>sign.storepass</property>
-                                            <message>The 'sign.storepass' property is missing. It must contain the password of
+                                            <property>android.keystore.password</property>
+                                            <message>The 'android.keystore.password' property is missing. It must contain the password of
                                                 the keystore used to sign the application.
                                             </message>
                                         </requireProperty>
                                         <requireProperty>
-                                            <property>sign.keypass</property>
-                                            <message>The 'sign.keypass' property is missing. It must contain the password of the
+                                            <property>android.key.password</property>
+                                            <message>The 'android.key.password' property is missing. It must contain the password of the
                                                 key used to sign the application.</message>
                                         </requireProperty>
                                     </rules>
