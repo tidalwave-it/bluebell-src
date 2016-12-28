@@ -4,6 +4,6 @@ jdk:
 android:
   components:
     - build-tools-18.1.1
-    - android-18
+    - android-19
     - extra
-script: mvn install -B -Pit.tidalwave-ci-v1
+script: mvn install -B -DskipTests -Pit.tidalwave-ci-v1
