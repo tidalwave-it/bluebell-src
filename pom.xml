@@ -33,7 +33,7 @@
     <parent>
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>3.3</version>
+        <version>4.1</version>
         <relativePath />
     </parent>
 
@@ -201,7 +201,7 @@ with Android Studio is to delete the ``pom.xml`` files before opening the projec
 Please also read the chapter above related to Lombok.
     </description>
     <properties>
-        <tft.maven.requiredJdk>[1.8.0-0,1.8.0-99)</tft.maven.requiredJdk>
+        <tft.maven.requiredJdk>[1.7.0-0,)</tft.maven.requiredJdk>
         <tft.javac.source>1.7</tft.javac.source>
         <tft.javac.target>1.7</tft.javac.target>
         <tidalwave.ci.view>blueBell</tidalwave.ci.view>

@@ -1,7 +1,10 @@
 target/
+<<<<<<< HEAD
 build/
 .gradle
 .idea
+=======
+>>>>>>> fabrizio.giudici
 .repository
 .description
 .classpath
