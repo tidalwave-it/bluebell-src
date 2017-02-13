@@ -1,0 +1,9 @@
+language: android
+jdk:
+  - oraclejdk8
+android:
+  components:
+    - build-tools-18.1.1
+    - android-19
+    - extra
+script: mvn install -B -DskipTests -Pit.tidalwave-ci-v1
