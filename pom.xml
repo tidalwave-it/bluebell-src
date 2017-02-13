@@ -33,7 +33,7 @@
     <parent>
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>2.16</version>
+        <version>4.1</version>
         <relativePath />
     </parent>
 
@@ -48,6 +48,9 @@
 
         <tft.maven-android-plugin.version>4.0.0-rc.2</tft.maven-android-plugin.version>
 
+        <tft.maven.requiredJdk>[1.7.0,)</tft.maven.requiredJdk>
+        <tft.javac.source>1.7</tft.javac.source>
+        <tft.javac.target>1.7</tft.javac.target>
     </properties>
 
     <dependencyManagement>
